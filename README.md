@@ -7,7 +7,7 @@ Spring semester Open Data club project!
 
 ### Git and Github links:
 - [Git tutorials](https://www.atlassian.com/git/tutorials/)
-- [Guide to using](GitHub: https://guides.github.com/)
+- [Guide to using GitHub](https://guides.github.com/)
 - [Git documentation](https://git-scm.com/doc)
 - [GitHub repository for the project](https://github.com/Pitt-CSC/club_project_2017)
 - [Guide to writing markdown (for documentation)](https://guides.github.com/features/mastering-markdown/)
