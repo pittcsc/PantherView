@@ -37,3 +37,7 @@ Since our project is just an HTML file, you can simply load the file into your b
 ### Open Data links:
 - [What is Open Data, and why you should care](http://www.govtech.com/data/Got-Data-Make-it-Open-Data-with-These-Tips.html)
 - [The West Pennsylvania Regional Data Center](http://www.wprdc.org/)
+
+### Map Links:
+- [Leaflet](http://leafletjs.com/)
+- [OpenStreetMap](http://osm.org/)
