@@ -3,6 +3,16 @@ Spring semester Open Data club project!
 
 ---
 
+## Installing and running:
+Since our project is just an HTML file, you can simply load the file into your browser. Once you edit it and commit the changes it will be updated on GitHub.
+
+
+## Getting started:
+1. Fork the project
+2. Add your name to `contributors.md`
+3. Submit a pull request
+4. Take a look at the Issues for more things to do
+
 ## Helpful links:
 
 ### Git and Github links:
