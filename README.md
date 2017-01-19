@@ -21,6 +21,7 @@ Since our project is just an HTML file, you can simply load the file into your b
 - [Git documentation](https://git-scm.com/doc)
 - [GitHub repository for the project](https://github.com/Pitt-CSC/club_project_2017)
 - [Guide to writing markdown (for documentation)](https://guides.github.com/features/mastering-markdown/)
+- [CSC Git Wiki](https://github.com/Pitt-CSC/learn-git/wiki)
 
 ### HTML, CSS, and JavaScript links:
 - [MDN Introduction to HTML](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Introduction)
