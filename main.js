@@ -7,8 +7,6 @@
         attribution: '&amp;copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    L.marker([40.4365, -79.9524]).addTo(map);
-
     const sqlQuery = 'SELECT * FROM "40776043-ad00-40f5-9dc8-1fde865ff571" WHERE "NEIGHBORHOOD" LIKE \'%Oakland\'';
     fetch(`https://data.wprdc.org/api/action/datastore_search_sql?sql=${sqlQuery}`).then((res) => {
       // TODO: check for 200 response
