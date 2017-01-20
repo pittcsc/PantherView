@@ -26,3 +26,16 @@ footer
     position: fixed;
     z-index: 1000000;
 }
+
+#sidebar
+{
+    overflow: auto;
+    position: absolute;
+    margin: 10px 0 0 53px;
+    width: 250px;
+    height: 600px;
+    background: rgba(245,245,245,0.85);
+    border-radius: 10px;
+    z-index: 800;
+    box-shadow: 2px 2px 10px #a3a3a3;
+}
