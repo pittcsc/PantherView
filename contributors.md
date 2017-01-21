@@ -4,6 +4,8 @@ JJ Naughton
 
 John Linahan
 
+Alexis John Aquiatan
+
 Matt Bilker <me@mbilker.us>
 
 Chandler Yocca
