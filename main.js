@@ -8,9 +8,8 @@
         attribution: '&amp;copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    //Array of markers and a parallel array that holds their date of occurance
+    //Array of markers
     var markers = new Array();
-    var dates = new Array();
 
     //WPRDC data
     const WPRDC_BASE_URL = 'https://data.wprdc.org/api/action/datastore_search_sql?sql=';
@@ -19,37 +18,38 @@
     var currentDate = new Date();
 
     //The following are functions that display records created within 1, 7, and
-    //30 days respectively
-    function displayToday() {
+    //30 days respectively (assuming all fetched data has been pruned to the last
+    //30 days already)
+    function displayPastDay() {
         markers.forEach((marker, i) => {
-            if (dates[i][0] == currentDate.getFullYear() && dates[i][1] == currentDate.getMonth() + 1 && dates[i][2] == currentDate.getDate()) {
-                marker.addTo(map);
+            if (marker.incidentYear == currentDate.getFullYear() && marker.incidentMonth == currentDate.getMonth() + 1 && marker.incidentDay == currentDate.getDate()) {
+                marker.pin.addTo(map);
             } else {
-                map.removeLayer(marker);
+                map.removeLayer(marker.pin);
             }
         });
     }
 
     function displayPastWeek() {
         markers.forEach((marker, i) => {
-            var tmpDate = new Date(dates[i][0], dates[i][1] - 1, dates[i][2]);
+            var tmpDate = new Date(marker.incidentYear, marker.incidentMonth - 1, marker.incidentDay);
             var diff = Math.ceil(Math.abs(currentDate.getTime() - tmpDate.getTime()) / (86400000));
             if (diff <= 7) {
-                marker.addTo(map);
+                marker.pin.addTo(map);
             } else {
-                map.removeLayer(marker);
+                map.removeLayer(marker.pin);
             }
         });
     }
 
     function displayPastMonth() {
         markers.forEach((marker, i) => {
-                marker.addTo(map);
+                marker.pin.addTo(map);
         });
     }
 
-    //Add listeners for each radio button
-    document.getElementById("radioDay").addEventListener("click", displayToday);
+    //Still here (for now)
+    document.getElementById("radioDay").addEventListener("click", displayPastDay);
     document.getElementById("radioWeek").addEventListener("click", displayPastWeek);
     document.getElementById("radioMonth").addEventListener("click", displayPastMonth);
 
@@ -64,20 +64,17 @@
         .then((data) =>{
             const records = data.result.records;
             records.forEach((record, i) => {
-                console.log(i);
-
                 //Collect time of incident from the record
-                var incidentYear = parseInt(record.INCIDENTTIME.substring(0,4));
-                var incidentMonth = parseInt(record.INCIDENTTIME.substring(6,8));
-                var incidentDay = parseInt(record.INCIDENTTIME.substring(8,10));
+                record.incidentYear = parseInt(record.INCIDENTTIME.substring(0,4));
+                record.incidentMonth = parseInt(record.INCIDENTTIME.substring(6,8));
+                record.incidentDay = parseInt(record.INCIDENTTIME.substring(8,10));
 
-                const marker = L.marker([record.Y, record.X]);
-                marker.addTo(map)
+                record.pin = L.marker([record.Y, record.X]);
+                record.pin.addTo(map)
                     .bindPopup(`${record.OFFENSES}`);
 
                 //Push the marker and date to their respective arrays
-                markers.push(marker);
-                dates.push([incidentYear, incidentMonth, incidentDay]);
+                markers.push(record);
             });
         });
 
@@ -95,21 +92,19 @@
             records.forEach((record, i) => {
 
                 //Collect time of incident from the record
-                var incidentYear = parseInt(record.CREATED_ON.substring(0,4));
-                var incidentMonth = parseInt(record.CREATED_ON.substring(6,8));
-                var incidentDay = parseInt(record.CREATED_ON.substring(8,10));
+                record.incidentYear = parseInt(record.CREATED_ON.substring(0,4));
+                record.incidentMonth = parseInt(record.CREATED_ON.substring(6,8));
+                record.incidentDay = parseInt(record.CREATED_ON.substring(8,10));
 
-                const marker = L.marker([record.Y, record.X], {
+                record.pin = L.marker([record.Y, record.X], {
                     title: record.REQUEST_TYPE || 'default title',
                     zIndexOffset: 100
                 });
-                marker.bindPopup(`<pre>${JSON.stringify(record, null, 2)}</pre>`);
-                marker.addTo(map);
+                record.pin.bindPopup(`<pre>${JSON.stringify(record, null, 2)}</pre>`);
+                record.pin.addTo(map);
 
                 //Push the marker and date to their respective arrays
-                markers.push(marker);
-                dates.push([incidentYear, incidentMonth, incidentDay]);
-
+                markers.push(record);
             });
         });
 
