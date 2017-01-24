@@ -55,7 +55,7 @@
 
     //City of Pittsburgh police data
     const CITY_POLICE_API = "1797ead8-8262-41cc-9099-cbc8a161924b";
-    const CITY_311_SQL = `SELECT * FROM "${CITY_311_API}" WHERE "NEIGHBORHOOD" LIKE '%Oakland' ORDER BY "CREATED_ON" DESC LIMIT 25`;
+    const CITY_POLICE_SQL = `SELECT * from "${CITY_POLICE_API}" WHERE "INCIDENTNEIGHBORHOOD" LIKE '%Oakland'`;
     fetch(`${WPRDC_BASE_URL}${CITY_POLICE_SQL}`)
         // TODO: ensure 200 response
         .then((response) => response.json())
