@@ -24,13 +24,14 @@ footer
 #ui
 {
     position: fixed;
+    margin-left: 53px;
     z-index: 1000000;
 }
 
 #sidebar
 {
     position: relative;
-    margin: 10px 0 0 53px;
+    margin: 10px 0 0 0;
     padding: 15px;
     width: 250px;
     height: 600px;
