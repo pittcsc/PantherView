@@ -1,10 +1,11 @@
-# club_project_2017
-Spring semester Open Data club project!
+# Club Project 2017
+Pitt Computer Science Club spring semester (16-17) project with the Western Pennsylvania Regional Data Center (@wprdc) Open Data.
 
 ---
 
 ## Installing and running:
-Since our project is just an HTML file, you can simply load the file into your browser. Once you edit it and commit the changes it will be updated on GitHub.
+Since our project is just an HTML file, you can simply load the file into your browser.  
+Once you make edits, commit the changes, and push, your changes will be updated on GitHub.
 
 
 ## Getting started:
