@@ -61,7 +61,6 @@
             if (getDateDifference(currentDate, recordDate) <= 7) {
                 marker.pin.addTo(map);
             } else {
-                console.log(getDateDifference(currentDate, recordDate), marker.incidentDay);
                 map.removeLayer(marker.pin);
             }
         });
