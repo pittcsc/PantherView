@@ -20,13 +20,11 @@ Chris Seifried
 
 Colton Blake
 
-<<<<<<< HEAD
 Austin Marcus
-=======
+
 Sriram Iyer
 
 Sai Xu
 
 Benjamin Lodi
 
->>>>>>> upstream/master
