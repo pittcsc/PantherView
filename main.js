@@ -11,6 +11,20 @@
         maxBoundsViscosity: 0.90
     });
 
+    var sidebar = document.getElementById("sidebar");
+    var sidebarToggle = document.getElementById("sidebarToggle");
+
+    //Start with sidebar closed if mobile
+    if (screen.width <= 800) {
+        sidebarToggle.open = 0;
+        sidebar.className = "hidden";
+        sidebarToggle.className = "fa fa-chevron-right fa-3x";
+    } else {
+        sidebarToggle.open = 1;
+        sidebar.className = "shown";
+        sidebarToggle.className = "fa fa-chevron-left fa-3x";
+    }
+
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
@@ -29,7 +43,9 @@
     //30 days already)
     function displayPastDay() {
         markers.forEach((marker, i) => {
-            if (marker.incidentYear == currentDate.getFullYear() && marker.incidentMonth == currentDate.getMonth() + 1 && marker.incidentDay == currentDate.getDate()) {
+            if (marker.incidentYear == currentDate.getFullYear() &&
+                marker.incidentMonth == currentDate.getMonth() + 1 &&
+                marker.incidentDay == currentDate.getDate()) {
                 marker.pin.addTo(map);
             } else {
                 map.removeLayer(marker.pin);
@@ -39,9 +55,10 @@
 
     function displayPastWeek() {
         markers.forEach((marker, i) => {
-            var tmpDate = new Date(marker.incidentYear, marker.incidentMonth - 1, marker.incidentDay);
-            var diff = Math.ceil(Math.abs(currentDate.getTime() - tmpDate.getTime()) / (86400000));
-            if (diff <= 7) {
+            var recordDate = new Date(marker.incidentYear,
+                                      marker.incidentMonth - 1,
+                                      marker.incidentDay);
+            if (getDateDifference(currentDate, recordDate) <= 7) {
                 marker.pin.addTo(map);
             } else {
                 map.removeLayer(marker.pin);
@@ -55,17 +72,17 @@
         });
     }
 
-    //Displays and hides the sidebar for mobile
-    function displaySidebar() {
-      document.getElementById("sidebar").style = "display:block";
-      document.getElementById("mobileMenuIcon").style = "display:none";
-      document.getElementById("mobileHideMenu").style = "display:block";
-    }
-
-    function hideSidebar() {
-      document.getElementById("sidebar").style = "";
-      document.getElementById("mobileMenuIcon").style = "";
-      document.getElementById("mobileHideMenu").style = ""
+    //Displays and hides the sidebar
+    function toggleSidebar() {
+      if (sidebarToggle.open == 1) {
+          sidebarToggle.open = 0;
+          sidebar.className = "hidden";
+          sidebarToggle.className = "fa fa-chevron-right fa-3x";
+      } else {
+          sidebarToggle.open = 1;
+          sidebar.className = "shown";
+          sidebarToggle.className = "fa fa-chevron-left fa-3x";
+      }
     }
 
     //Add listeners for radio buttons
@@ -73,9 +90,8 @@
     document.getElementById("radioWeek").addEventListener("click", displayPastWeek);
     document.getElementById("radioMonth").addEventListener("click", displayPastMonth);
 
-    //Listeners for mobile menu
-    document.getElementById("mobileMenuIcon").addEventListener("click", displaySidebar);
-    document.getElementById("mobileHideMenu").addEventListener("click", hideSidebar);
+    //Listener for sidebar toggle
+    document.getElementById("sidebarToggle").addEventListener("click", toggleSidebar);
 
     //City of Pittsburgh police data
     const CITY_POLICE_API = "1797ead8-8262-41cc-9099-cbc8a161924b";
@@ -152,5 +168,10 @@
                 markers.push(record);
             });
         });
+
+    //Helper function that returns difference between two dates in days
+    function getDateDifference(dateA, dateB) {
+      return Math.floor(Math.abs(dateA.getTime() - dateB.getTime()) / 86400000);
+    }
 
 })(typeof window !== "undefined" ? window : {});
