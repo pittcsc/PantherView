@@ -16,6 +16,8 @@ Simon Cao
 
 Matthew Duing
 
+Daniel Zheng
+
 Chris Seifried
 
 Colton Blake
@@ -27,4 +29,3 @@ Sriram Iyer
 Sai Xu
 
 Benjamin Lodi
-
