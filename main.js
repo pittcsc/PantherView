@@ -17,11 +17,11 @@
     //Start with sidebar closed if mobile
     if (screen.width <= 800) {
         sidebarToggle.open = 0;
-        sidebar.style.display = "none";
+        sidebar.className = "hidden";
         sidebarToggle.className = "fa fa-chevron-right fa-3x";
     } else {
         sidebarToggle.open = 1;
-        sidebar.style.display = "block";
+        sidebar.className = "shown";
         sidebarToggle.className = "fa fa-chevron-left fa-3x";
     }
 
@@ -76,11 +76,11 @@
     function toggleSidebar() {
       if (sidebarToggle.open == 1) {
           sidebarToggle.open = 0;
-          sidebar.style.display = "none";
+          sidebar.className = "hidden";
           sidebarToggle.className = "fa fa-chevron-right fa-3x";
       } else {
           sidebarToggle.open = 1;
-          sidebar.style.display = "block";
+          sidebar.className = "shown";
           sidebarToggle.className = "fa fa-chevron-left fa-3x";
       }
     }

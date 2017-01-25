@@ -125,7 +125,6 @@ footer
 #sidebar {
     position: fixed;
     top: 30px;
-    display: block;
     padding: 15px;
     width: 250px;
     height: 100%;
@@ -133,6 +132,15 @@ footer
     box-shadow: 2px 2px 10px #a3a3a3;
 }
 
+.shown
+{
+    display: block;
+}
+
+.hidden
+{
+    display: none;
+}
 #controls
 {
     position: relative;
