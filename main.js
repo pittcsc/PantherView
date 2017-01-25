@@ -5,7 +5,7 @@
     var map = L.map('mapid').setView([40.4388, -79.9514], 15);
 
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&amp;copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     //Array of markers
@@ -56,6 +56,16 @@
     //City of Pittsburgh police data
     const CITY_POLICE_API = "1797ead8-8262-41cc-9099-cbc8a161924b";
     const CITY_POLICE_SQL = `SELECT * from "${CITY_POLICE_API}" WHERE "INCIDENTNEIGHBORHOOD" LIKE '%Oakland'`;
+    const CITY_POLICE_ICON = L.icon({
+        iconUrl: 'assets/map-pins/pin-police.png',
+        iconRetinaUrl: 'assets/map-pins/pin-police@2x.png',
+        iconSize: [32, 32],
+        iconAnchor: [15, 31],
+        shadowUrl: 'assets/map-pins/pin-shadow.png',
+        shadowRetinaUrl: 'assets/map-pins/pin-shadow@2x.png',
+        shadowSize: [32, 32],
+        shadowAnchor: [15, 31]
+    }); // TODO: make a global dictionary for these?
     fetch(`${WPRDC_BASE_URL}${CITY_POLICE_SQL}`)
         // TODO: ensure 200 response
         .then((response) => response.json())
@@ -69,7 +79,7 @@
                 record.incidentMonth = parseInt(record.INCIDENTTIME.substring(5,8));
                 record.incidentDay = parseInt(record.INCIDENTTIME.substring(8,10));
 
-                record.pin = L.marker([record.Y, record.X]);
+                record.pin = L.marker([record.Y, record.X], {icon: CITY_POLICE_ICON});
                 record.pin.addTo(map)
                     .bindPopup(`${record.OFFENSES}`);
 
@@ -82,6 +92,16 @@
     //City of Pittsburgh 311 data
     const CITY_311_API = "40776043-ad00-40f5-9dc8-1fde865ff571";
     const CITY_311_SQL = `SELECT * FROM "${CITY_311_API}" WHERE "NEIGHBORHOOD" LIKE '%Oakland' ORDER BY "CREATED_ON" DESC LIMIT 25`;
+    const CITY_311_ICON = L.icon({
+        iconUrl: 'assets/map-pins/pin-311.png',
+        iconRetinaUrl: 'assets/map-pins/pin-311@2x.png',
+        iconSize: [32, 32],
+        iconAnchor: [15, 31],
+        shadowUrl: 'assets/map-pins/pin-shadow.png',
+        shadowRetinaUrl: 'assets/map-pins/pin-shadow@2x.png',
+        shadowSize: [32, 32],
+        shadowAnchor: [15, 31]
+    });
     fetch(`${WPRDC_BASE_URL}${CITY_311_SQL}`)
         // TODO: ensure 200 response
         .then((response) => response.json())
@@ -97,6 +117,7 @@
                 record.incidentDay = parseInt(record.CREATED_ON.substring(8,10));
 
                 record.pin = L.marker([record.Y, record.X], {
+                    icon: CITY_311_ICON,
                     title: record.REQUEST_TYPE || 'default title',
                     zIndexOffset: 100
                 });
