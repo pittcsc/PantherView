@@ -55,10 +55,27 @@
         });
     }
 
+    //Displays and hides the sidebar for mobile
+    function displaySidebar() {
+      document.getElementById("sidebar").style = "display:block";
+      document.getElementById("mobileMenuIcon").style = "display:none";
+      document.getElementById("mobileHideMenu").style = "display:block";
+    }
+
+    function hideSidebar() {
+      document.getElementById("sidebar").style = "";
+      document.getElementById("mobileMenuIcon").style = "";
+      document.getElementById("mobileHideMenu").style = ""
+    }
+
     //Add listeners for radio buttons
     document.getElementById("radioDay").addEventListener("click", displayPastDay);
     document.getElementById("radioWeek").addEventListener("click", displayPastWeek);
     document.getElementById("radioMonth").addEventListener("click", displayPastMonth);
+
+    //Listeners for mobile menu
+    document.getElementById("mobileMenuIcon").addEventListener("click", displaySidebar);
+    document.getElementById("mobileHideMenu").addEventListener("click", hideSidebar);
 
     //City of Pittsburgh police data
     const CITY_POLICE_API = "1797ead8-8262-41cc-9099-cbc8a161924b";
