@@ -1,7 +1,10 @@
-import requests
+import urllib3
 import json
-site = requests.get(' https://data.wprdc.org/api/action/datastore_search_sql?sql=SELECT * FROM "40776043-ad00-40f5-9dc8-1fde865ff571" WHERE "NEIGHBORHOOD" LIKE \'%Oakland\' ORDER BY "CREATED_ON" DESC LIMIT 25')
 
-data = site.json()
-with open('data.txt', 'w') as outfile:
-  json.dump(data,outfile)
+http = urllib3.PoolManager()
+site = http.request('GET', 'https://data.wprdc.org/api/action/datastore_search', fields={"resource_id": "40776043-ad00-40f5-9dc8-1fde865ff571", "q": "oakland"})
+
+data = json.loads(site.data.decode('utf-8'))
+
+with open('data.txt','w') as fileout:
+	json.dump(data,fileout)
