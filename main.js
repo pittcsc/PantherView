@@ -2,7 +2,14 @@
     "use strict";
 
     // Oakland Coordinates: 40.4388 N, 79.9514 W (40.4388, -79.9514)
-    var map = L.map('mapid').setView([40.4388, -79.9514], 15);
+    // Cathy Coordinates: 40° 26′ 39″ N, 79° 57′ 11″ W (40.444167, -79.953056)
+    var map = L.map('mapid', {
+        center: [40.444167, -79.953056],
+        zoom: 15,
+        minZoom: 12,
+        maxBounds: L.latLngBounds([40.65, -80.25], [40.25, -79.70]),
+        maxBoundsViscosity: 0.90
+    });
 
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
