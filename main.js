@@ -170,9 +170,9 @@
             });
         });
 
-})(typeof window !== "undefined" ? window : {});
+    //Helper function that returns difference between two dates in days
+    function getDateDifference(dateA, dateB) {
+      return Math.floor(Math.abs(dateA.getTime() - dateB.getTime()) / 86400000);
+    }
 
-//Helper function that returns difference between two dates in days
-function getDateDifference(dateA, dateB) {
-  return Math.floor(Math.abs(dateA.getTime() - dateB.getTime()) / 86400000);
-}
+})(typeof window !== "undefined" ? window : {});
