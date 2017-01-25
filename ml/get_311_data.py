@@ -6,5 +6,5 @@ site = http.request('GET', 'https://data.wprdc.org/api/action/datastore_search',
 
 data = json.loads(site.data.decode('utf-8'))
 
-with open('data/data.json','w') as fileout:
+with open('data/data_311.json','w') as fileout:
 	json.dump(data,fileout)
