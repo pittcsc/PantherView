@@ -14,6 +14,11 @@ Once you make edits, commit the changes, and push, your changes will be updated 
 3. Submit a pull request
 4. Take a look at the Issues for more things to do
 
+## Getting started (machine learning):
+1. Do all the steps above
+2. `cd` to the `ml` directory
+3. Ensure you have Python 3.5.X installed, then run `pip install -r requirements.txt` (depending on config, may be `pip3` instead)
+
 ## Helpful links:
 
 ### Git and Github links:
