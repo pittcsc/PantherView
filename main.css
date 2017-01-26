@@ -150,44 +150,92 @@ footer
     text-align: left;
 }
 
-/* divIcon pin styles */
-.pin {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  border: solid 1px black;
-  border-radius: 50% 50% 50% 0;
-/*   box-shadow: -2px 2px rgba(0, 0, 0, 0.5); */
-  transform: rotate(-45deg);
-  white-space: nowrap; 
+/* divIcon pins */
+/* base styles */
+.pin
+{
+    position: relative;
+
+    width: 32px;
+    height: 32px;
 }
 
-.pin i {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  font-size: 16px;
-  transform: translateX(-50%) translateY(-50%) rotate(45deg);
-  display: block;
-  text-align: center;
+.pin:before
+{
+    position: absolute;
+    top: 10%;
+    left: 50%;
+
+    width: 24px;
+    height: 24px;
+
+    content: ' ';
+    transform: translateX(-50%) rotate(-45deg);
+    white-space: nowrap;
+
+    border: solid 1px black;
+    border-radius: 50% 50% 50% 0;
 }
 
-.pin.blue {
-  background: lightblue;
+.pin:after
+{
+    position: absolute;
+    /*z-index: -1;*/
+    top: 100%;
+    left: 50%;
+
+    width: 32px;
+    height: 12px;
+
+    content: ' ';
+    transform: translate(-50%, -25%);
+
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 100%);
 }
 
-.pin.red {
-  background: #ffaaaa;
+.pin i
+{
+    font-size: 16px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    display: block;
+
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center;
 }
 
-.pin.green {
-  background: #aaeeaa;
+/* pin colors */
+.pin.blue:before
+{
+    background: dodgerblue; /* FIXME: I'm a placeholder color */
 }
 
-.pin.black {
-  background: black;
-  border-color: white;
-  color: white;
+.pin.red:before
+{
+    background: orangered; /* FIXME: I'm a placeholder color */
 }
 
+.pin.green:before
+{
+    background: springgreen; /* FIXME: I'm a placeholder color */
+}
 
+.pin.yellow:before
+{
+    background: yellow; /* FIXME: I'm a placeholder color */
+}
+
+.pin.black:before
+{
+    background: #404040; /* FIXME: I'm a placeholder color */
+}
+
+/* We also need to invert the black pin's text color */
+.pin.black
+{
+    color: white; /* FIXME: I'm a placeholder color */
+}
