@@ -56,8 +56,8 @@
     function displayPastWeek() {
         markers.forEach((marker, i) => {
             var recordDate = new Date(marker.incidentYear,
-                                      marker.incidentMonth - 1,
-                                      marker.incidentDay);
+                marker.incidentMonth - 1,
+                marker.incidentDay);
             if (getDateDifference(currentDate, recordDate) <= 7) {
                 marker.pin.addTo(map);
             } else {
@@ -68,21 +68,21 @@
 
     function displayPastMonth() {
         markers.forEach((marker, i) => {
-                marker.pin.addTo(map);
+            marker.pin.addTo(map);
         });
     }
 
     //Displays and hides the sidebar
     function toggleSidebar() {
-      if (sidebarToggle.open == 1) {
-          sidebarToggle.open = 0;
-          sidebar.className = "hidden";
-          sidebarToggle.className = "fa fa-chevron-right fa-3x";
-      } else {
-          sidebarToggle.open = 1;
-          sidebar.className = "shown";
-          sidebarToggle.className = "fa fa-chevron-left fa-3x";
-      }
+        if (sidebarToggle.open == 1) {
+            sidebarToggle.open = 0;
+            sidebar.className = "hidden";
+            sidebarToggle.className = "fa fa-chevron-right fa-3x";
+        } else {
+            sidebarToggle.open = 1;
+            sidebar.className = "shown";
+            sidebarToggle.className = "fa fa-chevron-left fa-3x";
+        }
     }
 
     //Add listeners for radio buttons
@@ -111,15 +111,15 @@
         .then((response) => response.json())
         //TODO: should have some generic error handling for data
         .catch((err) => console.log(err))
-        .then((data) =>{
+        .then((data) => {
             const records = data.result.records;
             records.forEach((record, i) => {
                 //Collect time of incident from the record
-                record.incidentYear = parseInt(record.INCIDENTTIME.substring(0,4));
-                record.incidentMonth = parseInt(record.INCIDENTTIME.substring(5,8));
-                record.incidentDay = parseInt(record.INCIDENTTIME.substring(8,10));
+                record.incidentYear = parseInt(record.INCIDENTTIME.substring(0, 4));
+                record.incidentMonth = parseInt(record.INCIDENTTIME.substring(5, 8));
+                record.incidentDay = parseInt(record.INCIDENTTIME.substring(8, 10));
 
-                record.pin = L.marker([record.Y, record.X], {icon: CITY_POLICE_ICON});
+                record.pin = L.marker([record.Y, record.X], { icon: CITY_POLICE_ICON });
                 record.pin.addTo(map)
                     .bindPopup(`${record.OFFENSES}`);
 
@@ -152,9 +152,9 @@
             records.forEach((record, i) => {
 
                 //Collect time of incident from the record
-                record.incidentYear = parseInt(record.CREATED_ON.substring(0,4));
-                record.incidentMonth = parseInt(record.CREATED_ON.substring(5,8));
-                record.incidentDay = parseInt(record.CREATED_ON.substring(8,10));
+                record.incidentYear = parseInt(record.CREATED_ON.substring(0, 4));
+                record.incidentMonth = parseInt(record.CREATED_ON.substring(5, 8));
+                record.incidentDay = parseInt(record.CREATED_ON.substring(8, 10));
 
                 record.pin = L.marker([record.Y, record.X], {
                     icon: CITY_311_ICON,
@@ -171,7 +171,7 @@
 
     //Helper function that returns difference between two dates in days
     function getDateDifference(dateA, dateB) {
-      return Math.floor(Math.abs(dateA.getTime() - dateB.getTime()) / 86400000);
+        return Math.floor(Math.abs(dateA.getTime() - dateB.getTime()) / 86400000);
     }
 
 })(typeof window !== "undefined" ? window : {});
