@@ -173,5 +173,44 @@
     function getDateDifference(dateA, dateB) {
       return Math.floor(Math.abs(dateA.getTime() - dateB.getTime()) / 86400000);
     }
+    //Calls from the library db 
+    const LibraryAPI = "2ba0788a-2f35-43aa-a47c-89c75f55cf9d";
+    const Library_SQL = `SELECT * FROM "${LibraryAPI}" WHERE "Name" LIKE '%OAKLAND%'`;
+        const Library_ICON = L.icon({
+        iconUrl: 'assets/map-pins/pin-library.png',
+        iconRetinaUrl: 'assets/map-pins/pin-library@2x.png',
+        iconSize: [32, 32],
+        iconAnchor: [15, 31]
+    });
+    fetch(`${WPRDC_BASE_URL}${Library_SQL}`)
+        .then((response) => response.json())
+        .catch((err) => console.log(err))
+        .then((data) => {
+        const libRecords = data.result.records;
+        libRecords.forEach((record, i) => {
+            console.log(record);
+            //Library Icon from their twitter
+            record.pin = L.marker([record.Lat, record.Lon], {
+                    icon: Library_ICON,
+                    title: record.Name,
+                    zIndexOffset: 100
+                    });
+                // Probably a better way to format the library popup but its cleaner for now
+                record.pin.bindPopup(`
+                <strong>${record.Name}</strong>
+                <br> Address: ${record.Address}
+                <br> Phone: ${record.Phone}
+                <br> Monday: ${record.MoOpen.substring(0, 5)} - ${record.MoClose.substring(0, 5)}
+                <br> Tuesday: ${record.TuOpen.substring(0, 5)} - ${record.TuClose.substring(0, 5)}
+                <br> Wednesday: ${record.WeOpen.substring(0, 5)} - ${record.WeClose.substring(0, 5)}
+                <br> Thursday: ${record.ThOpen.substring(0, 5)} - ${record.ThClose.substring(0, 5)}
+                <br> Friday: ${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}
+                <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
+                <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
+                `);
+                record.pin.addTo(map);
+                markers.push(record);
+            });
+        });
 
 })(typeof window !== "undefined" ? window : {});
