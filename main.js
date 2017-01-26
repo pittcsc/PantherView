@@ -123,7 +123,8 @@
 
                 record.pin = L.marker([record.Y, record.X], { icon: CITY_POLICE_ICON });
                 record.pin.addTo(map)
-                    .bindPopup(`${popup}`);
+                //.bindPopup(`${record.OFFENSES}`);
+                    .bindPopup(JSONtoTable(record));
 
                 //Push the marker and date to their respective arrays
                 markers.push(record);
@@ -163,6 +164,7 @@
                     title: record.REQUEST_TYPE || 'default title',
                     zIndexOffset: 100
                 });
+                //record.pin.bindPopup(`<pre>${JSON.stringify(record, null, 2)}</pre>`);
                 record.pin.bindPopup(popup);
                 record.pin.addTo(map);
 
@@ -202,15 +204,14 @@
                 markers.push(record);
             });
         });
-        function JSONtoTable(result){
-            var table = "<table>"
-            for(var key in result){
-                if(key == "_full_text" || key == "pin") continue;
+    function JSONtoTable(result){
+        var table = "<table>"
+        for(var key in result){
+            if(key == "_full_text" || key == "pin") continue;
                 table += `<tr><td> ${key}</td><td>${result[key]}</td></tr>`
             }
             table+= "</table>"
             return table;
         }
-
 
 })(typeof window !== "undefined" ? window : {});
