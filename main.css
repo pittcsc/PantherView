@@ -104,25 +104,26 @@ footer
 
 #sidebarToggle:hover
 {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 #sidebarToggleContainer .fa-chevron-right
 {
-  background: #0D2A52;
-  color: white;
-  box-shadow: 2px 2px 10px #555555;
-  padding-left: 2px;
-  padding-right: 0px;
+    background: #0D2A52;
+    color: white;
+    box-shadow: 2px 2px 10px #555555;
+    padding-left: 2px;
+    padding-right: 0px;
 }
 
 #sidebarToggleContainer .fa-chevron-left
 {
-  left: 232px;
-  color: #0D2A52
+    left: 232px;
+    color: #0D2A52
 }
 
-#sidebar {
+#sidebar
+{
     position: fixed;
     top: 30px;
     padding: 15px;
