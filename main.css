@@ -152,7 +152,7 @@ footer
 
 /* divIcon pins */
 /* base styles */
-.pin
+.map-pin
 {
     position: relative;
 
@@ -160,7 +160,7 @@ footer
     height: 32px;
 }
 
-.pin:before
+.map-pin:before
 {
     position: absolute;
     top: 10%;
@@ -177,7 +177,7 @@ footer
     border-radius: 50% 50% 50% 0;
 }
 
-.pin:after
+.map-pin:after
 {
     position: absolute;
     /*z-index: -1;*/
@@ -194,7 +194,7 @@ footer
     background: radial-gradient(ellipse at center, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 100%);
 }
 
-.pin i
+.map-pin i
 {
     font-size: 16px;
 
@@ -209,33 +209,33 @@ footer
 }
 
 /* pin colors */
-.pin.blue:before
+.map-pin.blue:before
 {
     background: dodgerblue; /* FIXME: I'm a placeholder color */
 }
 
-.pin.red:before
+.map-pin.red:before
 {
     background: orangered; /* FIXME: I'm a placeholder color */
 }
 
-.pin.green:before
+.map-pin.green:before
 {
     background: springgreen; /* FIXME: I'm a placeholder color */
 }
 
-.pin.yellow:before
+.map-pin.yellow:before
 {
     background: yellow; /* FIXME: I'm a placeholder color */
 }
 
-.pin.black:before
+.map-pin.black:before
 {
     background: #404040; /* FIXME: I'm a placeholder color */
 }
 
 /* We also need to invert the black pin's text color */
-.pin.black
+.map-pin.black
 {
     color: white; /* FIXME: I'm a placeholder color */
 }
