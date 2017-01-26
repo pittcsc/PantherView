@@ -176,7 +176,7 @@
     //Calls from the library db 
     const LibraryAPI = "2ba0788a-2f35-43aa-a47c-89c75f55cf9d";
     const Library_SQL = `SELECT * FROM "${LibraryAPI}" WHERE "Name" LIKE '%OAKLAND%'`;
-        const Library_ICON = L.icon({
+    const Library_ICON = L.icon({
         iconUrl: 'assets/map-pins/pin-library.png',
         iconRetinaUrl: 'assets/map-pins/pin-library@2x.png',
         iconSize: [32, 32],
@@ -186,14 +186,14 @@
         .then((response) => response.json())
         .catch((err) => console.log(err))
         .then((data) => {
-        const libRecords = data.result.records;
-        libRecords.forEach((record, i) => {
-            //Library Icon from their twitter
-            record.pin = L.marker([record.Lat, record.Lon], {
+            const libRecords = data.result.records;
+            libRecords.forEach((record, i) => {
+                //Library Icon from their twitter
+                record.pin = L.marker([record.Lat, record.Lon], {
                     icon: Library_ICON,
                     title: record.Name,
                     zIndexOffset: 100
-                    });
+                });
                 // Probably a better way to format the library popup but its cleaner for now
                 record.pin.bindPopup(`
                 <strong>${record.Name}</strong>
