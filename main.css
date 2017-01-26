@@ -149,3 +149,45 @@ footer
     height: 100%;
     text-align: left;
 }
+
+/* divIcon pin styles */
+.pin {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: solid 1px black;
+  border-radius: 50% 50% 50% 0;
+/*   box-shadow: -2px 2px rgba(0, 0, 0, 0.5); */
+  transform: rotate(-45deg);
+  white-space: nowrap; 
+}
+
+.pin i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 16px;
+  transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  display: block;
+  text-align: center;
+}
+
+.pin.blue {
+  background: lightblue;
+}
+
+.pin.red {
+  background: #ffaaaa;
+}
+
+.pin.green {
+  background: #aaeeaa;
+}
+
+.pin.black {
+  background: black;
+  border-color: white;
+  color: white;
+}
+
+
