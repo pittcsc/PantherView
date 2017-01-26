@@ -188,7 +188,6 @@
         .then((data) => {
         const libRecords = data.result.records;
         libRecords.forEach((record, i) => {
-            console.log(record);
             //Library Icon from their twitter
             record.pin = L.marker([record.Lat, record.Lon], {
                     icon: Library_ICON,
