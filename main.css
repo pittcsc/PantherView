@@ -149,3 +149,93 @@ footer
     height: 100%;
     text-align: left;
 }
+
+/* divIcon pins */
+/* base styles */
+.map-pin
+{
+    position: relative;
+
+    width: 32px;
+    height: 32px;
+}
+
+.map-pin:before
+{
+    position: absolute;
+    top: 10%;
+    left: 50%;
+
+    width: 24px;
+    height: 24px;
+
+    content: ' ';
+    transform: translateX(-50%) rotate(-45deg);
+    white-space: nowrap;
+
+    border: solid 1px black;
+    border-radius: 50% 50% 50% 0;
+}
+
+.map-pin:after
+{
+    position: absolute;
+    /*z-index: -1;*/
+    top: 100%;
+    left: 50%;
+
+    width: 32px;
+    height: 12px;
+
+    content: ' ';
+    transform: translate(-50%, -25%);
+
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.map-pin i
+{
+    font-size: 16px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    display: block;
+
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center;
+}
+
+/* pin colors */
+.map-pin.blue:before
+{
+    background: dodgerblue; /* FIXME: I'm a placeholder color */
+}
+
+.map-pin.red:before
+{
+    background: orangered; /* FIXME: I'm a placeholder color */
+}
+
+.map-pin.green:before
+{
+    background: springgreen; /* FIXME: I'm a placeholder color */
+}
+
+.map-pin.yellow:before
+{
+    background: yellow; /* FIXME: I'm a placeholder color */
+}
+
+.map-pin.black:before
+{
+    background: #404040; /* FIXME: I'm a placeholder color */
+}
+
+/* We also need to invert the black pin's text color */
+.map-pin.black
+{
+    color: white; /* FIXME: I'm a placeholder color */
+}

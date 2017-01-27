@@ -96,15 +96,11 @@
     //City of Pittsburgh police data
     const CITY_POLICE_API = "1797ead8-8262-41cc-9099-cbc8a161924b";
     const CITY_POLICE_SQL = `SELECT * from "${CITY_POLICE_API}" WHERE "INCIDENTNEIGHBORHOOD" LIKE '%Oakland'`;
-    const CITY_POLICE_ICON = L.icon({
-        iconUrl: 'assets/map-pins/pin-police.png',
-        iconRetinaUrl: 'assets/map-pins/pin-police@2x.png',
+    const CITY_POLICE_ICON = L.divIcon({
+        className: 'map-pin blue',
+        html: '<i class="fa fa-balance-scale"></i>',
         iconSize: [32, 32],
-        iconAnchor: [15, 31],
-        shadowUrl: 'assets/map-pins/pin-shadow.png',
-        shadowRetinaUrl: 'assets/map-pins/pin-shadow@2x.png',
-        shadowSize: [32, 32],
-        shadowAnchor: [15, 31]
+        iconAnchor: [16, 32]
     }); // TODO: make a global dictionary for these?
     fetch(`${WPRDC_BASE_URL}${CITY_POLICE_SQL}`)
         // TODO: ensure 200 response
@@ -132,15 +128,11 @@
     //City of Pittsburgh 311 data
     const CITY_311_API = "40776043-ad00-40f5-9dc8-1fde865ff571";
     const CITY_311_SQL = `SELECT * FROM "${CITY_311_API}" WHERE "NEIGHBORHOOD" LIKE '%Oakland' ORDER BY "CREATED_ON" DESC LIMIT 25`;
-    const CITY_311_ICON = L.icon({
-        iconUrl: 'assets/map-pins/pin-311.png',
-        iconRetinaUrl: 'assets/map-pins/pin-311@2x.png',
+    const CITY_311_ICON = L.divIcon({
+        className: 'map-pin yellow',
+        html: '<i class="fa fa-commenting"></i>',
         iconSize: [32, 32],
-        iconAnchor: [15, 31],
-        shadowUrl: 'assets/map-pins/pin-shadow.png',
-        shadowRetinaUrl: 'assets/map-pins/pin-shadow@2x.png',
-        shadowSize: [32, 32],
-        shadowAnchor: [15, 31]
+        iconAnchor: [16, 32]
     });
     fetch(`${WPRDC_BASE_URL}${CITY_311_SQL}`)
         // TODO: ensure 200 response
@@ -176,11 +168,11 @@
     //Calls from the library db 
     const LibraryAPI = "2ba0788a-2f35-43aa-a47c-89c75f55cf9d";
     const Library_SQL = `SELECT * FROM "${LibraryAPI}" WHERE "Name" LIKE '%OAKLAND%'`;
-    const Library_ICON = L.icon({
-        iconUrl: 'assets/map-pins/pin-library.png',
-        iconRetinaUrl: 'assets/map-pins/pin-library@2x.png',
+    const Library_ICON = L.divIcon({
+        className: 'map-pin black',
+        html: '<i class="fa fa-book"></i>',
         iconSize: [32, 32],
-        iconAnchor: [15, 31]
+        iconAnchor: [16, 32]
     });
     fetch(`${WPRDC_BASE_URL}${Library_SQL}`)
         .then((response) => response.json())
