@@ -94,7 +94,6 @@
     const WPRDC_BASE_URL = 'https://data.wprdc.org/api/action/datastore_search_sql?sql=';
 
     // Marker Icons
-    // Note: Must use L.Icon.Default
     const iconTypes = {
         CITY_POLICE: L.divIcon({
             className: 'map-pin blue',
@@ -119,8 +118,10 @@
     const WPRDC_DATA_SOURCES = {
         "Police": {
             id: '1797ead8-8262-41cc-9099-cbc8a161924b',
-            primaryFiltering: 'WHERE "INCIDENTNEIGHBORHOOD" LIKE "%Oakland"',
+            primaryFiltering: 'WHERE "INCIDENTNEIGHBORHOOD" LIKE \'%Oakland\'',
+            latLong: ['Y', 'X'],
             icon: iconTypes.CITY_POLICE,
+
             popup: (record) => record['OFFENSES'],
 
             processRecord: (record) => {
@@ -135,8 +136,10 @@
         // TODO: would be great to prune 311 data to the last 30 days, like the police data
         "311": {
             id: '40776043-ad00-40f5-9dc8-1fde865ff571',
-            primaryFiltering: 'WHERE "NEIGHBORHOOD" LIKE "%Oakland" ORDER BY "CREATED_ON" DESC',
+            primaryFiltering: 'WHERE "NEIGHBORHOOD" LIKE \'%Oakland\' ORDER BY "CREATED_ON" DESC',
+            latLong: ['Y', 'X'],
             icon: iconTypes.CITY_311_ICON,
+
             popup: (record) => record['REQUEST_TYPE'],
 
             processRecord: (record) => {
@@ -150,8 +153,11 @@
         // Calls from the library db
         "Library": {
           id: "2ba0788a-2f35-43aa-a47c-89c75f55cf9d",
-          primaryFiltering: 'WHERE "Name" LIKE "%OAKLAND%"',
+          primaryFiltering: 'WHERE "Name" LIKE \'%OAKLAND%\'',
+          latLong: ['Lat', 'Lon'],
           icon: iconTypes.LIBRARY_ICON,
+
+          title: (record) => record['Name'],
           popup: (record) => `
             <strong>${record.Name}</strong>
             <br> Address: ${record.Address}
@@ -163,11 +169,7 @@
             <br> Friday: ${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}
             <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
             <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
-            `,
-
-          processRecord: (record) => {
-
-          }
+            `
         }
     };
 
@@ -180,12 +182,18 @@
         options = {};
       }
 
+      console.group(`${dataSourceName} API`);
+
       const dataSource = WPRDC_DATA_SOURCES[dataSourceName];
-      let query = WPRDC_QUERY_PREFIX + dataSource.id + WPRDC_QUERY_SUFFIX;
+      let query = WPRDC_QUERY_PREFIX + dataSource.id + WPRDC_QUERY_SUFFIX + dataSource.primaryFiltering;
 
       if (options.limit) {
+        console.log(`Limit set to: ${options.limit}`);
         query += ' LIMIT ' + options.limit;
       }
+
+      console.log(`Final query: ${query}`);
+      console.groupEnd();
 
       return fetch(WPRDC_BASE_URL + query)
           // TODO: ensure 200 response
@@ -196,17 +204,34 @@
               const records = data.result.records;
 
               records.forEach((record, i) => {
+                  // TODO: Check browser compatability for `instanceof Function`
                   if (dataSource.processRecord instanceof Function) {
                       dataSource.processRecord(record, i);
                   }
 
-                  if (record.X && record.Y) {
-                      record.pin = L.marker([record.Y, record.X], {
+                  const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
+                  const latLongNoNulls = latLong.some((field) => !!field);
+                  if (latLongNoNulls) {
+                      let title = null;
+                      if (dataSource.title instanceof Function) {
+                        title = dataSource.title(record);
+                      }
+
+                      record.pin = L.marker(latLong, {
+                          title: title,
                           icon: dataSource.icon
                       });
-                      record.pin.addTo(map).bindPopup(record[dataSource.popup]);
 
+                      if (dataSource.popup instanceof Function) {
+                        record.pin.bindPopup(dataSource.popup(record));
+                      } else {
+                        record.pin.bindPopup(record[dataSource.popup])
+                      }
+
+                      record.pin.addTo(map)
                       markers.push(record);
+                  } else {
+                    console.log('Found a null location!', record);
                   }
               })
           });
@@ -214,7 +239,8 @@
 
     Promise.all([
       fetchWPRDCData('Police', { limit: 250 }),
-      fetchWPRDCData('311', { limit: 250 })
+      fetchWPRDCData('311', { limit: 250 }),
+      fetchWPRDCData('Library')
     ]).then(() => {
       console.log('All data loaded');
     }).catch((err) => {
