@@ -108,7 +108,7 @@
             iconSize: [32, 32],
             iconAnchor: [16, 32]
         }),
-		CITY_ARREST: L.divIcon({
+		    CITY_ARREST: L.divIcon({
             className: 'map-pin red',
             html: '<i class="fa fa-gavel"></i>',
             iconSize: [32, 32],
@@ -146,9 +146,9 @@
                 record.incidentDay = parseInt(record.INCIDENTTIME.substring(8,10));
             }
         },
-		
-		"Arrest": {
-		    id: 'e03a89dd-134a-4ee8-a2bd-62c40aeebc6f',
+
+		    "Arrest": {
+		        id: 'e03a89dd-134a-4ee8-a2bd-62c40aeebc6f',
             primaryFiltering: 'WHERE "INCIDENTNEIGHBORHOOD" LIKE \'%Oakland\'',
             latLong: ['Y', 'X'],
             icon: iconTypes.CITY_ARREST,
@@ -163,7 +163,7 @@
                 record.incidentMonth = parseInt(record.ARRESTTIME.substring(5,8));
                 record.incidentDay = parseInt(record.ARRESTTIME.substring(8,10));
             }
-		},
+		    },
 
         // City of Pittsburgh 311 data
         // TODO: would be great to prune 311 data to the last 30 days, like the police data
@@ -256,7 +256,7 @@
     Promise.all([
         fetchWPRDCData('Police', { limit: 250 }),
         fetchWPRDCData('311', { limit: 250 }),
-		fetchWPRDCData('Arrest', { limit: 250 }),
+		    fetchWPRDCData('Arrest', { limit: 250 }),
         fetchWPRDCData('Library')
     ]).then(() => {
         console.log('All data loaded');
