@@ -3,8 +3,9 @@
 
     // Oakland Coordinates: 40.4388 N, 79.9514 W (40.4388, -79.9514)
     // Cathy Coordinates: 40° 26′ 39″ N, 79° 57′ 11″ W (40.444167, -79.953056)
+    const cathyLatLong = [40.444167, -79.953056];
     var map = L.map('mapid', {
-        center: [40.444167, -79.953056],
+        center: cathyLatLong,
         zoom: 15,
         minZoom: 12,
         maxBounds: L.latLngBounds([40.65, -80.25], [40.25, -79.70]),
@@ -90,7 +91,13 @@
     //Listener for sidebar toggle
     document.getElementById("sidebarToggle").addEventListener("click", toggleSidebar);
 
-    //WPRDC data
+    // Display a notification to the user
+    function displayNotification(messageText) {
+      // TODO: Actually make the notification instead of logging
+      console.log(messageText);
+    }
+
+    // WPRDC data
     const WPRDC_BASE_URL = 'https://data.wprdc.org/api/action/datastore_search_sql?sql=';
 
     // Marker Icons
@@ -122,6 +129,8 @@
             latLong: ['Y', 'X'],
             icon: iconTypes.CITY_POLICE,
 
+            // TODO: Better title and popup messages?
+            title: (record) => record['OFFENSES'],
             popup: (record) => record['OFFENSES'],
 
             processRecord: (record) => {
@@ -140,7 +149,10 @@
             latLong: ['Y', 'X'],
             icon: iconTypes.CITY_311_ICON,
 
-            popup: (record) => record['REQUEST_TYPE'],
+            title: (record) => record['REQUEST_TYPE'],
+            popup: (record) => `
+              <strong>${record['DEPARTMENT']}</strong>
+              <br> ${record['REQUEST_TYPE']}`,
 
             processRecord: (record) => {
                 // Collect time of incident from the record
@@ -152,24 +164,24 @@
 
         // Calls from the library db
         "Library": {
-          id: "2ba0788a-2f35-43aa-a47c-89c75f55cf9d",
-          primaryFiltering: 'WHERE "Name" LIKE \'%OAKLAND%\'',
-          latLong: ['Lat', 'Lon'],
-          icon: iconTypes.LIBRARY_ICON,
+            id: "2ba0788a-2f35-43aa-a47c-89c75f55cf9d",
+            primaryFiltering: 'WHERE "Name" LIKE \'%OAKLAND%\'',
+            latLong: ['Lat', 'Lon'],
+            icon: iconTypes.LIBRARY_ICON,
 
-          title: (record) => record['Name'],
-          popup: (record) => `
-            <strong>${record.Name}</strong>
-            <br> Address: ${record.Address}
-            <br> Phone: ${record.Phone}
-            <br> Monday: ${record.MoOpen.substring(0, 5)} - ${record.MoClose.substring(0, 5)}
-            <br> Tuesday: ${record.TuOpen.substring(0, 5)} - ${record.TuClose.substring(0, 5)}
-            <br> Wednesday: ${record.WeOpen.substring(0, 5)} - ${record.WeClose.substring(0, 5)}
-            <br> Thursday: ${record.ThOpen.substring(0, 5)} - ${record.ThClose.substring(0, 5)}
-            <br> Friday: ${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}
-            <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
-            <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
-            `
+            title: (record) => record['Name'],
+            popup: (record) => `
+              <strong>${record.Name}</strong>
+              <br> Address: ${record.Address}
+              <br> Phone: ${record.Phone}
+              <br> Monday: ${record.MoOpen.substring(0, 5)} - ${record.MoClose.substring(0, 5)}
+              <br> Tuesday: ${record.TuOpen.substring(0, 5)} - ${record.TuClose.substring(0, 5)}
+              <br> Wednesday: ${record.WeOpen.substring(0, 5)} - ${record.WeClose.substring(0, 5)}
+              <br> Thursday: ${record.ThOpen.substring(0, 5)} - ${record.ThClose.substring(0, 5)}
+              <br> Friday: ${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}
+              <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
+              <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
+              `
         }
     };
 
@@ -177,74 +189,53 @@
     const WPRDC_QUERY_SUFFIX = '" ';
 
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
-    function fetchWPRDCData(dataSourceName, options) {
-      if (!options) {
-        options = {};
-      }
+    function fetchWPRDCData(dataSourceName, options={}) {
+        const dataSource = WPRDC_DATA_SOURCES[dataSourceName];
+        let query = WPRDC_QUERY_PREFIX + dataSource.id + WPRDC_QUERY_SUFFIX + dataSource.primaryFiltering;
 
-      console.group(`${dataSourceName} API`);
+        if (options.limit) {
+          query += ' LIMIT ' + options.limit;
+        }
 
-      const dataSource = WPRDC_DATA_SOURCES[dataSourceName];
-      let query = WPRDC_QUERY_PREFIX + dataSource.id + WPRDC_QUERY_SUFFIX + dataSource.primaryFiltering;
+        return fetch(WPRDC_BASE_URL + query)
+            // TODO: ensure 200 response
+            .then((response) => response.json())
+            // TODO: should have some generic error handling for data
+            .catch((err) => displayNotification(err))
+            .then((data) => {
+                const records = data.result.records;
 
-      if (options.limit) {
-        console.log(`Limit set to: ${options.limit}`);
-        query += ' LIMIT ' + options.limit;
-      }
+                records.forEach((record, i) => {
+                    if (dataSource.processRecord) {
+                        dataSource.processRecord(record, i);
+                    }
 
-      console.log(`Final query: ${query}`);
-      console.groupEnd();
+                    const recordLatLong = dataSource.latLong.map((fieldName) => record[fieldName]);
+                    const latLongNoNulls = recordLatLong.some((field) => !!field);
+                    const latLong = latLongNoNulls ? recordLatLong : cathyLatLong;
 
-      return fetch(WPRDC_BASE_URL + query)
-          // TODO: ensure 200 response
-          .then((response) => response.json())
-          // TODO: should have some generic error handling for data
-          .catch((err) => console.log(err))
-          .then((data) => {
-              const records = data.result.records;
+                    const title = dataSource.title(record);
+                    record.pin = L.marker(latLong, {
+                        title: title,
+                        icon: dataSource.icon
+                    });
 
-              records.forEach((record, i) => {
-                  // TODO: Check browser compatability for `instanceof Function`
-                  if (dataSource.processRecord instanceof Function) {
-                      dataSource.processRecord(record, i);
-                  }
+                    record.pin.bindPopup(dataSource.popup(record));
 
-                  const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
-                  const latLongNoNulls = latLong.some((field) => !!field);
-                  if (latLongNoNulls) {
-                      let title = null;
-                      if (dataSource.title instanceof Function) {
-                        title = dataSource.title(record);
-                      }
-
-                      record.pin = L.marker(latLong, {
-                          title: title,
-                          icon: dataSource.icon
-                      });
-
-                      if (dataSource.popup instanceof Function) {
-                        record.pin.bindPopup(dataSource.popup(record));
-                      } else {
-                        record.pin.bindPopup(record[dataSource.popup])
-                      }
-
-                      record.pin.addTo(map)
-                      markers.push(record);
-                  } else {
-                    console.log('Found a null location!', record);
-                  }
-              })
-          });
+                    record.pin.addTo(map)
+                    markers.push(record);
+                })
+            });
     }
 
     Promise.all([
-      fetchWPRDCData('Police', { limit: 250 }),
-      fetchWPRDCData('311', { limit: 250 }),
-      fetchWPRDCData('Library')
+        fetchWPRDCData('Police', { limit: 250 }),
+        fetchWPRDCData('311', { limit: 250 }),
+        fetchWPRDCData('Library')
     ]).then(() => {
-      console.log('All data loaded');
+        console.log('All data loaded');
     }).catch((err) => {
-      console.log('error fetching data', err);
+        console.log('final error catch data', err);
     });
 
     //Helper function that returns difference between two dates in days
