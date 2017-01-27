@@ -153,8 +153,8 @@
             }
         },
 
-		    "Arrest": {
-		        id: 'e03a89dd-134a-4ee8-a2bd-62c40aeebc6f',
+        "Arrest": {
+            id: 'e03a89dd-134a-4ee8-a2bd-62c40aeebc6f',
             primaryFiltering: 'WHERE "INCIDENTNEIGHBORHOOD" LIKE \'%Oakland\'',
             latLong: ['Y', 'X'],
             icon: iconTypes.CITY_ARREST,
@@ -169,10 +169,10 @@
                 record.incidentMonth = parseInt(record.ARRESTTIME.substring(5,8));
                 record.incidentDay = parseInt(record.ARRESTTIME.substring(8,10));
             }
-		    },
+        },
 
         "Code Violation": {
-		        id: '4e5374be-1a88-47f7-afee-6a79317019b4',
+            id: '4e5374be-1a88-47f7-afee-6a79317019b4',
             primaryFiltering: 'WHERE "NEIGHBORHOOD" LIKE \'%Oakland\'',
             latLong: ['Y', 'X'],
             icon: iconTypes.CODE_VIOLATION,
@@ -189,7 +189,7 @@
                 record.incidentMonth = parseInt(record.INSPECTION_DATE.substring(5,8));
                 record.incidentDay = parseInt(record.INSPECTION_DATE.substring(8,10));
             }
-		    },
+        },
 
         // City of Pittsburgh 311 data
         // TODO: would be great to prune 311 data to the last 30 days, like the police data
