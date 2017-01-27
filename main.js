@@ -108,6 +108,12 @@
             iconSize: [32, 32],
             iconAnchor: [16, 32]
         }),
+		    CITY_ARREST: L.divIcon({
+            className: 'map-pin red',
+            html: '<i class="fa fa-gavel"></i>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32]
+        }),
         CITY_311_ICON: L.divIcon({
             className: 'map-pin yellow',
             html: '<i class="fa fa-commenting"></i>',
@@ -140,6 +146,24 @@
                 record.incidentDay = parseInt(record.INCIDENTTIME.substring(8,10));
             }
         },
+
+		    "Arrest": {
+		        id: 'e03a89dd-134a-4ee8-a2bd-62c40aeebc6f',
+            primaryFiltering: 'WHERE "INCIDENTNEIGHBORHOOD" LIKE \'%Oakland\'',
+            latLong: ['Y', 'X'],
+            icon: iconTypes.CITY_ARREST,
+
+            // TODO: Better title and popup messages?
+            title: (record) => record['OFFENSES'],
+            popup: (record) => record['OFFENSES'],
+
+            processRecord: (record) => {
+                // Collect time of incident from the record
+                record.incidentYear = parseInt(record.ARRESTTIME.substring(0,4));
+                record.incidentMonth = parseInt(record.ARRESTTIME.substring(5,8));
+                record.incidentDay = parseInt(record.ARRESTTIME.substring(8,10));
+            }
+		    },
 
         // City of Pittsburgh 311 data
         // TODO: would be great to prune 311 data to the last 30 days, like the police data
@@ -203,6 +227,7 @@
             // TODO: should have some generic error handling for data
             .catch((err) => displayNotification(err))
             .then((data) => {
+				console.log(dataSource.id, data);
                 const records = data.result.records;
 
                 records.forEach((record, i) => {
@@ -231,6 +256,7 @@
     Promise.all([
         fetchWPRDCData('Police', { limit: 250 }),
         fetchWPRDCData('311', { limit: 250 }),
+		    fetchWPRDCData('Arrest', { limit: 250 }),
         fetchWPRDCData('Library')
     ]).then(() => {
         console.log('All data loaded');
