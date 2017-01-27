@@ -116,14 +116,13 @@
             const records = data.result.records;
             records.forEach((record, i) => {
                 //Collect time of incident from the record
-                var popup = JSONtoTable(record);
                 record.incidentYear = parseInt(record.INCIDENTTIME.substring(0, 4));
                 record.incidentMonth = parseInt(record.INCIDENTTIME.substring(5, 8));
                 record.incidentDay = parseInt(record.INCIDENTTIME.substring(8, 10));
 
                 record.pin = L.marker([record.Y, record.X], { icon: CITY_POLICE_ICON });
                 record.pin.addTo(map)
-                //.bindPopup(`${record.OFFENSES}`);
+                
                     .bindPopup(JSONtoTable(record));
 
                 //Push the marker and date to their respective arrays
@@ -153,7 +152,6 @@
         .then((data) => {
             const records = data.result.records;
             records.forEach((record, i) => {
-                var popup = JSONtoTable(record);
                 //Collect time of incident from the record
                 record.incidentYear = parseInt(record.CREATED_ON.substring(0, 4));
                 record.incidentMonth = parseInt(record.CREATED_ON.substring(5, 8));
@@ -164,8 +162,7 @@
                     title: record.REQUEST_TYPE || 'default title',
                     zIndexOffset: 100
                 });
-                //record.pin.bindPopup(`<pre>${JSON.stringify(record, null, 2)}</pre>`);
-                record.pin.bindPopup(popup);
+                record.pin.bindPopup(JSONtoTable(record));
                 record.pin.addTo(map);
 
                 //Push the marker and date to their respective arrays
@@ -208,8 +205,8 @@
         var table = "<table>"
         for(var key in result){
             if(key == "_full_text" || key == "pin") continue;
-                table += `<tr><td> ${key}</td><td>${result[key]}</td></tr>`
-            }
+            table += `<tr><td> ${key}</td><td>${result[key]}</td></tr>`
+        }
             table+= "</table>"
             return table;
         }
