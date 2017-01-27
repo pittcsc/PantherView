@@ -108,6 +108,7 @@
         //TODO: should have some generic error handling for data
         .catch((err) => console.log(err))
         .then((data) => {
+            
             const records = data.result.records;
             records.forEach((record, i) => {
                 //Collect time of incident from the record
@@ -117,7 +118,8 @@
 
                 record.pin = L.marker([record.Y, record.X], { icon: CITY_POLICE_ICON });
                 record.pin.addTo(map)
-                    .bindPopup(`${record.OFFENSES}`);
+                
+                    .bindPopup(JSONtoTable(record));
 
                 //Push the marker and date to their respective arrays
                 markers.push(record);
@@ -142,7 +144,6 @@
         .then((data) => {
             const records = data.result.records;
             records.forEach((record, i) => {
-
                 //Collect time of incident from the record
                 record.incidentYear = parseInt(record.CREATED_ON.substring(0, 4));
                 record.incidentMonth = parseInt(record.CREATED_ON.substring(5, 8));
@@ -153,7 +154,7 @@
                     title: record.REQUEST_TYPE || 'default title',
                     zIndexOffset: 100
                 });
-                record.pin.bindPopup(`<pre>${JSON.stringify(record, null, 2)}</pre>`);
+                record.pin.bindPopup(JSONtoTable(record));
                 record.pin.addTo(map);
 
                 //Push the marker and date to their respective arrays
@@ -187,21 +188,19 @@
                     zIndexOffset: 100
                 });
                 // Probably a better way to format the library popup but its cleaner for now
-                record.pin.bindPopup(`
-                <strong>${record.Name}</strong>
-                <br> Address: ${record.Address}
-                <br> Phone: ${record.Phone}
-                <br> Monday: ${record.MoOpen.substring(0, 5)} - ${record.MoClose.substring(0, 5)}
-                <br> Tuesday: ${record.TuOpen.substring(0, 5)} - ${record.TuClose.substring(0, 5)}
-                <br> Wednesday: ${record.WeOpen.substring(0, 5)} - ${record.WeClose.substring(0, 5)}
-                <br> Thursday: ${record.ThOpen.substring(0, 5)} - ${record.ThClose.substring(0, 5)}
-                <br> Friday: ${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}
-                <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
-                <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
-                `);
+                record.pin.bindPopup(JSONtoTable(record));
                 record.pin.addTo(map);
                 markers.push(record);
             });
         });
+    function JSONtoTable(result){
+        var table = "<table>"
+        for(var key in result){
+            if(key == "_full_text" || key == "pin") continue;
+            table += `<tr><td> ${key}</td><td>${result[key]}</td></tr>`
+        }
+            table+= "</table>"
+            return table;
+        }
 
 })(typeof window !== "undefined" ? window : {});
