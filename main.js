@@ -32,6 +32,7 @@
 
     //Array of markers
     var markers = new Array();
+    var nullRecords = new Array();
 
     //Create a new Date object for the current date
     var currentDate = new Date();
@@ -235,20 +236,22 @@
                         dataSource.processRecord(record, i);
                     }
 
-                    const recordLatLong = dataSource.latLong.map((fieldName) => record[fieldName]);
-                    const latLongNoNulls = recordLatLong.some((field) => !!field);
-                    const latLong = latLongNoNulls ? recordLatLong : cathyLatLong;
+                    const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
+                    const latLongNoNulls = latLong.some((field) => !!field);
+                    if (latLongNoNulls) {
+                        const title = dataSource.title(record);
+                        record.pin = L.marker(latLong, {
+                            title: title,
+                            icon: dataSource.icon
+                        });
 
-                    const title = dataSource.title(record);
-                    record.pin = L.marker(latLong, {
-                        title: title,
-                        icon: dataSource.icon
-                    });
+                        record.pin.bindPopup(dataSource.popup(record));
 
-                    record.pin.bindPopup(dataSource.popup(record));
-
-                    record.pin.addTo(map)
-                    markers.push(record);
+                        record.pin.addTo(map);
+                        markers.push(record);
+                    } else {
+                        nullRecords.push(record);
+                    }
                 })
             });
     }
