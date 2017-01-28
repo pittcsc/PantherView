@@ -42,9 +42,15 @@
     //30 days already)
     function displayPastDay() {
         markers.forEach((marker, i) => {
+
+            //Check if library or other non-dated pin
+            if (!marker.incidentYear)
+                return;
+
             if (marker.incidentYear == currentDate.getFullYear() &&
                 marker.incidentMonth == currentDate.getMonth() + 1 &&
-                marker.incidentDay == currentDate.getDate()) {
+                marker.incidentDay == currentDate.getDate() &&
+                !marker.filtered) {
                 marker.pin.addTo(map);
             } else {
                 map.removeLayer(marker.pin);
@@ -54,10 +60,15 @@
 
     function displayPastWeek() {
         markers.forEach((marker, i) => {
+
+            if (!marker.incidentYear)
+                return;
+
             var recordDate = new Date(marker.incidentYear,
                 marker.incidentMonth - 1,
                 marker.incidentDay);
-            if (getDateDifference(currentDate, recordDate) <= 7) {
+            if (getDateDifference(currentDate, recordDate) <= 7 &&
+                !marker.filtered) {
                 marker.pin.addTo(map);
             } else {
                 map.removeLayer(marker.pin);
@@ -67,7 +78,26 @@
 
     function displayPastMonth() {
         markers.forEach((marker, i) => {
-            marker.pin.addTo(map);
+            if (!marker.filtered) {
+                marker.pin.addTo(map);
+            }
+        });
+    }
+
+    function filterDisplay(e) {
+        var elm = e.target;
+        var type = /.+?(?=[A-Z])/.exec(elm.id)[0];
+
+        markers.forEach((marker) => {
+            if (marker.type == type) {
+                if (elm.checked == true) {
+                  marker.pin.addTo(map);
+                  marker.filtered = false;
+                } else {
+                  map.removeLayer(marker.pin);
+                  marker.filtered = true;
+                }
+            }
         });
     }
 
@@ -84,10 +114,17 @@
         }
     }
 
-    //Add listeners for radio buttons
+    //Listeners for date buttons
     document.getElementById("radioDay").addEventListener("click", displayPastDay);
     document.getElementById("radioWeek").addEventListener("click", displayPastWeek);
     document.getElementById("radioMonth").addEventListener("click", displayPastMonth);
+
+    //Listerners for type filter buttons
+    document.getElementById("policeCheck").addEventListener("click", filterDisplay);
+    document.getElementById("codeCheck").addEventListener("click", filterDisplay);
+    document.getElementById("libraryCheck").addEventListener("click", filterDisplay);
+    document.getElementById("arrestCheck").addEventListener("click", filterDisplay);
+    document.getElementById("311Check").addEventListener("click", filterDisplay);
 
     //Listener for sidebar toggle
     document.getElementById("sidebarToggle").addEventListener("click", toggleSidebar);
@@ -151,6 +188,7 @@
                 record.incidentYear = parseInt(record.INCIDENTTIME.substring(0,4));
                 record.incidentMonth = parseInt(record.INCIDENTTIME.substring(5,8));
                 record.incidentDay = parseInt(record.INCIDENTTIME.substring(8,10));
+                record.type = "police";
             }
         },
 
@@ -169,6 +207,8 @@
                 record.incidentYear = parseInt(record.ARRESTTIME.substring(0,4));
                 record.incidentMonth = parseInt(record.ARRESTTIME.substring(5,8));
                 record.incidentDay = parseInt(record.ARRESTTIME.substring(8,10));
+                record.type = "arrest";
+
             }
         },
 
@@ -189,6 +229,7 @@
                 record.incidentYear = parseInt(record.INSPECTION_DATE.substring(0,4));
                 record.incidentMonth = parseInt(record.INSPECTION_DATE.substring(5,8));
                 record.incidentDay = parseInt(record.INSPECTION_DATE.substring(8,10));
+                record.type = "code";
             }
         },
 
@@ -210,6 +251,7 @@
                 record.incidentYear = parseInt(record.CREATED_ON.substring(0,4));
                 record.incidentMonth = parseInt(record.CREATED_ON.substring(5,8));
                 record.incidentDay = parseInt(record.CREATED_ON.substring(8,10));
+                record.type = "311";
             }
         },
 
@@ -232,7 +274,11 @@
               <br> Friday: ${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}
               <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
               <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
-              `
+              `,
+
+            processRecord: (record) => {
+              record.type = "library";
+            }
         }
     };
 
@@ -264,6 +310,16 @@
 
                     const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
                     const latLongNoNulls = latLong.some((field) => !!field);
+
+                    //Prune to last 30 days
+                    if (record.incidentYear) {
+                      if (getDateDifference(currentDate, new Date(record.incidentYear,
+                          record.incidentMonth - 1,
+                          record.incidentDay)) > 30) {
+                            return;
+                      }
+                    }
+
                     if (latLongNoNulls) {
                         const title = dataSource.title(record);
                         record.pin = L.marker(latLong, {
