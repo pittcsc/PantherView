@@ -166,14 +166,14 @@
             html: '<i class="fa fa-book"></i>',
             iconSize: [32, 32],
             iconAnchor: [16, 32],
-            popupAnchor: [0, -16]            
+            popupAnchor: [0, -16]
         }),
         CODE_VIOLATION: L.divIcon({
             className: 'map-pin green',
             html: '<i class="fa fa-times-circle"></i>',
             iconSize: [32, 32],
             iconAnchor: [16, 32],
-            popupAnchor: [0, -16]            
+            popupAnchor: [0, -16]
         })
     };
 
