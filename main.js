@@ -126,6 +126,12 @@
             html: '<i class="fa fa-book"></i>',
             iconSize: [32, 32],
             iconAnchor: [16, 32]
+        }),
+        CODE_VIOLATION: L.divIcon({
+            className: 'map-pin green',
+            html: '<i class="fa fa-times-circle"></i>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32]
         })
     };
 
@@ -148,8 +154,8 @@
             }
         },
 
-		    "Arrest": {
-		        id: 'e03a89dd-134a-4ee8-a2bd-62c40aeebc6f',
+        "Arrest": {
+            id: 'e03a89dd-134a-4ee8-a2bd-62c40aeebc6f',
             primaryFiltering: 'WHERE "INCIDENTNEIGHBORHOOD" LIKE \'%Oakland\'',
             latLong: ['Y', 'X'],
             icon: iconTypes.CITY_ARREST,
@@ -164,7 +170,27 @@
                 record.incidentMonth = parseInt(record.ARRESTTIME.substring(5,8));
                 record.incidentDay = parseInt(record.ARRESTTIME.substring(8,10));
             }
-		    },
+        },
+
+        "Code Violation": {
+            id: '4e5374be-1a88-47f7-afee-6a79317019b4',
+            primaryFiltering: 'WHERE "NEIGHBORHOOD" LIKE \'%Oakland\'',
+            latLong: ['Y', 'X'],
+            icon: iconTypes.CODE_VIOLATION,
+
+            // TODO: Better title and popup messages?
+            title: (record) => record['VIOLATION'],
+            popup: (record) => `<strong>${record['VIOLATION']}:</strong>
+            ${record['LOCATION']}<br>
+            ${record['STREET_NUM']} ${record['STREET_NAME']}`,
+
+            processRecord: (record) => {
+                // Collect time of incident from the record
+                record.incidentYear = parseInt(record.INSPECTION_DATE.substring(0,4));
+                record.incidentMonth = parseInt(record.INSPECTION_DATE.substring(5,8));
+                record.incidentDay = parseInt(record.INSPECTION_DATE.substring(8,10));
+            }
+        },
 
         // City of Pittsburgh 311 data
         // TODO: would be great to prune 311 data to the last 30 days, like the police data
@@ -260,6 +286,7 @@
         fetchWPRDCData('Police', { limit: 250 }),
         fetchWPRDCData('311', { limit: 250 }),
 		    fetchWPRDCData('Arrest', { limit: 250 }),
+        fetchWPRDCData('Code Violation', { limit: 250 }),
         fetchWPRDCData('Library')
     ]).then(() => {
         console.log('All data loaded');
