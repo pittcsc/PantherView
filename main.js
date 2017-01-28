@@ -32,7 +32,7 @@
 
     //Array of markers
     var markers = new Array();
-    var nullRecords = new Array();
+    var nonPlacedRecords = new Array();
 
     //Create a new Date object for the current date
     var currentDate = new Date();
@@ -276,7 +276,7 @@
                         record.pin.addTo(map);
                         markers.push(record);
                     } else {
-                        nullRecords.push(record);
+                        nonPlacedRecords.push(record);
                     }
                 })
             });
