@@ -1,4 +1,4 @@
-# Club Project 2017
+# PantherView
 Pitt Computer Science Club spring semester (16-17) project with the Western Pennsylvania Regional Data Center (@wprdc) Open Data.
 
 ---
