@@ -7,17 +7,6 @@ html, body
     flex-direction: column;
 }
 
-footer
-{
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 20px;
-    z-index: 9999;
-    background-color: transparent;
-}
-
 #mapid
 {
     height: 100%;
@@ -120,6 +109,18 @@ footer
 {
     left: 232px;
     color: #0D2A52
+}
+
+#sidebar footer
+{
+    position: fixed;
+    bottom: 0;
+    right: 1;
+    width: 255px;
+    height: 20px;
+    font-size: 10px;
+    z-index: 9999;
+    background-color: transparent;
 }
 
 #sidebar
