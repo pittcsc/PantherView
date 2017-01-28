@@ -18,12 +18,14 @@ html, body
     position: fixed;
     z-index: 1000000;
     font-family: "Roboto", sans-serif;
+    letter-spacing: .04em;
+    font-weight: 300;
 }
 
 #ui h2, h3
 {
     font-family: "Roboto Medium", sans-serif;
-    font-weight: normal;
+    font-weight: 300;
 }
 
 /* Moves the zoom control */
@@ -37,25 +39,39 @@ html, body
 #header
 {
     position: fixed;
-    height: 30px;
+    height: 45px;
     width: 100%;
     color: white;
     box-sizing: border-box;
-    background: #0D2A52;
+    background: #00254A; /* color picked from Pitt website */
+    line-height: 45px;
 }
 
-#header h3
+#header a{
+  color: white;
+}
+
+#logo{
+  float: left;
+  margin: 0 10px 0 15px;
+  max-width: 45px;
+  max-height: 45px;
+}
+
+#header h1
 {
     float: left;
     margin: 0;
-    padding: 4px 0 0 10px;
+    padding: 0 0 0 4px;
+    font-weight: lighter;
+    font-size: 1.6em;
 }
 
 #header ul
 {
     float: right;
     margin: 0;
-    padding: 0 10px 0 0;
+    padding: 0 0 0 0;
     list-style-type: none;
     background-color: transparent;
 }
@@ -63,19 +79,20 @@ html, body
 #header li
 {
     float: left;
-    height: 30px;
+    height: 45px;
     box-sizing: border-box;
+    width: 100px;
 }
 
 #header li a
 {
     display: block;
-    height: 30px;
+    height: 45px;
     text-align: center;
     text-decoration: none;
     box-sizing: border-box;
     color: white;
-    padding: 5px;
+
 }
 
 #header li a:hover
@@ -126,7 +143,7 @@ html, body
 #sidebar
 {
     position: fixed;
-    top: 30px;
+    top: 45px;
     padding: 15px;
     width: 250px;
     height: 100%;
