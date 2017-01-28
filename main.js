@@ -334,6 +334,8 @@
                       }
                     }
 
+                    record.inDate = true;
+
                     if (latLongNoNulls) {
                         const title = dataSource.title(record);
                         record.pin = L.marker(latLong, {
