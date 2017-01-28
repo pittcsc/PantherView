@@ -144,31 +144,36 @@
             className: 'map-pin blue',
             html: '<i class="fa fa-balance-scale"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
         }),
-		    CITY_ARREST: L.divIcon({
+        CITY_ARREST: L.divIcon({
             className: 'map-pin red',
             html: '<i class="fa fa-gavel"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
         }),
         CITY_311_ICON: L.divIcon({
             className: 'map-pin yellow',
             html: '<i class="fa fa-commenting"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
         }),
         LIBRARY_ICON: L.divIcon({
             className: 'map-pin black',
             html: '<i class="fa fa-book"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]            
         }),
         CODE_VIOLATION: L.divIcon({
             className: 'map-pin green',
             html: '<i class="fa fa-times-circle"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]            
         })
     };
 
