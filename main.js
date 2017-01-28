@@ -49,11 +49,14 @@
 
             if (marker.incidentYear == currentDate.getFullYear() &&
                 marker.incidentMonth == currentDate.getMonth() + 1 &&
-                marker.incidentDay == currentDate.getDate() &&
-                !marker.filtered) {
-                marker.pin.addTo(map);
+                marker.incidentDay == currentDate.getDate()) {
+                marker.inDate = true;
+                if (!marker.filtered) {
+                    marker.pin.addTo(map);
+                }
             } else {
                 map.removeLayer(marker.pin);
+                marker.inDate = false;
             }
         });
     }
@@ -67,17 +70,21 @@
             var recordDate = new Date(marker.incidentYear,
                 marker.incidentMonth - 1,
                 marker.incidentDay);
-            if (getDateDifference(currentDate, recordDate) <= 7 &&
-                !marker.filtered) {
-                marker.pin.addTo(map);
+            if (getDateDifference(currentDate, recordDate) <= 7) {
+                marker.inDate = true;
+                if (!marker.filtered) {
+                    marker.pin.addTo(map);
+                }
             } else {
                 map.removeLayer(marker.pin);
+                marker.inDate = false;
             }
         });
     }
 
     function displayPastMonth() {
         markers.forEach((marker, i) => {
+            marker.inDate = true;            
             if (!marker.filtered) {
                 marker.pin.addTo(map);
             }
@@ -91,11 +98,13 @@
         markers.forEach((marker) => {
             if (marker.type == type) {
                 if (elm.checked == true) {
-                  marker.pin.addTo(map);
-                  marker.filtered = false;
+                    if (marker.inDate) {
+                        marker.pin.addTo(map);
+                    }
+                    marker.filtered = false;
                 } else {
-                  map.removeLayer(marker.pin);
-                  marker.filtered = true;
+                    map.removeLayer(marker.pin);
+                    marker.filtered = true;
                 }
             }
         });
