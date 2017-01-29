@@ -135,10 +135,35 @@
     //Listener for sidebar toggle
     document.getElementById("sidebarToggle").addEventListener("click", toggleSidebar);
 
-    // Display a notification to the user
-    function displayNotification(messageText) {
-      // TODO: Actually make the notification instead of logging
-      console.log(messageText);
+    // Display a notification to the user.
+    // Style is optional, can be "error", "warning", or "success"
+    function displayNotification(messageText, style) {
+        var notificationArea = document.getElementById("notifications");
+        var box = document.createElement("div");
+        box.className = "notification";
+
+        if (style != undefined) {
+            box.className += " " + style;
+        }
+
+        var closeButton = document.createElement("a");
+        closeButton.className = "close";
+        closeButton.href = "#";
+        closeButton.appendChild(document.createTextNode("X"))
+        box.appendChild(closeButton);
+
+        var textarea = document.createTextNode(messageText);
+        box.appendChild(textarea);
+
+        var topNotification = notificationArea.firstChild;
+        notificationArea.appendChild(box);
+        notificationArea.insertBefore(box, topNotification);
+
+        box.addEventListener("click", function() {
+            box.style.display = "none";
+        });
+
+        console.log(messageText);
     }
 
     // WPRDC data
@@ -302,7 +327,7 @@
             // TODO: ensure 200 response
             .then((response) => response.json())
             // TODO: should have some generic error handling for data
-            .catch((err) => displayNotification(err))
+            .catch((err) => displayNotification(err, "error"))
             .then((data) => {
                 const records = data.result.records;
 
