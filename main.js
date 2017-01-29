@@ -95,19 +95,23 @@
         var elm = e.target;
         var type = /.+?(?=[A-Z])/.exec(elm.id)[0];
 
-        markers.forEach((marker) => {
-            if (marker.type === type) {
-                if (elm.checked) {
+        if (elm.checked) {
+            markers.forEach((marker) => {
+                if (marker.type === type) {
                     if (marker.inDate) {
                         marker.pin.addTo(map);
                     }
                     marker.filtered = false;
-                } else {
+                }
+            });
+        } else {
+            markers.forEach((marker) => {
+                if (marker.type === type) {
                     map.removeLayer(marker.pin);
                     marker.filtered = true;
                 }
-            }
-        });
+            });
+        }
     }
 
     //Displays and hides the sidebar
@@ -300,20 +304,21 @@
             // TODO: should have some generic error handling for data
             .catch((err) => displayNotification(err))
             .then((data) => {
-				console.log(dataSource.id, data);
+                console.log(dataSource.id, data);
                 const records = data.result.records;
 
                 var filterContainer = document.createElement("div");
-                filterContainer.className = "checkBtn";
+                filterContainer.className = "typeBtn";
 
                 var filter = document.createElement("input");
-                filter.type = "checkbox";
                 filter.id = dataSourceName.toLowerCase() + "Check";
+                filter.type = "checkbox";
                 filter.checked = true;
 
                 var filterLabel = document.createElement("label");
                 filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
-                filterLabel.innerHTML = dataSource.icon.options.html;
+                filterLabel.innerHTML = dataSource.icon.options.html + " - " +
+                    dataSourceName;
 
                 filter.addEventListener("click", filterDisplay);
 
