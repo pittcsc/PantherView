@@ -4,13 +4,65 @@
     // Oakland Coordinates: 40.4388 N, 79.9514 W (40.4388, -79.9514)
     // Cathy Coordinates: 40° 26′ 39″ N, 79° 57′ 11″ W (40.444167, -79.953056)
     const cathyLatLong = [40.444167, -79.953056];
-    var map = L.map('mapid', {
-        center: cathyLatLong,
-        zoom: 15,
-        minZoom: 12,
-        maxBounds: L.latLngBounds([40.65, -80.25], [40.25, -79.70]),
-        maxBoundsViscosity: 0.90
-    });
+    var map = {};
+
+    // Determine if the user's browser has geolocation services
+    // If yes, set the center of the map to their current location
+    // If not, set the center of the map to Cathy
+    if (navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(locationSuccess, locationFailure, options);
+    } else {
+        loadMap(cathyLatLong, 15);
+    }
+
+    // User accepted location services
+    // Set center of map to their current location
+    function locationSuccess(position){
+        var currentLatitude = position.coords.latitude;
+        var currentLongitude = position.coords.longitude;
+        var userCoordinates = [currentLatitude, currentLongitude];
+        loadMap(userCoordinates, 17);
+    }
+
+    // User denied location services
+    // Set center of map to Cathy
+    function locationFailure(){
+        loadMap(cathyLatLong, 15);
+    }
+
+    // Options for geolocation services
+    var options = {
+      enableHighAccuracy: false,
+      timeout: 5000,
+      maximumAge: 60000
+    };
+
+    // Initialize the map
+    function loadMap(centerCoordinates, centerZoom){
+      map = L.map('mapid', {
+          center: centerCoordinates,
+          zoom: centerZoom,
+          minZoom: 12,
+          maxBounds: L.latLngBounds([40.65, -80.25], [40.25, -79.70]),
+          maxBoundsViscosity: 0.90
+      });
+
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      Promise.all([
+          fetchWPRDCData('Police', { limit: 250 }),
+          fetchWPRDCData('311', { limit: 250 }),
+          fetchWPRDCData('Arrest', { limit: 250 }),
+          fetchWPRDCData('Code Violation', { limit: 250 }),
+          fetchWPRDCData('Library')
+      ]).then(() => {
+          console.log('All data loaded');
+      }).catch((err) => {
+          console.log('final error catch data', err);
+      });
+    }
 
     var sidebar = document.getElementById("sidebar");
     var sidebarToggle = document.getElementById("sidebarToggle");
@@ -26,9 +78,6 @@
         sidebarToggle.className = "fa fa-chevron-left fa-3x";
     }
 
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
 
     //Array of markers
     var markers = new Array();
@@ -363,17 +412,6 @@
             });
     }
 
-    Promise.all([
-        fetchWPRDCData('Police', { limit: 250 }),
-        fetchWPRDCData('311', { limit: 250 }),
-		    fetchWPRDCData('Arrest', { limit: 250 }),
-        fetchWPRDCData('Code Violation', { limit: 250 }),
-        fetchWPRDCData('Library')
-    ]).then(() => {
-        console.log('All data loaded');
-    }).catch((err) => {
-        console.log('final error catch data', err);
-    });
 
     //Helper function that returns difference between two dates in days
     function getDateDifference(dateA, dateB) {
