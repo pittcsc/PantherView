@@ -96,8 +96,8 @@
         var type = /.+?(?=[A-Z])/.exec(elm.id)[0];
 
         markers.forEach((marker) => {
-            if (marker.type == type) {
-                if (elm.checked == true) {
+            if (marker.type === type) {
+                if (elm.checked) {
                     if (marker.inDate) {
                         marker.pin.addTo(map);
                     }
@@ -127,13 +127,6 @@
     document.getElementById("radioDay").addEventListener("click", displayPastDay);
     document.getElementById("radioWeek").addEventListener("click", displayPastWeek);
     document.getElementById("radioMonth").addEventListener("click", displayPastMonth);
-
-    //Listerners for type filter buttons
-    document.getElementById("policeCheck").addEventListener("click", filterDisplay);
-    document.getElementById("codeCheck").addEventListener("click", filterDisplay);
-    document.getElementById("libraryCheck").addEventListener("click", filterDisplay);
-    document.getElementById("arrestCheck").addEventListener("click", filterDisplay);
-    document.getElementById("311Check").addEventListener("click", filterDisplay);
 
     //Listener for sidebar toggle
     document.getElementById("sidebarToggle").addEventListener("click", toggleSidebar);
@@ -202,7 +195,6 @@
                 record.incidentYear = parseInt(record.INCIDENTTIME.substring(0,4));
                 record.incidentMonth = parseInt(record.INCIDENTTIME.substring(5,8));
                 record.incidentDay = parseInt(record.INCIDENTTIME.substring(8,10));
-                record.type = "police";
             }
         },
 
@@ -221,8 +213,6 @@
                 record.incidentYear = parseInt(record.ARRESTTIME.substring(0,4));
                 record.incidentMonth = parseInt(record.ARRESTTIME.substring(5,8));
                 record.incidentDay = parseInt(record.ARRESTTIME.substring(8,10));
-                record.type = "arrest";
-
             }
         },
 
@@ -243,7 +233,6 @@
                 record.incidentYear = parseInt(record.INSPECTION_DATE.substring(0,4));
                 record.incidentMonth = parseInt(record.INSPECTION_DATE.substring(5,8));
                 record.incidentDay = parseInt(record.INSPECTION_DATE.substring(8,10));
-                record.type = "code";
             }
         },
 
@@ -265,7 +254,6 @@
                 record.incidentYear = parseInt(record.CREATED_ON.substring(0,4));
                 record.incidentMonth = parseInt(record.CREATED_ON.substring(5,8));
                 record.incidentDay = parseInt(record.CREATED_ON.substring(8,10));
-                record.type = "311";
             }
         },
 
@@ -290,9 +278,6 @@
               <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
               `,
 
-            processRecord: (record) => {
-              record.type = "library";
-            }
         }
     };
 
@@ -300,6 +285,7 @@
     const WPRDC_QUERY_SUFFIX = '" ';
 
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
+    // TODO: Prune to last 30 days in SQL
     function fetchWPRDCData(dataSourceName, options={}) {
         const dataSource = WPRDC_DATA_SOURCES[dataSourceName];
         let query = WPRDC_QUERY_PREFIX + dataSource.id + WPRDC_QUERY_SUFFIX + dataSource.primaryFiltering;
@@ -316,6 +302,24 @@
             .then((data) => {
 				console.log(dataSource.id, data);
                 const records = data.result.records;
+
+                var filterContainer = document.createElement("div");
+                filterContainer.className = "checkBtn";
+
+                var filter = document.createElement("input");
+                filter.type = "checkbox";
+                filter.id = dataSourceName.toLowerCase() + "Check";
+                filter.checked = true;
+
+                var filterLabel = document.createElement("label");
+                filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
+                filterLabel.innerHTML = dataSource.icon.options.html;
+
+                filter.addEventListener("click", filterDisplay);
+
+                document.getElementById("typeSelection").appendChild(filterContainer);
+                filterContainer.appendChild(filter);
+                filterContainer.appendChild(filterLabel);
 
                 records.forEach((record, i) => {
                     if (dataSource.processRecord) {
@@ -335,6 +339,7 @@
                     }
 
                     record.inDate = true;
+                    record.type = dataSourceName.toLowerCase();
 
                     if (latLongNoNulls) {
                         const title = dataSource.title(record);
