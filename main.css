@@ -36,6 +36,11 @@ html, body
     bottom: 3%;
 }
 
+.leaflet-popup {
+    margin-bottom: 32px;
+}
+
+
 #header
 {
     position: fixed;
@@ -160,12 +165,50 @@ html, body
 {
     display: none;
 }
+
 #controls
 {
     position: relative;
     overflow-y: auto;
     height: 100%;
     text-align: left;
+}
+
+#dateSelection
+{
+    display: flex;
+}
+
+button
+{
+    background-color: #fff;
+    font-size: 14px;
+    border: 1px solid lightgrey;
+    margin-left: -1px;
+    padding: 5px 5px;
+}
+
+#dateSelection:first-child
+{
+    margin-left: 1px;
+}
+
+button:hover
+{
+    background-color: #eee;
+    cursor: pointer;
+}
+
+button:active
+{
+    background-color: #bbb;
+}
+
+#typeSelection input[type=checkbox] {
+    cursor: pointer;
+    margin: 5px;
+    padding: 5px;
+    vertical-align: -3px;
 }
 
 /* divIcon pins */

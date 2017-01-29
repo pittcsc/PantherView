@@ -42,33 +42,76 @@
     //30 days already)
     function displayPastDay() {
         markers.forEach((marker, i) => {
+
+            //Check if library or other non-dated pin
+            if (!marker.incidentYear)
+                return;
+
             if (marker.incidentYear == currentDate.getFullYear() &&
                 marker.incidentMonth == currentDate.getMonth() + 1 &&
                 marker.incidentDay == currentDate.getDate()) {
-                marker.pin.addTo(map);
+                marker.inDate = true;
+                if (!marker.filtered) {
+                    marker.pin.addTo(map);
+                }
             } else {
                 map.removeLayer(marker.pin);
+                marker.inDate = false;
             }
         });
     }
 
     function displayPastWeek() {
         markers.forEach((marker, i) => {
+
+            if (!marker.incidentYear)
+                return;
+
             var recordDate = new Date(marker.incidentYear,
                 marker.incidentMonth - 1,
                 marker.incidentDay);
             if (getDateDifference(currentDate, recordDate) <= 7) {
-                marker.pin.addTo(map);
+                marker.inDate = true;
+                if (!marker.filtered) {
+                    marker.pin.addTo(map);
+                }
             } else {
                 map.removeLayer(marker.pin);
+                marker.inDate = false;
             }
         });
     }
 
     function displayPastMonth() {
         markers.forEach((marker, i) => {
-            marker.pin.addTo(map);
+            marker.inDate = true;            
+            if (!marker.filtered) {
+                marker.pin.addTo(map);
+            }
         });
+    }
+
+    function filterDisplay(e) {
+        var elm = e.target;
+        var type = /.+?(?=[A-Z])/.exec(elm.id)[0];
+
+        if (elm.checked) {
+            markers.forEach((marker) => {
+                if (marker.type === type) {
+                    if (marker.inDate) {
+                        marker.pin.addTo(map);
+                    }
+                    marker.filtered = false;
+                }
+            });
+        } else {
+            markers.forEach((marker) => {
+                if (marker.type === type) {
+                    map.removeLayer(marker.pin);
+                    marker.filtered = true;
+                }
+            });
+        }
     }
 
     //Displays and hides the sidebar
@@ -84,7 +127,7 @@
         }
     }
 
-    //Add listeners for radio buttons
+    //Listeners for date buttons
     document.getElementById("radioDay").addEventListener("click", displayPastDay);
     document.getElementById("radioWeek").addEventListener("click", displayPastWeek);
     document.getElementById("radioMonth").addEventListener("click", displayPastMonth);
@@ -107,31 +150,36 @@
             className: 'map-pin blue',
             html: '<i class="fa fa-balance-scale"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
         }),
-		    CITY_ARREST: L.divIcon({
+        CITY_ARREST: L.divIcon({
             className: 'map-pin red',
             html: '<i class="fa fa-gavel"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
         }),
         CITY_311_ICON: L.divIcon({
             className: 'map-pin yellow',
             html: '<i class="fa fa-commenting"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
         }),
         LIBRARY_ICON: L.divIcon({
             className: 'map-pin black',
             html: '<i class="fa fa-book"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
         }),
         CODE_VIOLATION: L.divIcon({
             className: 'map-pin green',
             html: '<i class="fa fa-times-circle"></i>',
             iconSize: [32, 32],
-            iconAnchor: [16, 32]
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
         })
     };
 
@@ -232,7 +280,8 @@
               <br> Friday: ${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}
               <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
               <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
-              `
+              `,
+
         }
     };
 
@@ -240,6 +289,7 @@
     const WPRDC_QUERY_SUFFIX = '" ';
 
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
+    // TODO: Prune to last 30 days in SQL
     function fetchWPRDCData(dataSourceName, options={}) {
         const dataSource = WPRDC_DATA_SOURCES[dataSourceName];
         let query = WPRDC_QUERY_PREFIX + dataSource.id + WPRDC_QUERY_SUFFIX + dataSource.primaryFiltering;
@@ -254,8 +304,26 @@
             // TODO: should have some generic error handling for data
             .catch((err) => displayNotification(err))
             .then((data) => {
-				console.log(dataSource.id, data);
                 const records = data.result.records;
+
+                var filterContainer = document.createElement("div");
+                filterContainer.className = "typeBtn";
+
+                var filter = document.createElement("input");
+                filter.id = dataSourceName.toLowerCase() + "Check";
+                filter.type = "checkbox";
+                filter.checked = true;
+
+                var filterLabel = document.createElement("label");
+                filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
+                filterLabel.innerHTML = dataSource.icon.options.html + " - " +
+                    dataSourceName;
+
+                filter.addEventListener("click", filterDisplay);
+
+                document.getElementById("typeSelection").appendChild(filterContainer);
+                filterContainer.appendChild(filter);
+                filterContainer.appendChild(filterLabel);
 
                 records.forEach((record, i) => {
                     if (dataSource.processRecord) {
@@ -264,6 +332,19 @@
 
                     const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
                     const latLongNoNulls = latLong.some((field) => !!field);
+
+                    //Prune to last 30 days
+                    if (record.incidentYear) {
+                      if (getDateDifference(currentDate, new Date(record.incidentYear,
+                          record.incidentMonth - 1,
+                          record.incidentDay)) > 30) {
+                            return;
+                      }
+                    }
+
+                    record.inDate = true;
+                    record.type = dataSourceName.toLowerCase();
+
                     if (latLongNoNulls) {
                         const title = dataSource.title(record);
                         record.pin = L.marker(latLong, {

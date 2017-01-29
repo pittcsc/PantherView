@@ -36,22 +36,14 @@
     </div>
     <div id="sidebar">
       <div id="controls">
-        <h2>Controls</h2>
-        <h3>Date Range</h3>
-        <form name="dateSelection">
-          <div class="dateRadio">
-            <input type="radio" name="radioDate" id="radioMonth" checked>
-            <label for="radioMonth">Past 30 Days</label>
-          </div>
-          <div class="dateRadio">
-            <input type="radio" name="radioDate" id="radioWeek">
-            <label for="radioWeek">Past 7 Days</label>
-          </div>
-          <div class="dateRadio">
-            <input type="radio" name="radioDate" id="radioDay">
-            <label for="radioDay">Today</label>
-          </div>
-        </form>
+        <div id="dateSelection">
+            <button id="radioMonth" checked>Past Month</button>
+            <button id="radioWeek">Past Week</button>
+            <button id="radioDay">Today</button>
+        </div>
+        <h3>Legend</h3>
+        <div id="typeSelection">
+        </div>
       </div>
       <footer>
         &copy; 2017 University of Pittsburgh Computer Science Club
