@@ -10,7 +10,7 @@
     // If yes, set the center of the map to their current location
     // If not, set the center of the map to Cathy
     if (navigator.geolocation){
-      navigator.geolocation.getCurrentPosition(locationSuccess, locationFailure, options);
+      navigator.geolocation.getCurrentPosition(locationSuccess, locationFailure, locationOptions);
     } else {
         loadMap(cathyLatLong, 15);
     }
@@ -31,7 +31,7 @@
     }
 
     // Options for geolocation services
-    var options = {
+    var locationOptions = {
       enableHighAccuracy: false,
       timeout: 5000,
       maximumAge: 60000
