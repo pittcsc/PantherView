@@ -47,9 +47,10 @@
             if (!marker.incidentYear)
                 return;
 
-            if (marker.incidentYear == currentDate.getFullYear() &&
-                marker.incidentMonth == currentDate.getMonth() + 1 &&
-                marker.incidentDay == currentDate.getDate()) {
+            var recordDate = new Date(marker.incidentYear,
+                marker.incidentMonth - 1,
+                marker.incidentDay);
+            if (getDateDifference(currentDate, recordDate) <= 1) {
                 marker.inDate = true;
                 if (!marker.filtered) {
                     marker.pin.addTo(map);
