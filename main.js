@@ -304,7 +304,6 @@
             // TODO: should have some generic error handling for data
             .catch((err) => displayNotification(err))
             .then((data) => {
-                console.log(dataSource.id, data);
                 const records = data.result.records;
 
                 var filterContainer = document.createElement("div");

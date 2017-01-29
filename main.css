@@ -196,11 +196,19 @@ button
 button:hover
 {
     background-color: #eee;
+    cursor: pointer;
 }
 
 button:active
 {
     background-color: #bbb;
+}
+
+#typeSelection input[type=checkbox] {
+    cursor: pointer;
+    margin: 5px;
+    padding: 5px;
+    vertical-align: -3px;
 }
 
 /* divIcon pins */
