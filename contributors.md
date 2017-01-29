@@ -37,5 +37,3 @@ Chris Skowronski
 Brandon Palonis
 
 Neha Abraham
-
-Nicole Daniels
