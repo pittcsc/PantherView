@@ -142,28 +142,22 @@
         var box = document.createElement("div");
         box.className = "notification";
 
-        if (style != undefined) {
+        if (style) {
             box.className += " " + style;
         }
 
-        var closeButton = document.createElement("a");
+        var closeButton = document.createElement("button");
         closeButton.className = "close";
-        closeButton.href = "#";
-        closeButton.appendChild(document.createTextNode("X"))
-        box.appendChild(closeButton);
+        closeButton.innerHTML = "x";
+        closeButton.onclick = function() {
+            box.style.display = "none";
+        };
 
+        box.appendChild(closeButton);
         var textarea = document.createTextNode(messageText);
         box.appendChild(textarea);
-
         var topNotification = notificationArea.firstChild;
-        notificationArea.appendChild(box);
         notificationArea.insertBefore(box, topNotification);
-
-        box.addEventListener("click", function() {
-            box.style.display = "none";
-        });
-
-        console.log(messageText);
     }
 
     // WPRDC data
