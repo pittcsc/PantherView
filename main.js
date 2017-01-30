@@ -32,7 +32,6 @@
 
     //Array of markers
     var markers = new Array();
-    var nonPlacedRecords = new Array();
 
     //Create a new Date object for the current date
     var currentDate = new Date();
@@ -85,7 +84,7 @@
 
     function displayPastMonth() {
         markers.forEach((marker, i) => {
-            marker.inDate = true;            
+            marker.inDate = true;
             if (!marker.filtered) {
                 marker.pin.addTo(map);
             }
@@ -354,12 +353,13 @@
                         });
 
                         record.pin.bindPopup(dataSource.popup(record));
-
                         record.pin.addTo(map);
-                        markers.push(record);
+
+                        record.isMapped = true;
                     } else {
-                        nonPlacedRecords.push(record);
+                        record.isMapped = false;
                     }
+                    markers.push(record);
                 })
             });
     }
