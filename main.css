@@ -55,7 +55,8 @@ html, body
     border-color: #b4ff99;
 }
 
-.notification button.close {
+.notification button.close
+{
     float: right;
     font-wight: bold;
     margin-top: -10px;
@@ -116,7 +117,6 @@ html, body
 .leaflet-popup {
     margin-bottom: 32px;
 }
-
 
 #header
 {
