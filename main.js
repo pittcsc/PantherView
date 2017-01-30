@@ -330,9 +330,6 @@
                         dataSource.processRecord(record, i);
                     }
 
-                    const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
-                    const latLongNoNulls = latLong.some((field) => !!field);
-
                     //Prune to last 30 days
                     if (record.incidentYear) {
                       if (getDateDifference(currentDate, new Date(record.incidentYear,
@@ -344,6 +341,9 @@
 
                     record.inDate = true;
                     record.type = dataSourceName.toLowerCase();
+
+                    const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
+                    const latLongNoNulls = latLong.some((field) => !!field);
 
                     if (latLongNoNulls) {
                         const title = dataSource.title(record);
