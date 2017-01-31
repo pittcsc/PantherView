@@ -33,22 +33,21 @@
     //Array of markers
     var markers = new Array();
 
-    //Create a new Date object for the current date
-    var currentDate = new Date();
-
     //The following are functions that display records created within 1, 7, and
     //30 days respectively (assuming all fetched data has been pruned to the last
     //30 days already)
     function displayPastDay() {
         markers.forEach((marker, i) => {
-
             //Check if library or other non-dated pin
-            if (!marker.incidentYear)
+            if (!marker.incidentYear || !marker.isMapped)
                 return;
 
-            var recordDate = new Date(marker.incidentYear,
+            // Create a new Date object for the current date
+            const currentDate = new Date();
+            const recordDate = new Date(marker.incidentYear,
                 marker.incidentMonth - 1,
                 marker.incidentDay);
+
             if (getDateDifference(currentDate, recordDate) <= 1) {
                 marker.inDate = true;
                 if (!marker.filtered) {
@@ -63,13 +62,15 @@
 
     function displayPastWeek() {
         markers.forEach((marker, i) => {
-
-            if (!marker.incidentYear)
+            if (!marker.incidentYear || !marker.isMapped)
                 return;
 
-            var recordDate = new Date(marker.incidentYear,
+            // Create a new Date object for the current date
+            const currentDate = new Date();
+            const recordDate = new Date(marker.incidentYear,
                 marker.incidentMonth - 1,
                 marker.incidentDay);
+
             if (getDateDifference(currentDate, recordDate) <= 7) {
                 marker.inDate = true;
                 if (!marker.filtered) {
@@ -84,7 +85,11 @@
 
     function displayPastMonth() {
         markers.forEach((marker, i) => {
+            if (!marker.isMapped)
+                return;
+
             marker.inDate = true;
+
             if (!marker.filtered) {
                 marker.pin.addTo(map);
             }
