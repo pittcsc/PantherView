@@ -295,6 +295,11 @@ button:active
     background: #404040; /* FIXME: I'm a placeholder color */
 }
 
+.map-pin.darkorchid:before
+{
+    background: darkorchid;
+}
+
 /* We also need to invert the black pin's text color */
 .map-pin.black
 {

@@ -180,6 +180,13 @@
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
+        }),
+        NON_TRAFFIC_VIOLATION: L.divIcon({
+            className: 'map-pin darkorchid',
+            html: '<i class="fa fa-road"></i>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
         })
     };
 
@@ -282,8 +289,24 @@
               <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
               `,
 
+        },
+        "Non-Traffic Violation": {
+            id: '6b11e87d-1216-463d-bbd3-37460e539d86',
+            primaryFiltering: 'Where "NEIGHBORHOOD" LIKE \'%Oakland\'',
+            latLong: ['Y', 'X'],
+            icon: iconTypes.NON_TRAFFIC_VIOLATION,
+
+            title: (record) => record['OFFENSES'],
+            popup: (record) => record['OFFENSES'],
+
+            processRecord: (record) => {
+                record.incidentYear = parseInt(record.CITEDTIME.substring(0,4));
+                record.incidentMonth = parseInt(record.CITEDTIME.substring(5,8));
+                record.incidentDay = parseInt(record.CITEDTIME.substring(8,10));
+            }
         }
     };
+
 
     const WPRDC_QUERY_PREFIX = 'SELECT * FROM "';
     const WPRDC_QUERY_SUFFIX = '" ';
@@ -367,9 +390,10 @@
     Promise.all([
         fetchWPRDCData('Police', { limit: 250 }),
         fetchWPRDCData('311', { limit: 250 }),
-		    fetchWPRDCData('Arrest', { limit: 250 }),
+        fetchWPRDCData('Arrest', { limit: 250 }),
         fetchWPRDCData('Code Violation', { limit: 250 }),
-        fetchWPRDCData('Library')
+        fetchWPRDCData('Library'),
+        fetchWPRDCData('Non-Traffic Violation', { limit: 250 })
     ]).then(() => {
         console.log('All data loaded');
     }).catch((err) => {
