@@ -137,7 +137,7 @@
 
     // Display a notification to the user.
     // Style is optional, can be "error", "warning", or "success"
-    function displayNotification(messageText, style) {
+    function displayNotification(messageText, style, customHTML) {
         var notificationArea = document.getElementById("notifications");
         var box = document.createElement("div");
         box.className = "notification";
@@ -156,9 +156,17 @@
         box.appendChild(closeButton);
         var textarea = document.createTextNode(messageText);
         box.appendChild(textarea);
+
+        if (customHTML) {
+            var customDiv = document.createElement("div");
+            customHTML(customDiv);
+            box.appendChild(customDiv);
+        }
+
         var topNotification = notificationArea.firstChild;
         notificationArea.insertBefore(box, topNotification);
     }
+
 
     // WPRDC data
     const WPRDC_BASE_URL = 'https://data.wprdc.org/api/action/datastore_search_sql?sql=';
