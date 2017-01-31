@@ -7,6 +7,84 @@ html, body
     flex-direction: column;
 }
 
+#notifications
+{
+    position: fixed;
+    top: 45px;
+    left: 300px;
+    height: auto;
+    width: 50%;
+    margin: 5px;
+    box-sizing: border-box;
+}
+
+.notification
+{
+    display: block;
+    float: left;
+    height: 20%;
+    width: 100%;
+    margin: 2px;
+    padding: 12px;
+    opacity: 0.95;
+    color: #144C70;
+    background-color: #c9eeff;
+    box-sizing: border-box;
+    border: solid;
+    border-width: thin;
+    border-color: #80d7ff;
+    border-radius: 4px;
+}
+
+.notification.error
+{
+    color: #660a00;
+    background-color: #ffcec9;
+    border-color:  #ffa399;
+}
+.notification.warning
+{
+    color: #996900;
+    background-color: #ffeec9;
+    border-color: #ffdf99;
+}
+.notification.success
+{
+    color: #1b6600;
+    background-color: #d7ffc9;
+    border-color: #b4ff99;
+}
+
+.notification button.close
+{
+    float: right;
+    font-wight: bold;
+    margin-top: -10px;
+    margin-right: -10px;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    color: black;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px)
+{
+    #notifications
+    {
+        left: 0px;
+        margin: 0px;
+        width: 100%;
+    }
+
+    .notification
+    {
+        margin: 0px;
+        border-radius: 0px;
+    }
+}
+
 #mapid
 {
     height: 100%;
@@ -39,7 +117,6 @@ html, body
 .leaflet-popup {
     margin-bottom: 32px;
 }
-
 
 #header
 {

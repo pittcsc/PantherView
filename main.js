@@ -135,11 +135,38 @@
     //Listener for sidebar toggle
     document.getElementById("sidebarToggle").addEventListener("click", toggleSidebar);
 
-    // Display a notification to the user
-    function displayNotification(messageText) {
-      // TODO: Actually make the notification instead of logging
-      console.log(messageText);
+    // Display a notification to the user.
+    // Style is optional, can be "error", "warning", or "success"
+    function displayNotification(messageText, style, customHTML) {
+        var notificationArea = document.getElementById("notifications");
+        var box = document.createElement("div");
+        box.className = "notification";
+
+        if (style) {
+            box.className += " " + style;
+        }
+
+        var closeButton = document.createElement("button");
+        closeButton.className = "close";
+        closeButton.innerHTML = "x";
+        closeButton.onclick = function() {
+            box.style.display = "none";
+        };
+
+        box.appendChild(closeButton);
+        var textarea = document.createTextNode(messageText);
+        box.appendChild(textarea);
+
+        if (customHTML) {
+            var customDiv = document.createElement("div");
+            customHTML(customDiv);
+            box.appendChild(customDiv);
+        }
+
+        var topNotification = notificationArea.firstChild;
+        notificationArea.insertBefore(box, topNotification);
     }
+
 
     // WPRDC data
     const WPRDC_BASE_URL = 'https://data.wprdc.org/api/action/datastore_search_sql?sql=';
@@ -325,7 +352,7 @@
             // TODO: ensure 200 response
             .then((response) => response.json())
             // TODO: should have some generic error handling for data
-            .catch((err) => displayNotification(err))
+            .catch((err) => displayNotification(err, "error"))
             .then((data) => {
                 const records = data.result.records;
 
