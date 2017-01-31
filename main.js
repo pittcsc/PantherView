@@ -97,7 +97,7 @@
 
         if (elm.checked) {
             markers.forEach((marker) => {
-                if (marker.type === type) {
+                if (marker.type === type && marker.isMapped) {
                     if (marker.inDate) {
                         marker.pin.addTo(map);
                     }
@@ -106,7 +106,7 @@
             });
         } else {
             markers.forEach((marker) => {
-                if (marker.type === type) {
+                if (marker.type === type && marker.isMapped) {
                     map.removeLayer(marker.pin);
                     marker.filtered = true;
                 }
