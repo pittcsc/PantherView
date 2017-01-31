@@ -97,7 +97,7 @@
 
         if (elm.checked) {
             markers.forEach((marker) => {
-                if (marker.type === type) {
+                if (marker.type === type && marker.isMapped) {
                     if (marker.inDate) {
                         marker.pin.addTo(map);
                     }
@@ -106,7 +106,7 @@
             });
         } else {
             markers.forEach((marker) => {
-                if (marker.type === type) {
+                if (marker.type === type && marker.isMapped) {
                     map.removeLayer(marker.pin);
                     marker.filtered = true;
                 }
@@ -204,6 +204,13 @@
         CODE_VIOLATION: L.divIcon({
             className: 'map-pin green',
             html: '<i class="fa fa-times-circle"></i>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
+        }),
+        NON_TRAFFIC_VIOLATION: L.divIcon({
+            className: 'map-pin darkorchid',
+            html: '<i class="fa fa-sticky-note-o"></i>',
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
@@ -309,8 +316,24 @@
               <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
               `,
 
+        },
+        "Non-Traffic Violation": {
+            id: '6b11e87d-1216-463d-bbd3-37460e539d86',
+            primaryFiltering: 'Where "NEIGHBORHOOD" LIKE \'%Oakland\'',
+            latLong: ['Y', 'X'],
+            icon: iconTypes.NON_TRAFFIC_VIOLATION,
+
+            title: (record) => record['OFFENSES'],
+            popup: (record) => record['OFFENSES'],
+
+            processRecord: (record) => {
+                record.incidentYear = parseInt(record.CITEDTIME.substring(0,4));
+                record.incidentMonth = parseInt(record.CITEDTIME.substring(5,8));
+                record.incidentDay = parseInt(record.CITEDTIME.substring(8,10));
+            }
         }
     };
+
 
     const WPRDC_QUERY_PREFIX = 'SELECT * FROM "';
     const WPRDC_QUERY_SUFFIX = '" ';
@@ -357,9 +380,6 @@
                         dataSource.processRecord(record, i);
                     }
 
-                    const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
-                    const latLongNoNulls = latLong.some((field) => !!field);
-
                     //Prune to last 30 days
                     if (record.incidentYear) {
                       if (getDateDifference(currentDate, new Date(record.incidentYear,
@@ -371,6 +391,9 @@
 
                     record.inDate = true;
                     record.type = dataSourceName.toLowerCase();
+
+                    const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
+                    const latLongNoNulls = latLong.some((field) => !!field);
 
                     if (latLongNoNulls) {
                         const title = dataSource.title(record);
@@ -394,9 +417,10 @@
     Promise.all([
         fetchWPRDCData('Police', { limit: 250 }),
         fetchWPRDCData('311', { limit: 250 }),
-		    fetchWPRDCData('Arrest', { limit: 250 }),
+        fetchWPRDCData('Arrest', { limit: 250 }),
         fetchWPRDCData('Code Violation', { limit: 250 }),
-        fetchWPRDCData('Library')
+        fetchWPRDCData('Library'),
+        fetchWPRDCData('Non-Traffic Violation', { limit: 250 })
     ]).then(() => {
         console.log('All data loaded');
     }).catch((err) => {
