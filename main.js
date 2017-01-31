@@ -354,10 +354,17 @@
         }
 
         return fetch(WPRDC_BASE_URL + query)
-            // TODO: ensure 200 response
+            .then((response) => {
+              // Inspired by https://github.com/github/fetch#handling-http-error-statuses
+              if (response.status >= 200 && response.status < 300) {
+                return response;
+              } else {
+                const error = new Error(response.errorText);
+                error.response = response;
+                displayNotification(error, "error response");
+              }
+            })
             .then((response) => response.json())
-            // TODO: should have some generic error handling for data
-            .catch((err) => displayNotification(err, "error"))
             .then((data) => {
                 const records = data.result.records;
 
@@ -416,7 +423,8 @@
                     }
                     markers.push(record);
                 })
-            });
+            })
+            .catch((err) => displayNotification(err, "error after record process"));
     }
 
     Promise.all([
@@ -430,6 +438,7 @@
         console.log('All data loaded');
     }).catch((err) => {
         console.log('final error catch data', err);
+        displayNotification(err, "error total");
     });
 
     //Helper function that returns difference between two dates in days
