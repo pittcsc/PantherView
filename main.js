@@ -30,20 +30,21 @@
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    //Array of markers
+    // Array of markers
     var markers = new Array();
 
-    //The following are functions that display records created within 1, 7, and
-    //30 days respectively (assuming all fetched data has been pruned to the last
-    //30 days already)
+    // Create a new Date object for the current date
+    const currentDate = new Date();
+
+    // The following are functions that display records created within 1, 7, and
+    // 30 days respectively (assuming all fetched data has been pruned to the last
+    // 30 days already)
     function displayPastDay() {
         markers.forEach((marker, i) => {
             //Check if library or other non-dated pin
             if (!marker.incidentYear || !marker.isMapped)
                 return;
 
-            // Create a new Date object for the current date
-            const currentDate = new Date();
             const recordDate = new Date(marker.incidentYear,
                 marker.incidentMonth - 1,
                 marker.incidentDay);
@@ -65,8 +66,6 @@
             if (!marker.incidentYear || !marker.isMapped)
                 return;
 
-            // Create a new Date object for the current date
-            const currentDate = new Date();
             const recordDate = new Date(marker.incidentYear,
                 marker.incidentMonth - 1,
                 marker.incidentDay);
