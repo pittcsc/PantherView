@@ -183,7 +183,7 @@
         }),
         NON_TRAFFIC_VIOLATION: L.divIcon({
             className: 'map-pin darkorchid',
-            html: '<i class="fa fa-road"></i>',
+            html: '<i class="fa fa-sticky-note-o"></i>',
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
