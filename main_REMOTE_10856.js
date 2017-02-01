@@ -135,42 +135,6 @@
     //Listener for sidebar toggle
     document.getElementById("sidebarToggle").addEventListener("click", toggleSidebar);
 
-<<<<<<< HEAD
-    //City of Pittsburgh police data
-    const CITY_POLICE_API = "1797ead8-8262-41cc-9099-cbc8a161924b";
-    const CITY_POLICE_SQL = `SELECT * from "${CITY_POLICE_API}" WHERE "INCIDENTNEIGHBORHOOD" LIKE '%Oakland'`;
-    const CITY_POLICE_ICON = L.icon({
-        iconUrl: 'assets/map-pins/pin-police.png',
-        iconRetinaUrl: 'assets/map-pins/pin-police@2x.png',
-        iconSize: [32, 32],
-        iconAnchor: [15, 31],
-        shadowUrl: 'assets/map-pins/pin-shadow.png',
-        shadowRetinaUrl: 'assets/map-pins/pin-shadow@2x.png',
-        shadowSize: [32, 32],
-        shadowAnchor: [15, 31]
-    }); // TODO: make a global dictionary for these?
-    fetch(`${WPRDC_BASE_URL}${CITY_POLICE_SQL}`)
-        // TODO: ensure 200 response
-        .then((response) => response.json())
-        //TODO: should have some generic error handling for data
-        .catch((err) => console.log(err))
-        .then((data) => {
-            
-            const records = data.result.records;
-            records.forEach((record, i) => {
-                //Collect time of incident from the record
-                record.incidentYear = parseInt(record.INCIDENTTIME.substring(0, 4));
-                record.incidentMonth = parseInt(record.INCIDENTTIME.substring(5, 8));
-                record.incidentDay = parseInt(record.INCIDENTTIME.substring(8, 10));
-
-                record.pin = L.marker([record.Y, record.X], { icon: CITY_POLICE_ICON });
-                record.pin.addTo(map)
-                
-                    .bindPopup(JSONtoTable(record));
-
-                //Push the marker and date to their respective arrays
-                markers.push(record);
-=======
     // Display a notification to the user
     function displayNotification(messageText) {
       // TODO: Actually make the notification instead of logging
@@ -420,7 +384,6 @@
                     }
                     markers.push(record);
                 })
->>>>>>> 21d5edd0de9554a08a0529334a7dc927b80785a6
             });
     }
 
@@ -436,77 +399,10 @@
     }).catch((err) => {
         console.log('final error catch data', err);
     });
-<<<<<<< HEAD
-    fetch(`${WPRDC_BASE_URL}${CITY_311_SQL}`)
-        // TODO: ensure 200 response
-        .then((response) => response.json())
-        //TODO: should have some generic error handling for data
-        .catch((err) => console.log(err))
-        .then((data) => {
-            const records = data.result.records;
-            records.forEach((record, i) => {
-                //Collect time of incident from the record
-                record.incidentYear = parseInt(record.CREATED_ON.substring(0, 4));
-                record.incidentMonth = parseInt(record.CREATED_ON.substring(5, 8));
-                record.incidentDay = parseInt(record.CREATED_ON.substring(8, 10));
-
-                record.pin = L.marker([record.Y, record.X], {
-                    icon: CITY_311_ICON,
-                    title: record.REQUEST_TYPE || 'default title',
-                    zIndexOffset: 100
-                });
-                record.pin.bindPopup(JSONtoTable(record));
-                record.pin.addTo(map);
-
-                //Push the marker and date to their respective arrays
-                markers.push(record);
-            });
-        });
-=======
->>>>>>> 21d5edd0de9554a08a0529334a7dc927b80785a6
 
     //Helper function that returns difference between two dates in days
     function getDateDifference(dateA, dateB) {
         return Math.floor(Math.abs(dateA.getTime() - dateB.getTime()) / 86400000);
     }
-<<<<<<< HEAD
-    //Calls from the library db 
-    const LibraryAPI = "2ba0788a-2f35-43aa-a47c-89c75f55cf9d";
-    const Library_SQL = `SELECT * FROM "${LibraryAPI}" WHERE "Name" LIKE '%OAKLAND%'`;
-    const Library_ICON = L.icon({
-        iconUrl: 'assets/map-pins/pin-library.png',
-        iconRetinaUrl: 'assets/map-pins/pin-library@2x.png',
-        iconSize: [32, 32],
-        iconAnchor: [15, 31]
-    });
-    fetch(`${WPRDC_BASE_URL}${Library_SQL}`)
-        .then((response) => response.json())
-        .catch((err) => console.log(err))
-        .then((data) => {
-            const libRecords = data.result.records;
-            libRecords.forEach((record, i) => {
-                //Library Icon from their twitter
-                record.pin = L.marker([record.Lat, record.Lon], {
-                    icon: Library_ICON,
-                    title: record.Name,
-                    zIndexOffset: 100
-                });
-                // Probably a better way to format the library popup but its cleaner for now
-                record.pin.bindPopup(JSONtoTable(record));
-                record.pin.addTo(map);
-                markers.push(record);
-            });
-        });
-    function JSONtoTable(result){
-        var table = "<table>"
-        for(var key in result){
-            if(key == "_full_text" || key == "pin") continue;
-            table += `<tr><td> ${key}</td><td>${result[key]}</td></tr>`
-        }
-            table+= "</table>"
-            return table;
-        }
-=======
->>>>>>> 21d5edd0de9554a08a0529334a7dc927b80785a6
 
 })(typeof window !== "undefined" ? window : {});

@@ -7,17 +7,6 @@ html, body
     flex-direction: column;
 }
 
-footer
-{
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 20px;
-    z-index: 9999;
-    background-color: transparent;
-}
-
 #mapid
 {
     height: 100%;
@@ -29,12 +18,14 @@ footer
     position: fixed;
     z-index: 1000000;
     font-family: "Roboto", sans-serif;
+    letter-spacing: .04em;
+    font-weight: 300;
 }
 
 #ui h2, h3
 {
     font-family: "Roboto Medium", sans-serif;
-    font-weight: normal;
+    font-weight: 300;
 }
 
 /* Moves the zoom control */
@@ -45,28 +36,47 @@ footer
     bottom: 3%;
 }
 
+.leaflet-popup {
+    margin-bottom: 32px;
+}
+
+
 #header
 {
     position: fixed;
-    height: 30px;
+    height: 45px;
     width: 100%;
     color: white;
     box-sizing: border-box;
-    background: #0D2A52;
+    background: #00254A; /* color picked from Pitt website */
+    line-height: 45px;
 }
 
-#header h3
+#header a{
+  color: white;
+}
+
+#logo{
+  float: left;
+  margin: 0 10px 0 15px;
+  max-width: 45px;
+  max-height: 45px;
+}
+
+#header h1
 {
     float: left;
     margin: 0;
-    padding: 4px 0 0 10px;
+    padding: 0 0 0 4px;
+    font-weight: lighter;
+    font-size: 1.6em;
 }
 
 #header ul
 {
     float: right;
     margin: 0;
-    padding: 0 10px 0 0;
+    padding: 0 0 0 0;
     list-style-type: none;
     background-color: transparent;
 }
@@ -74,19 +84,20 @@ footer
 #header li
 {
     float: left;
-    height: 30px;
+    height: 45px;
     box-sizing: border-box;
+    width: 100px;
 }
 
 #header li a
 {
     display: block;
-    height: 30px;
+    height: 45px;
     text-align: center;
     text-decoration: none;
     box-sizing: border-box;
     color: white;
-    padding: 5px;
+
 }
 
 #header li a:hover
@@ -122,10 +133,22 @@ footer
     color: #0D2A52
 }
 
+#sidebar footer
+{
+    position: fixed;
+    bottom: 0;
+    right: 1;
+    width: 255px;
+    height: 20px;
+    font-size: 10px;
+    z-index: 9999;
+    background-color: transparent;
+}
+
 #sidebar
 {
     position: fixed;
-    top: 30px;
+    top: 45px;
     padding: 15px;
     width: 250px;
     height: 100%;
@@ -142,10 +165,143 @@ footer
 {
     display: none;
 }
+
 #controls
 {
     position: relative;
     overflow-y: auto;
     height: 100%;
     text-align: left;
+}
+
+#dateSelection
+{
+    display: flex;
+}
+
+button
+{
+    background-color: #fff;
+    font-size: 14px;
+    border: 1px solid lightgrey;
+    margin-left: -1px;
+    padding: 5px 5px;
+}
+
+#dateSelection:first-child
+{
+    margin-left: 1px;
+}
+
+button:hover
+{
+    background-color: #eee;
+    cursor: pointer;
+}
+
+button:active
+{
+    background-color: #bbb;
+}
+
+#typeSelection input[type=checkbox] {
+    cursor: pointer;
+    margin: 5px;
+    padding: 5px;
+    vertical-align: -3px;
+}
+
+/* divIcon pins */
+/* base styles */
+.map-pin
+{
+    position: relative;
+
+    width: 32px;
+    height: 32px;
+}
+
+.map-pin:before
+{
+    position: absolute;
+    top: 10%;
+    left: 50%;
+
+    width: 24px;
+    height: 24px;
+
+    content: ' ';
+    transform: translateX(-50%) rotate(-45deg);
+    white-space: nowrap;
+
+    border: solid 1px black;
+    border-radius: 50% 50% 50% 0;
+}
+
+.map-pin:after
+{
+    position: absolute;
+    /*z-index: -1;*/
+    top: 100%;
+    left: 50%;
+
+    width: 32px;
+    height: 12px;
+
+    content: ' ';
+    transform: translate(-50%, -25%);
+
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.map-pin i
+{
+    font-size: 16px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    display: block;
+
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center;
+}
+
+/* pin colors */
+.map-pin.blue:before
+{
+    background: dodgerblue; /* FIXME: I'm a placeholder color */
+}
+
+.map-pin.red:before
+{
+    background: orangered; /* FIXME: I'm a placeholder color */
+}
+
+.map-pin.green:before
+{
+    background: springgreen; /* FIXME: I'm a placeholder color */
+}
+
+.map-pin.yellow:before
+{
+    background: yellow; /* FIXME: I'm a placeholder color */
+}
+
+.map-pin.black:before
+{
+    background: #404040; /* FIXME: I'm a placeholder color */
+}
+
+.map-pin.darkorchid:before
+{
+    background: darkorchid;
+}
+
+/* We also need to invert the black pin's text color */
+.map-pin.black
+{
+    color: white; /* FIXME: I'm a placeholder color */
 }

@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pitt Data Map</title>
+  <title>PantherView</title>
   <meta name="description" content="Map for Oakland data.">
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="./main.css">
@@ -18,11 +18,15 @@
   <div id="ui">
     <div id="header">
       <div id="title">
-        <h3>Pitt Open Data Project</h3>
+        <a href="index.html">
+          <div id="logo">
+            <img src="" alt="logo">
+          </div>
+          <h1>PantherView</h1>
+        </a>
       </div>
       <div id="navigation">
         <ul>
-          <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About</a></li>
         </ul>
       </div>
@@ -32,29 +36,21 @@
     </div>
     <div id="sidebar">
       <div id="controls">
-        <h2>Controls</h2>
-        <h3>Date Range</h3>
-        <form name="dateSelection">
-          <div class="dateRadio">
-            <input type="radio" name="radioDate" id="radioMonth" checked>
-            <label for="radioMonth">Past 30 Days</label>
-          </div>
-          <div class="dateRadio">
-            <input type="radio" name="radioDate" id="radioWeek">
-            <label for="radioWeek">Past 7 Days</label>
-          </div>
-          <div class="dateRadio">
-            <input type="radio" name="radioDate" id="radioDay">
-            <label for="radioDay">Today</label>
-          </div>
-        </form>
+        <div id="dateSelection">
+            <button id="radioMonth" checked>Past Month</button>
+            <button id="radioWeek">Past Week</button>
+            <button id="radioDay">Yesterday</button>
+        </div>
+        <h3>Legend</h3>
+        <div id="typeSelection">
+        </div>
       </div>
+      <footer>
+        &copy; 2017 University of Pittsburgh Computer Science Club
+      </footer>
     </div>
   </div>
   <div id="mapid"></div>
-  <footer>
-    &copy; 2017 University of Pittsburgh Computer Science Club
-  </footer>
   <script src="https://unpkg.com/promise-polyfill@6.0.2/promise.min.js"></script>
   <script src="https://unpkg.com/whatwg-fetch@2.0.2/fetch.js"></script>
   <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
