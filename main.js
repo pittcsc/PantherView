@@ -98,7 +98,6 @@
     function filterDisplay(e) {
         var elm = e.target;
         var type = /.+?(?=[A-Z])/.exec(elm.id)[0];
-
         if (elm.checked) {
             markers.forEach((marker) => {
                 if (marker.type === type && marker.isMapped) {
@@ -177,6 +176,13 @@
 
     // Marker Icons
     const iconTypes = {
+        COMP_LAB: L.divIcon({
+            className: 'map-pin black',
+            html: '<i class="fa fa-desktop"></i>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
+        }),
         CITY_POLICE: L.divIcon({
             className: 'map-pin blue',
             html: '<i class="fa fa-balance-scale"></i>',
@@ -219,6 +225,37 @@
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
         })
+    };
+
+    const PITT_LABS = {
+        "Alumni": {
+            latLong: [40.445763, -79.953834],
+            icon: iconTypes.COMP_LAB
+        },
+        "Benedum": {
+            latLong: [40.443844, -79.958475],
+            icon: iconTypes.COMP_LAB
+        },
+        "Cath_G26": {
+            latLong: [40.444038, -79.953110],
+            icon: iconTypes.COMP_LAB
+        },
+        "Cath_G27": {
+            latLong: [40.444291, -79.953357],
+            icon: iconTypes.COMP_LAB
+        },
+        "Lawrence": {
+            latLong: [40.442277, -79.955023],
+            icon: iconTypes.COMP_LAB
+        },
+        "Hillman": {
+            latLong: [40.442787, -79.953942],
+            icon: iconTypes.COMP_LAB
+        },
+        "Suth": {
+            latLong: [40.445953, -79.962444],
+            icon: iconTypes.COMP_LAB
+        }
     };
 
     const WPRDC_DATA_SOURCES = {
@@ -426,13 +463,101 @@
             .catch((err) => displayNotification(err, "error after record process"));
     }
 
+    //Fetch data from Pitt using Ritwik Gupta's PittAPI and associated wrapper
+    //May not need the "options" parameter, as I can't see any data request from Pitt being overwhelmingly large
+    function fetchPittData(dataSection, dataSourceName, filterCreated, options = {}){
+        if (dataSection == "Labs"){
+            return fetch("http://labinformation.cssd.pitt.edu/lab_status/" + dataSourceName.toLowerCase())
+            //TODO: Ensure 200 response
+            .then((response) => {
+                // Inspired by https://github.com/github/fetch#handling-http-error-statuses
+                if (response.status >= 200 && response.status < 300) {
+                    return response;
+                } else {
+                    const error = new Error(response.errorText);
+                    error.response = response;
+                    displayNotification(error, "error response");
+                }
+            })
+            .then((response) => response.json())
+            .then((data) => {
+
+                //Grab dataSource object
+                const dataSource = PITT_LABS[dataSourceName];
+
+                //If the checkbox has yet to be built for filtering the pins (only executes for first lab fetch)
+                if (!filterCreated){
+                    var filterContainer = document.createElement("div");
+                    filterContainer.className = "typeBtn";
+
+                    var filter = document.createElement("input");
+                    filter.id = dataSection.toLowerCase() + "Check";
+                    filter.type = "checkbox";
+                    filter.checked = true;
+
+                    var filterLabel = document.createElement("label");
+                    filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
+                    filterLabel.innerHTML = dataSource.icon.options.html + " - " + dataSection;
+
+                    filter.addEventListener("click", filterDisplay);
+
+                    document.getElementById("typeSelection").appendChild(filterContainer);
+                    filterContainer.appendChild(filter);
+                    filterContainer.appendChild(filterLabel);
+                }
+
+                //Create pin object
+                const thePin = L.marker(PITT_LABS[dataSourceName].latLong, {
+                    title: dataSourceName,
+                    icon: dataSource.icon
+                });
+
+                //Create popup
+                var pup = L.popup();
+                    pup.setContent("<p> " + dataSourceName + " Lab<br>Status: " + data.status
+                                 + "<br> Macs available: " + data.mac
+                                + "<br> Windows available: " + data.windows
+                                + "<br> Linux available: " + data.linux + "</p>");
+
+                //labRecord.popup = pup;
+                //Bind popup to pin
+                thePin.bindPopup(pup);
+                //Add pin to map
+                thePin.addTo(map);
+                pup.isMapped = true;
+                //Push pin (haha, get it?)
+                markers.push({ //Push the following object onto the markers array
+                    numWindows: data.windows,
+                    numMac: data.mac,
+                    numLinux: data.linux,
+                    labStatus: data.status,
+                    pin: thePin,
+                    isMapped: true,
+                    inDate: true, //Date is not important, but necessary for filtering for now
+                    type: "labs" 
+                });
+            });
+        }
+
+    }
+
     Promise.all([
         fetchWPRDCData('Police', { limit: 250 }),
         fetchWPRDCData('311', { limit: 250 }),
         fetchWPRDCData('Arrest', { limit: 250 }),
         fetchWPRDCData('Code Violation', { limit: 250 }),
         fetchWPRDCData('Library'),
-        fetchWPRDCData('Non-Traffic Violation', { limit: 250 })
+        fetchWPRDCData('Non-Traffic Violation', { limit: 250 }),
+
+        //Pitt Promises
+        fetchPittData('Labs', 'Alumni', false),
+        fetchPittData('Labs', 'Benedum', true),
+        fetchPittData('Labs', 'Cath_G26', true),
+        fetchPittData('Labs', 'Cath_G27', true),
+        fetchPittData('Labs', 'Lawrence', true),
+        fetchPittData('Labs', 'Hillman', true),
+        fetchPittData('Labs', 'Suth', true)
+
     ]).then(() => {
         console.log('All data loaded');
     }).catch((err) => {
