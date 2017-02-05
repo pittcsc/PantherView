@@ -158,6 +158,7 @@
         };
 
         box.appendChild(closeButton);
+
         var textarea = document.createTextNode(messageText);
         box.appendChild(textarea);
 
@@ -356,89 +357,120 @@
             .then((response) => {
               // Inspired by https://github.com/github/fetch#handling-http-error-statuses
               if (response.status >= 200 && response.status < 300) {
-                return response;
+                return response.json();
               } else {
-                const error = new Error(response.errorText);
-                error.response = response;
-                displayNotification(error, "error response");
+                  throw new Error("Could not retrieve the " + dataSourceName + " dataset; bad response.");
               }
             })
-            .then((response) => response.json())
             .then((data) => {
                 const records = data.result.records;
+                if (records) {
+                    var filterContainer = document.createElement("div");
+                    filterContainer.className = "typeBtn";
 
-                var filterContainer = document.createElement("div");
-                filterContainer.className = "typeBtn";
+                    var filter = document.createElement("input");
+                    filter.id = dataSourceName.toLowerCase() + "Check";
+                    filter.type = "checkbox";
+                    filter.checked = true;
 
-                var filter = document.createElement("input");
-                filter.id = dataSourceName.toLowerCase() + "Check";
-                filter.type = "checkbox";
-                filter.checked = true;
+                    var filterLabel = document.createElement("label");
+                    filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
+                    filterLabel.innerHTML = dataSource.icon.options.html + " - " +
+                        dataSourceName;
 
-                var filterLabel = document.createElement("label");
-                filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
-                filterLabel.innerHTML = dataSource.icon.options.html + " - " +
-                    dataSourceName;
+                    filter.addEventListener("click", filterDisplay);
 
-                filter.addEventListener("click", filterDisplay);
+                    document.getElementById("typeSelection").appendChild(filterContainer);
+                    filterContainer.appendChild(filter);
+                    filterContainer.appendChild(filterLabel);
 
-                document.getElementById("typeSelection").appendChild(filterContainer);
-                filterContainer.appendChild(filter);
-                filterContainer.appendChild(filterLabel);
+                    records.forEach((record, i) => {
+                        if (dataSource.processRecord) {
+                            dataSource.processRecord(record, i);
+                        }
 
-                records.forEach((record, i) => {
-                    if (dataSource.processRecord) {
-                        dataSource.processRecord(record, i);
-                    }
+                        //Prune to last 30 days
+                        if (record.incidentYear) {
+                          if (getDateDifference(currentDate, new Date(record.incidentYear,
+                              record.incidentMonth - 1,
+                              record.incidentDay)) > 30) {
+                                return;
+                          }
+                        }
 
-                    //Prune to last 30 days
-                    if (record.incidentYear) {
-                      if (getDateDifference(currentDate, new Date(record.incidentYear,
-                          record.incidentMonth - 1,
-                          record.incidentDay)) > 30) {
-                            return;
-                      }
-                    }
+                        record.inDate = true;
+                        record.type = dataSourceName.toLowerCase();
 
-                    record.inDate = true;
-                    record.type = dataSourceName.toLowerCase();
+                        const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
+                        const latLongNoNulls = latLong.some((field) => !!field);
 
-                    const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
-                    const latLongNoNulls = latLong.some((field) => !!field);
+                        if (latLongNoNulls) {
+                            const title = dataSource.title(record);
+                            record.pin = L.marker(latLong, {
+                                title: title,
+                                icon: dataSource.icon
+                            });
 
-                    if (latLongNoNulls) {
-                        const title = dataSource.title(record);
-                        record.pin = L.marker(latLong, {
-                            title: title,
-                            icon: dataSource.icon
+                            record.pin.bindPopup(dataSource.popup(record));
+                            record.pin.addTo(map);
+
+                            record.isMapped = true;
+                        } else {
+                            record.isMapped = false;
+                        }
+                        markers.push(record);
+                    })
+                } else {
+                    displayNotification(dataSourceName + " records not processed.", "error", (retryDiv) => {
+                        var retryButton = document.createElement("button");
+                        retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
+                        retryButton.type = 'button';
+                        retryButton.className = 'retry';
+                        retryButton.addEventListener("click", function() {
+                            retryDiv.parentNode.style.display = "none";
+                            fetchWPRDCData(dataSourceName);
                         });
-
-                        record.pin.bindPopup(dataSource.popup(record));
-                        record.pin.addTo(map);
-
-                        record.isMapped = true;
-                    } else {
-                        record.isMapped = false;
-                    }
-                    markers.push(record);
-                })
+                        retryDiv.appendChild(retryButton);
+                    });
+                }
             })
-            .catch((err) => displayNotification(err, "error after record process"));
+            .catch((err) => displayNotification(err, "error", (retryDiv) => {
+                var retryButton = document.createElement("button");
+                retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
+                retryButton.type = 'button';
+                retryButton.className = 'retry';
+                retryButton.addEventListener("click", function() {
+                    retryDiv.parentNode.style.display = "none";
+                    fetchWPRDCData(dataSourceName);
+                });
+                retryDiv.appendChild(retryButton);
+            }));
     }
 
-    Promise.all([
-        fetchWPRDCData('Police', { limit: 250 }),
-        fetchWPRDCData('311', { limit: 250 }),
-        fetchWPRDCData('Arrest', { limit: 250 }),
-        fetchWPRDCData('Code Violation', { limit: 250 }),
-        fetchWPRDCData('Library'),
-        fetchWPRDCData('Non-Traffic Violation', { limit: 250 })
-    ]).then(() => {
-        console.log('All data loaded');
-    }).catch((err) => {
-        console.log('final error catch data', err);
-        displayNotification(err, "error total");
-    });
+    function fetchAllData() {
+        Promise.all([
+            fetchWPRDCData('Police', { limit: 250 }),
+            fetchWPRDCData('311', { limit: 250 }),
+            fetchWPRDCData('Arrest', { limit: 250 }),
+            fetchWPRDCData('Code Violation', { limit: 250 }),
+            fetchWPRDCData('Library'),
+            fetchWPRDCData('Non-Traffic Violation', { limit: 250 })
+        ]).catch((err) => {
+            displayNotification(err, "error", (retryDiv) => {
+                var retryButton = document.createElement("button");
+                retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
+                retryButton.type = 'button';
+                retryButton.className = 'retry';
+                retryButton.addEventListener("click", function() {
+                    retryDiv.parentNode.style.display = "none";
+                    fetchAllData();
+                });
+                retryDiv.appendChild(retryButton);
+            });
+        });
+    }
+
+    fetchAllData();
 
     //Helper function that returns difference between two dates in days
     function getDateDifference(dateA, dateB) {
