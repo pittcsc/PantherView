@@ -363,8 +363,7 @@
               }
             })
             .then((data) => {
-                // const records = data.result.records;
-                var records = null;
+                const records = data.result.records;
                 if (records) {
                     var filterContainer = document.createElement("div");
                     filterContainer.className = "typeBtn";
