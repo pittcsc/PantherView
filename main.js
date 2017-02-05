@@ -447,18 +447,30 @@
             }));
     }
 
-    Promise.all([
-        fetchWPRDCData('Police', { limit: 250 }),
-        fetchWPRDCData('311', { limit: 250 }),
-        fetchWPRDCData('Arrest', { limit: 250 }),
-        fetchWPRDCData('Code Violation', { limit: 250 }),
-        fetchWPRDCData('Library'),
-        fetchWPRDCData('Non-Traffic Violation', { limit: 250 })
-    ]).then(() => {
-        console.log('All data loaded');
-    }).catch((err) => {
-        console.log('final error catch data', err);
-    });
+    function fetchAllData() {
+        Promise.all([
+            fetchWPRDCData('Police', { limit: 250 }),
+            fetchWPRDCData('311', { limit: 250 }),
+            fetchWPRDCData('Arrest', { limit: 250 }),
+            fetchWPRDCData('Code Violation', { limit: 250 }),
+            fetchWPRDCData('Library'),
+            fetchWPRDCData('Non-Traffic Violation', { limit: 250 })
+        ]).catch((err) => {
+            displayNotification(err, "error", (retryDiv) => {
+                var retryButton = document.createElement("button");
+                retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
+                retryButton.type = 'button';
+                retryButton.className = 'retry';
+                retryButton.addEventListener("click", function() {
+                    retryDiv.parentNode.style.display = "none";
+                    fetchAllData();
+                });
+                retryDiv.appendChild(retryButton);
+            });
+        });
+    }
+
+    fetchAllData();
 
     //Helper function that returns difference between two dates in days
     function getDateDifference(dateA, dateB) {
