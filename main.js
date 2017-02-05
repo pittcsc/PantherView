@@ -428,6 +428,7 @@
                         retryButton.type = 'button';
                         retryButton.className = 'retry';
                         retryButton.addEventListener("click", function() {
+                            retryDiv.parentNode.style.display = "none";
                             fetchWPRDCData(dataSourceName);
                         });
                         retryDiv.appendChild(retryButton);
@@ -440,6 +441,7 @@
                 retryButton.type = 'button';
                 retryButton.className = 'retry';
                 retryButton.addEventListener("click", function() {
+                    retryDiv.parentNode.style.display = "none";
                     fetchWPRDCData(dataSourceName);
                 });
                 retryDiv.appendChild(retryButton);
