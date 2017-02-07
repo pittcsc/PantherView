@@ -363,7 +363,7 @@
               }
             })
             .then((data) => {
-                if (!data.result.records) {
+                if (!data || !data.result || !data.result.records) {
                     displayNotification(`${dataSourceName} records not processed.`, "error", (retryDiv) => {
                         var retryButton = document.createElement("button");
                         retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
