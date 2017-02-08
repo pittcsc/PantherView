@@ -158,6 +158,29 @@
         generateDataTable();
     }
 
+    // List markers that were not put on the map in a list on the sidebar
+    function displayInvalidMarkers() {
+        const parentDiv = document.getElementById('badMarkers');
+
+        for (const record of markers) {
+            if (record.isMapped) {
+                continue;
+            }
+
+            const dataSource = WPRDC_DATA_SOURCES[record.dataSourceName];
+
+            const headerLine = document.createElement('p');
+            headerLine.innerHTML = dataSource.title(record);
+
+            const div = document.createElement('div');
+            div.appendChild(headerLine);
+
+            parentDiv.appendChild(div);
+
+            console.log(record);
+        }
+    }
+
     //Displays and hides the sidebar
     function toggleSidebar() {
         if (sidebarToggle.open == 1) {
