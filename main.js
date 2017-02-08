@@ -43,6 +43,7 @@
 
     const sidebar = document.getElementById("sidebar");
     const sidebarToggle = document.getElementById("sidebarToggle");
+    const parentList = document.getElementById('badMarkers');
 
     //Start with sidebar closed if mobile
     if (screen.width <= 800) {
@@ -139,46 +140,40 @@
 
         if (elm.checked) {
             markers.forEach((marker) => {
+<<<<<<< HEAD
                 if (marker.type.toLowerCase() === type && marker.isMapped) {
+=======
+                if (marker.type === type) {
+>>>>>>> Precompute table data to allow for filtering
                     if (marker.inDate) {
-                        marker.pin.addTo(map);
+                        if (marker.isMapped) {
+                            marker.pin.addTo(map);
+                        } else {
+                            parentList.appendChild(marker.tableEl);
+                        }
                     }
                     marker.filtered = false;
                 }
             });
         } else {
             markers.forEach((marker) => {
+<<<<<<< HEAD
                 if (marker.type.toLowerCase() === type && marker.isMapped) {
                     map.removeLayer(marker.pin);
+=======
+                if (marker.type === type) {
+                    if (marker.isMapped) {
+                        map.removeLayer(marker.pin);
+                    } else if (marker.tableEl.parentElement) {
+                        marker.tableEl.parentElement.removeChild(marker.tableEl);
+                    }
+>>>>>>> Precompute table data to allow for filtering
                     marker.filtered = true;
                 }
             });
         }
 
         generateDataTable();
-    }
-
-    // List markers that were not put on the map in a list on the sidebar
-    function displayInvalidMarkers() {
-        const parentDiv = document.getElementById('badMarkers');
-
-        for (const record of markers) {
-            if (record.isMapped) {
-                continue;
-            }
-
-            const dataSource = WPRDC_DATA_SOURCES[record.dataSourceName];
-
-            const headerLine = document.createElement('p');
-            headerLine.innerHTML = dataSource.title(record);
-
-            const div = document.createElement('div');
-            div.appendChild(headerLine);
-
-            parentDiv.appendChild(div);
-
-            console.log(record);
-        }
     }
 
     //Displays and hides the sidebar
@@ -370,6 +365,17 @@
 
                         record.isMapped = true;
                     } else {
+                        // Give non-mapped markers a list element for displaying in a separate list
+                        // of non-mapped markers
+                        const headerLine = document.createElement('p');
+                        headerLine.innerHTML = dataSource.title(record);
+
+                        const li = document.createElement('li');
+                        li.appendChild(headerLine);
+
+                        parentList.appendChild(li);
+
+                        record.tableEl = li;
                         record.isMapped = false;
                     }
                     markers.push(record);
@@ -580,7 +586,6 @@
             fetchPittData('Laundry', 'SUTH_EAST', true),
             fetchPittData('Laundry', 'SUTH_WEST', true),
             fetchPittData('Laundry', 'FORBES_CRAIG', true)
-
         ]).catch((err) => {
             displayNotification(err, "error", (retryDiv) => {
                 var retryButton = document.createElement("button");

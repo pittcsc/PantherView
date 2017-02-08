@@ -134,7 +134,7 @@ html, body
 .leaflet-control-zoom.leaflet-bar.leaflet-control
 {
     position: fixed;
-    right: 1%;
+    right: calc(250px + 3%);
     bottom: 3%;
 }
 
