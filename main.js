@@ -1,10 +1,10 @@
 (function (window, undefined) {
-    "use strict";
+    'use strict';
 
     // Oakland Coordinates: 40.4388 N, 79.9514 W (40.4388, -79.9514)
     // Cathy Coordinates: 40° 26′ 39″ N, 79° 57′ 11″ W (40.444167, -79.953056)
     const cathyLatLong = [40.444167, -79.953056];
-    var map = L.map('mapid', {
+    const map = L.map('mapid', {
         center: cathyLatLong,
         zoom: 15,
         minZoom: 12,
@@ -12,18 +12,18 @@
         maxBoundsViscosity: 0.90
     });
 
-    var sidebar = document.getElementById("sidebar");
-    var sidebarToggle = document.getElementById("sidebarToggle");
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
 
     //Start with sidebar closed if mobile
     if (screen.width <= 800) {
         sidebarToggle.open = 0;
-        sidebar.className = "hidden";
-        sidebarToggle.className = "fa fa-chevron-right fa-3x";
+        sidebar.className = 'hidden';
+        sidebarToggle.className = 'fa fa-chevron-right fa-3x';
     } else {
         sidebarToggle.open = 1;
-        sidebar.className = "shown";
-        sidebarToggle.className = "fa fa-chevron-left fa-3x";
+        sidebar.className = 'shown';
+        sidebarToggle.className = 'fa fa-chevron-left fa-3x';
     }
 
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -31,7 +31,7 @@
     }).addTo(map);
 
     // Array of markers
-    var markers = new Array();
+    const markers = [];
 
     // Create a new Date object for the current date
     const currentDate = new Date();
@@ -42,8 +42,9 @@
     function displayPastDay() {
         markers.forEach((marker, i) => {
             //Check if library or other non-dated pin
-            if (!marker.incidentYear || !marker.isMapped)
+            if (!marker.incidentYear || !marker.isMapped) {
                 return;
+            }
 
             const recordDate = new Date(marker.incidentYear,
                 marker.incidentMonth - 1,
@@ -63,8 +64,9 @@
 
     function displayPastWeek() {
         markers.forEach((marker, i) => {
-            if (!marker.incidentYear || !marker.isMapped)
+            if (!marker.incidentYear || !marker.isMapped) {
                 return;
+            }
 
             const recordDate = new Date(marker.incidentYear,
                 marker.incidentMonth - 1,
@@ -84,8 +86,9 @@
 
     function displayPastMonth() {
         markers.forEach((marker, i) => {
-            if (!marker.isMapped)
+            if (!marker.isMapped) {
                 return;
+            }
 
             marker.inDate = true;
 
@@ -96,8 +99,8 @@
     }
 
     function filterDisplay(e) {
-        var elm = e.target;
-        var type = /.+?(?=[A-Z])/.exec(elm.id)[0];
+        const elm = e.target;
+        const type = /.+?(?=[A-Z])/.exec(elm.id)[0];
 
         if (elm.checked) {
             markers.forEach((marker) => {
@@ -122,53 +125,53 @@
     function toggleSidebar() {
         if (sidebarToggle.open == 1) {
             sidebarToggle.open = 0;
-            sidebar.className = "hidden";
-            sidebarToggle.className = "fa fa-chevron-right fa-3x";
+            sidebar.className = 'hidden';
+            sidebarToggle.className = 'fa fa-chevron-right fa-3x';
         } else {
             sidebarToggle.open = 1;
-            sidebar.className = "shown";
-            sidebarToggle.className = "fa fa-chevron-left fa-3x";
+            sidebar.className = 'shown';
+            sidebarToggle.className = 'fa fa-chevron-left fa-3x';
         }
     }
 
     //Listeners for date buttons
-    document.getElementById("radioDay").addEventListener("click", displayPastDay);
-    document.getElementById("radioWeek").addEventListener("click", displayPastWeek);
-    document.getElementById("radioMonth").addEventListener("click", displayPastMonth);
+    document.getElementById('radioDay').addEventListener('click', displayPastDay);
+    document.getElementById('radioWeek').addEventListener('click', displayPastWeek);
+    document.getElementById('radioMonth').addEventListener('click', displayPastMonth);
 
     //Listener for sidebar toggle
-    document.getElementById("sidebarToggle").addEventListener("click", toggleSidebar);
+    document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
 
     // Display a notification to the user.
-    // Style is optional, can be "error", "warning", or "success"
+    // Style is optional, can be 'error', 'warning', or 'success'
     function displayNotification(messageText, style, customHTML) {
-        var notificationArea = document.getElementById("notifications");
-        var box = document.createElement("div");
-        box.className = "notification";
+        const notificationArea = document.getElementById('notifications');
+        const box = document.createElement('div');
+        box.className = 'notification';
 
         if (style) {
-            box.className += " " + style;
+            box.classList.add(style);
         }
 
-        var closeButton = document.createElement("button");
-        closeButton.className = "close";
-        closeButton.innerHTML = "x";
-        closeButton.onclick = function() {
-            box.style.display = "none";
-        };
+        const closeButton = document.createElement('button');
+        closeButton.className = 'close';
+        closeButton.innerHTML = 'x';
+        closeButton.addEventListnener('click', function() {
+            box.style.display = 'none';
+        });
 
         box.appendChild(closeButton);
 
-        var textarea = document.createTextNode(messageText);
+        const textarea = document.createTextNode(messageText);
         box.appendChild(textarea);
 
         if (customHTML) {
-            var customDiv = document.createElement("div");
+            const customDiv = document.createElement('div');
             customHTML(customDiv);
             box.appendChild(customDiv);
         }
 
-        var topNotification = notificationArea.firstChild;
+        const topNotification = notificationArea.firstChild;
         notificationArea.insertBefore(box, topNotification);
     }
 
@@ -302,7 +305,7 @@
 
         // Calls from the library db
         "Library": {
-            id: "2ba0788a-2f35-43aa-a47c-89c75f55cf9d",
+            id: '2ba0788a-2f35-43aa-a47c-89c75f55cf9d',
             primaryFiltering: 'WHERE "Name" LIKE \'%OAKLAND%\'',
             latLong: ['Lat', 'Lon'],
             icon: iconTypes.LIBRARY_ICON,
@@ -355,22 +358,22 @@
 
         return fetch(WPRDC_BASE_URL + query)
             .then((response) => {
-              // Inspired by https://github.com/github/fetch#handling-http-error-statuses
-              if (response.status >= 200 && response.status < 300) {
-                return response.json();
-              } else {
-                  throw new Error("Could not retrieve the " + dataSourceName + " dataset; bad response.");
-              }
+                // Inspired by https://github.com/github/fetch#handling-http-error-statuses
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                } else {
+                  throw new Error(`Could not retrieve the ${dataSourceName} dataset; bad response.`);
+                }
             })
             .then((data) => {
                 if (!data || !data.result || !data.result.records) {
-                    displayNotification(`${dataSourceName} records not processed.`, "error", (retryDiv) => {
-                        var retryButton = document.createElement("button");
+                    displayNotification(`${dataSourceName} records not processed.`, 'error', (retryDiv) => {
+                        const retryButton = document.createElement('button');
                         retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
                         retryButton.type = 'button';
                         retryButton.className = 'retry';
-                        retryButton.addEventListener("click", function() {
-                            retryDiv.parentNode.style.display = "none";
+                        retryButton.addEventListener('click', function() {
+                            retryDiv.parentNode.style.display = 'none';
                             fetchWPRDCData(dataSourceName);
                         });
                         retryDiv.appendChild(retryButton);
@@ -380,22 +383,22 @@
 
                 const records = data.result.records;
 
-                var filterContainer = document.createElement("div");
-                filterContainer.className = "typeBtn";
+                const filterContainer = document.createElement('div');
+                filterContainer.className = 'typeBtn';
 
-                var filter = document.createElement("input");
-                filter.id = dataSourceName.toLowerCase() + "Check";
-                filter.type = "checkbox";
+                const filter = document.createElement('input');
+                filter.id = dataSourceName.toLowerCase() + 'Check';
+                filter.type = 'checkbox';
                 filter.checked = true;
 
-                var filterLabel = document.createElement("label");
-                filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
-                filterLabel.innerHTML = dataSource.icon.options.html + " - " +
+                const filterLabel = document.createElement('label');
+                filterLabel.htmlFor = dataSourceName.toLowerCase() + 'Check';
+                filterLabel.innerHTML = dataSource.icon.options.html + ' - ' +
                     dataSourceName;
 
-                filter.addEventListener("click", filterDisplay);
+                filter.addEventListener('click', filterDisplay);
 
-                document.getElementById("typeSelection").appendChild(filterContainer);
+                document.getElementById('typeSelection').appendChild(filterContainer);
                 filterContainer.appendChild(filter);
                 filterContainer.appendChild(filterLabel);
 
@@ -406,11 +409,11 @@
 
                     //Prune to last 30 days
                     if (record.incidentYear) {
-                      if (getDateDifference(currentDate, new Date(record.incidentYear,
-                          record.incidentMonth - 1,
-                          record.incidentDay)) > 30) {
-                            return;
-                      }
+                        if (getDateDifference(currentDate, new Date(record.incidentYear,
+                            record.incidentMonth - 1,
+                            record.incidentDay)) > 30) {
+                                return;
+                        }
                     }
 
                     record.inDate = true;
@@ -436,13 +439,13 @@
                     markers.push(record);
                 });
             })
-            .catch((err) => displayNotification(err, "error", (retryDiv) => {
-                var retryButton = document.createElement("button");
+            .catch((err) => displayNotification(err, 'error', (retryDiv) => {
+                const retryButton = document.createElement('button');
                 retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
                 retryButton.type = 'button';
                 retryButton.className = 'retry';
-                retryButton.addEventListener("click", function() {
-                    retryDiv.parentNode.style.display = "none";
+                retryButton.addEventListener('click', function() {
+                    retryDiv.parentNode.style.display = 'none';
                     fetchWPRDCData(dataSourceName);
                 });
                 retryDiv.appendChild(retryButton);
@@ -458,13 +461,13 @@
             fetchWPRDCData('Library'),
             fetchWPRDCData('Non-Traffic Violation', { limit: 250 })
         ]).catch((err) => {
-            displayNotification(err, "error", (retryDiv) => {
-                var retryButton = document.createElement("button");
+            displayNotification(err, 'error', (retryDiv) => {
+                var retryButton = document.createElement('button');
                 retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
                 retryButton.type = 'button';
                 retryButton.className = 'retry';
-                retryButton.addEventListener("click", function() {
-                    retryDiv.parentNode.style.display = "none";
+                retryButton.addEventListener('click', function() {
+                    retryDiv.parentNode.style.display = 'none';
                     fetchAllData();
                 });
                 retryDiv.appendChild(retryButton);
@@ -479,4 +482,4 @@
         return Math.floor(Math.abs(dateA.getTime() - dateB.getTime()) / 86400000);
     }
 
-})(typeof window !== "undefined" ? window : {});
+})(typeof window !== 'undefined' ? window : {});
