@@ -27,7 +27,7 @@
     }
 
     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"
     }).addTo(map);
 
     // Array of markers
@@ -183,42 +183,42 @@
     const iconTypes = {
         CITY_POLICE: L.divIcon({
             className: "map-pin blue",
-            html: '<i class="fa fa-balance-scale"></i>',
+            html: "<i class=\"fa fa-balance-scale\"></i>",
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
         }),
         CITY_ARREST: L.divIcon({
             className: "map-pin red",
-            html: '<i class="fa fa-gavel"></i>',
+            html: "<i class=\"fa fa-gavel\"></i>",
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
         }),
         CITY_311_ICON: L.divIcon({
             className: "map-pin yellow",
-            html: '<i class="fa fa-commenting"></i>',
+            html: "<i class=\"fa fa-commenting\"></i>",
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
         }),
         LIBRARY_ICON: L.divIcon({
             className: "map-pin black",
-            html: '<i class="fa fa-book"></i>',
+            html: "<i class=\"fa fa-book\"></i>",
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
         }),
         CODE_VIOLATION: L.divIcon({
             className: "map-pin green",
-            html: '<i class="fa fa-times-circle"></i>',
+            html: "<i class=\"fa fa-times-circle\"></i>",
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
         }),
         NON_TRAFFIC_VIOLATION: L.divIcon({
             className: "map-pin darkorchid",
-            html: '<i class="fa fa-sticky-note-o"></i>',
+            html: "<i class=\"fa fa-sticky-note-o\"></i>",
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
@@ -228,7 +228,7 @@
     const WPRDC_DATA_SOURCES = {
         "Police": {
             id: "1797ead8-8262-41cc-9099-cbc8a161924b",
-            primaryFiltering: 'WHERE "INCIDENTNEIGHBORHOOD" LIKE \'%Oakland\'',
+            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland'",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_POLICE,
 
@@ -246,7 +246,7 @@
 
         "Arrest": {
             id: "e03a89dd-134a-4ee8-a2bd-62c40aeebc6f",
-            primaryFiltering: 'WHERE "INCIDENTNEIGHBORHOOD" LIKE \'%Oakland\'',
+            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland'",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_ARREST,
 
@@ -264,7 +264,7 @@
 
         "Code Violation": {
             id: "4e5374be-1a88-47f7-afee-6a79317019b4",
-            primaryFiltering: 'WHERE "NEIGHBORHOOD" LIKE \'%Oakland\'',
+            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland'",
             latLong: ["Y", "X"],
             icon: iconTypes.CODE_VIOLATION,
 
@@ -286,7 +286,7 @@
         // TODO: would be great to prune 311 data to the last 30 days, like the police data
         "311": {
             id: "40776043-ad00-40f5-9dc8-1fde865ff571",
-            primaryFiltering: 'WHERE "NEIGHBORHOOD" LIKE \'%Oakland\' ORDER BY "CREATED_ON" DESC',
+            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland' ORDER BY \"CREATED_ON\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_311_ICON,
 
@@ -306,7 +306,7 @@
         // Calls from the library db
         "Library": {
             id: "2ba0788a-2f35-43aa-a47c-89c75f55cf9d",
-            primaryFiltering: 'WHERE "Name" LIKE \'%OAKLAND%\'',
+            primaryFiltering: "WHERE \"Name\" LIKE '%OAKLAND%'",
             latLong: ["Lat", "Lon"],
             icon: iconTypes.LIBRARY_ICON,
 
@@ -327,7 +327,7 @@
         },
         "Non-Traffic Violation": {
             id: "6b11e87d-1216-463d-bbd3-37460e539d86",
-            primaryFiltering: 'Where "NEIGHBORHOOD" LIKE \'%Oakland\'',
+            primaryFiltering: "Where \"NEIGHBORHOOD\" LIKE '%Oakland'",
             latLong: ["Y", "X"],
             icon: iconTypes.NON_TRAFFIC_VIOLATION,
 
@@ -343,8 +343,8 @@
     };
 
 
-    const WPRDC_QUERY_PREFIX = 'SELECT * FROM "';
-    const WPRDC_QUERY_SUFFIX = '" ';
+    const WPRDC_QUERY_PREFIX = "SELECT * FROM \"";
+    const WPRDC_QUERY_SUFFIX = "\" ";
 
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
     // TODO: Prune to last 30 days in SQL
@@ -369,7 +369,7 @@
                 if (!data || !data.result || !data.result.records) {
                     displayNotification(`${dataSourceName} records not processed.`, "error", (retryDiv) => {
                         const retryButton = document.createElement("button");
-                        retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
+                        retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
                         retryButton.type = "button";
                         retryButton.className = "retry";
                         retryButton.addEventListener("click", function() {
@@ -441,7 +441,7 @@
             })
             .catch((err) => displayNotification(err, "error", (retryDiv) => {
                 const retryButton = document.createElement("button");
-                retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
+                retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
                 retryButton.type = "button";
                 retryButton.className = "retry";
                 retryButton.addEventListener("click", function() {
@@ -463,7 +463,7 @@
         ]).catch((err) => {
             displayNotification(err, "error", (retryDiv) => {
                 var retryButton = document.createElement("button");
-                retryButton.innerHTML = '<p><i class="fa fa-refresh" aria-hidden="true"></i> Retry</p>';
+                retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
                 retryButton.type = "button";
                 retryButton.className = "retry";
                 retryButton.addEventListener("click", function() {
