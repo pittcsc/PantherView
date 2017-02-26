@@ -39,3 +39,5 @@ Brandon Palonis
 Neha Abraham
 
 Franklin Ty
+
+Kyle Amoroso
