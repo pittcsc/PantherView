@@ -58,8 +58,8 @@ html, body
 .notification button.close
 {
     float: right;
-    font-wight: bold;
-    margin-top: -10px;
+    font-weight: bold;
+    margin-top: -15px;
     margin-right: -10px;
     text-decoration: none;
     border: none;
@@ -67,6 +67,30 @@ html, body
     color: black;
     background-color: transparent;
     cursor: pointer;
+}
+
+.retry
+{
+    position: relative;
+    left: 45%;
+    margin-top: 3px;
+    background-color: transparent;
+    border-style: none;
+}
+
+.retry p
+{
+    font-family: "Roboto", sans-serif;
+    padding: 0px;
+    margin: 0px;
+}
+
+.retry:hover
+{
+    background-color: transparent;
+    border-style: solid;
+    border-color: gray;
+    border-radius: 3px;
 }
 
 @media only screen and (max-width: 600px)
