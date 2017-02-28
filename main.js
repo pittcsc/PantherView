@@ -156,7 +156,7 @@
         const closeButton = document.createElement("button");
         closeButton.className = "close";
         closeButton.innerHTML = "x";
-        closeButton.addEventListnener("click", function() {
+        closeButton.addEventListener("click", function() {
             box.style.display = "none";
         });
 
@@ -178,6 +178,7 @@
 
     // WPRDC data
     const WPRDC_BASE_URL = "https://data.wprdc.org/api/action/datastore_search_sql?sql=";
+    const WPRDC_META_URL = "https://data.wprdc.org/api/action/resource_show?id=";
 
     // Marker Icons
     const iconTypes = {
@@ -449,7 +450,25 @@
                     fetchWPRDCData(dataSourceName);
                 });
                 retryDiv.appendChild(retryButton);
-            }));
+            })).then(() => {
+                return fetch(WPRDC_META_URL + dataSource.id)
+                .then((response) => {
+                    //check response for data and data for date
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    }
+                })
+                .then((metadata) => {
+                    // Parse json for last modified field
+                    var parsedDate = Date.parse(metadata.result.last_modified);
+
+                    // Display a notification if the dataset has been updated within the hour
+                    var diff = Date.now() - parsedDate;
+                    if (diff <= 3600000) {
+                        displayNotification("The ${dataSourceName} dataset has been recently updated.");
+                    }
+                });
+            });
     }
 
     function fetchAllData() {
