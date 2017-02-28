@@ -450,7 +450,8 @@
                     fetchWPRDCData(dataSourceName);
                 });
                 retryDiv.appendChild(retryButton);
-            })).then(() => {
+            }))
+            .then(() => {
                 return fetch(WPRDC_META_URL + dataSource.id)
                 .then((response) => {
                     //check response for data and data for date
@@ -465,7 +466,7 @@
                     // Display a notification if the dataset has been updated within the hour
                     var diff = Date.now() - parsedDate;
                     if (diff <= 3600000) {
-                        displayNotification("The ${dataSourceName} dataset has been recently updated.");
+                        displayNotification("The " + dataSourceName + " dataset has been recently updated.");
                     }
                 });
             });
