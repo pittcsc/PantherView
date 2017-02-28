@@ -236,7 +236,7 @@
             latLong: [40.443844, -79.958475],
             icon: iconTypes.COMP_LAB
         },
-        "Cath_G26": {
+        "Cath_G62": {
             latLong: [40.444038, -79.953110],
             icon: iconTypes.COMP_LAB
         },
@@ -467,7 +467,7 @@
     //May not need the "options" parameter, as I can't see any data request from Pitt being overwhelmingly large
     function fetchPittData(dataSection, dataSourceName, filterCreated, options = {}){
         if (dataSection == "Labs"){
-            return fetch("http://labinformation.cssd.pitt.edu/lab_status/" + dataSourceName.toLowerCase())
+            return fetch("http://127.0.0.1:5000/lab_status/" + dataSourceName.toUpperCase())
             //TODO: Ensure 200 response
             .then((response) => {
                 // Inspired by https://github.com/github/fetch#handling-http-error-statuses
@@ -481,6 +481,7 @@
             })
             .then((response) => response.json())
             .then((data) => {
+                console.log(data);
 
                 //Grab dataSource object
                 const dataSource = PITT_LABS[dataSourceName];
@@ -552,7 +553,7 @@
         //Pitt Promises
         fetchPittData('Labs', 'Alumni', false),
         fetchPittData('Labs', 'Benedum', true),
-        fetchPittData('Labs', 'Cath_G26', true),
+        fetchPittData('Labs', 'Cath_G62', true),
         fetchPittData('Labs', 'Cath_G27', true),
         fetchPittData('Labs', 'Lawrence', true),
         fetchPittData('Labs', 'Hillman', true),
