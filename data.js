@@ -3,6 +3,7 @@
 
     // WPRDC data
     const WPRDC_BASE_URL = "https://data.wprdc.org/api/action/datastore_search_sql?sql=";
+    const WPRDC_META_URL = "https://data.wprdc.org/api/action/resource_show?id=";
 
     // Marker Icons
     const iconTypes = {
