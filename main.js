@@ -179,7 +179,7 @@
         const closeButton = document.createElement("button");
         closeButton.className = "close";
         closeButton.innerHTML = "x";
-        closeButton.addEventListnener("click", function() {
+        closeButton.addEventListener("click", function() {
             box.style.display = "none";
         });
 
@@ -197,8 +197,6 @@
         const topNotification = notificationArea.firstChild;
         notificationArea.insertBefore(box, topNotification);
     }
-
-    // data was here
 
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
     // TODO: Prune to last 30 days in SQL
@@ -303,7 +301,27 @@
                     fetchWPRDCData(dataSourceName);
                 });
                 retryDiv.appendChild(retryButton);
-            }));
+            }))
+            .then(() => {
+                return fetch(WPRDC_META_URL + dataSource.id)
+                .then((response) => {
+                    //check response for data and data for date
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    }
+                })
+                .then((metadata) => {
+                    // Parse json for last modified field
+                    var parsedDate = Date.parse(metadata.result.last_modified);
+
+                    // Display a notification if the dataset has been updated within the past 2 hours
+                    const range = 3600000*2;
+                    var diff = Date.now() - parsedDate;
+                    if (diff <= range) {
+                        displayNotification("The " + dataSourceName + " dataset has been recently updated.");
+                    }
+                });
+            });
     }
 
     function fetchAllData() {
