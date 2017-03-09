@@ -3,6 +3,7 @@
 
     // declare variables awaiting values
     let WPRDC_BASE_URL,
+        WPRDC_META_URL,
         WPRDC_DATA_SOURCES,
         WPRDC_QUERY_PREFIX,
         WPRDC_QUERY_SUFFIX;
@@ -12,6 +13,7 @@
         // asign the recieved values
         ({
             WPRDC_BASE_URL,
+            WPRDC_META_URL,
             WPRDC_DATA_SOURCES,
             WPRDC_QUERY_PREFIX,
             WPRDC_QUERY_SUFFIX

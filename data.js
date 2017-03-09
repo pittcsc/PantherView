@@ -174,6 +174,7 @@
     const dataReadyEvent = new CustomEvent("dataready", {
         detail: {
             WPRDC_BASE_URL,
+            WPRDC_META_URL,
             WPRDC_DATA_SOURCES,
             WPRDC_QUERY_PREFIX,
             WPRDC_QUERY_SUFFIX
