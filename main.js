@@ -523,13 +523,25 @@
                 if (response.status >= 200 && response.status < 300) {
                     return response;
                 } else {
-                    const error = new Error(response.errorText);
-                    error.response = response;
-                    displayNotification(error, "error response");
+                    throw new Error(`Could not retrieve the ${dataSourceName} dataset; bad response.`);
                 }
             })
             .then((response) => response.json())
             .then((data) => {
+                if (!data || !data.result || !data.result.records) {
+                    displayNotification(`${dataSourceName} records not processed.`, "error", (retryDiv) => {
+                        const retryButton = document.createElement("button");
+                        retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
+                        retryButton.type = "button";
+                        retryButton.className = "retry";
+                        retryButton.addEventListener("click", function() {
+                            retryDiv.parentNode.style.display = "none";
+                            fetchPittData(dataSourceName);
+                        });
+                        retryDiv.appendChild(retryButton);
+                    });
+                    return;
+                }
                 console.log(data);
 
                 //Grab dataSource object
@@ -586,9 +598,19 @@
                     inDate: true, //Date is not important, but necessary for filtering for now
                     type: "labs" 
                 });
-            });
+            })
+            .catch((err) => displayNotification(err, "error", (retryDiv) => {
+                const retryButton = document.createElement("button");
+                retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
+                retryButton.type = "button";
+                retryButton.className = "retry";
+                retryButton.addEventListener("click", function() {
+                    retryDiv.parentNode.style.display = "none";
+                    fetchPittData(dataSourceName);
+                });
+                retryDiv.appendChild(retryButton);
+            }));
         }
-
     }
 
     Promise.all([
