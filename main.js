@@ -316,10 +316,9 @@
                     // Parse json for last modified field
                     var parsedDate = Date.parse(metadata.result.last_modified);
 
-                    // Display a notification if the dataset has been updated within the past 2 hours
-                    const range = 3600000*2;
+                    // Display a notification if the dataset has been updated within .updateTime
                     var diff = Date.now() - parsedDate;
-                    if (diff <= range) {
+                    if (diff <= dataSource.updateTime) {
                         displayNotification("The " + dataSourceName + " dataset has been recently updated.");
                     }
                 });
