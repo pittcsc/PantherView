@@ -179,7 +179,7 @@
         const closeButton = document.createElement("button");
         closeButton.className = "close";
         closeButton.innerHTML = "x";
-        closeButton.addEventListnener("click", function() {
+        closeButton.addEventListener("click", function() {
             box.style.display = "none";
         });
 
@@ -199,7 +199,7 @@
     }
 
     // WPRDC data
-    const WPRDC_BASE_URL = "https://data.wprdc.org/api/action/datastore_search_sql?sql=";
+    WPRDC_BASE_URL = "https://data.wprdc.org/api/action/datastore_search_sql?sql=";
 
     // Marker Icons
     const iconTypes = {
@@ -285,7 +285,7 @@
         }
     };
 
-    const WPRDC_DATA_SOURCES = {
+    WPRDC_DATA_SOURCES = {
         "Police": {
             id: "1797ead8-8262-41cc-9099-cbc8a161924b",
             primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland'",
@@ -403,12 +403,13 @@
     };
 
 
-    const WPRDC_QUERY_PREFIX = "SELECT * FROM \"";
-    const WPRDC_QUERY_SUFFIX = "\" ";
+    WPRDC_QUERY_PREFIX = "SELECT * FROM \"";
+    WPRDC_QUERY_SUFFIX = "\" ";
 
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
     // TODO: Prune to last 30 days in SQL
     function fetchWPRDCData(dataSourceName, options={}) {
+        console.log("Call me??");
         const dataSource = WPRDC_DATA_SOURCES[dataSourceName];
         let query = WPRDC_QUERY_PREFIX + dataSource.id + WPRDC_QUERY_SUFFIX + dataSource.primaryFiltering;
 
@@ -613,29 +614,6 @@
         }
     }
 
-    Promise.all([
-        fetchWPRDCData('Police', { limit: 250 }),
-        fetchWPRDCData('311', { limit: 250 }),
-        fetchWPRDCData('Arrest', { limit: 250 }),
-        fetchWPRDCData('Code Violation', { limit: 250 }),
-        fetchWPRDCData('Library'),
-        fetchWPRDCData('Non-Traffic Violation', { limit: 250 }),
-
-        //Pitt Promises
-        fetchPittData('Labs', 'Alumni', false),
-        fetchPittData('Labs', 'Benedum', true),
-        fetchPittData('Labs', 'Cath_G62', true),
-        fetchPittData('Labs', 'Cath_G27', true),
-        fetchPittData('Labs', 'Lawrence', true),
-        fetchPittData('Labs', 'Hillman', true),
-        fetchPittData('Labs', 'Suth', true)
-
-    ]).then(() => {
-        console.log('All data loaded');
-    }).catch((err) => {
-        console.log('final error catch data', err);
-        displayNotification(err, "error total");
-    });
     function fetchAllData() {
         Promise.all([
             fetchWPRDCData("Police", { limit: 250 }),
@@ -643,7 +621,16 @@
             fetchWPRDCData("Arrest", { limit: 250 }),
             fetchWPRDCData("Code Violation", { limit: 250 }),
             fetchWPRDCData("Library"),
-            fetchWPRDCData("Non-Traffic Violation", { limit: 250 })
+            fetchWPRDCData("Non-Traffic Violation", { limit: 250 }),
+
+            fetchPittData('Labs', 'Alumni', false),
+            fetchPittData('Labs', 'Benedum', true),
+            fetchPittData('Labs', 'Cath_G62', true),
+            fetchPittData('Labs', 'Cath_G27', true),
+            fetchPittData('Labs', 'Lawrence', true),
+            fetchPittData('Labs', 'Hillman', true),
+            fetchPittData('Labs', 'Suth', true)
+
         ]).catch((err) => {
             displayNotification(err, "error", (retryDiv) => {
                 var retryButton = document.createElement("button");
@@ -658,8 +645,6 @@
             });
         });
     }
-
-    fetchAllData();
 
     //Helper function that returns difference between two dates in days
     function getDateDifference(dateA, dateB) {
