@@ -409,7 +409,6 @@
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
     // TODO: Prune to last 30 days in SQL
     function fetchWPRDCData(dataSourceName, options={}) {
-        console.log("Call me??");
         const dataSource = WPRDC_DATA_SOURCES[dataSourceName];
         let query = WPRDC_QUERY_PREFIX + dataSource.id + WPRDC_QUERY_SUFFIX + dataSource.primaryFiltering;
 
@@ -529,7 +528,8 @@
             })
             .then((response) => response.json())
             .then((data) => {
-                if (!data || !data.result || !data.result.records) {
+                if (!data) {
+                    console.log(data);
                     displayNotification(`${dataSourceName} records not processed.`, "error", (retryDiv) => {
                         const retryButton = document.createElement("button");
                         retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
