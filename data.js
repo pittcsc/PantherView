@@ -1,8 +1,12 @@
 (function(window, undefined) {
     "use strict";
 
+    const HOUR = 3600000;
+    const MINUTE = 60000;
+
     // WPRDC data
     const WPRDC_BASE_URL = "https://data.wprdc.org/api/action/datastore_search_sql?sql=";
+    const WPRDC_META_URL = "https://data.wprdc.org/api/action/resource_show?id=";
 
     // Marker Icons
     const iconTypes = {
@@ -94,6 +98,7 @@
             primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland'",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_POLICE,
+            updateTime: 12*HOUR,
 
             // TODO: Better title and popup messages?
             title: (record) => record["OFFENSES"],
@@ -112,6 +117,7 @@
             primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland'",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_ARREST,
+            updateTime: 12*HOUR,
 
             // TODO: Better title and popup messages?
             title: (record) => record["OFFENSES"],
@@ -130,6 +136,7 @@
             primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland'",
             latLong: ["Y", "X"],
             icon: iconTypes.CODE_VIOLATION,
+            updateTime: 12*HOUR,
 
             // TODO: Better title and popup messages?
             title: (record) => record["VIOLATION"],
@@ -152,6 +159,7 @@
             primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland' ORDER BY \"CREATED_ON\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_311_ICON,
+            updateTime: 10*MINUTE,
 
             title: (record) => record["REQUEST_TYPE"],
             popup: (record) => `
@@ -164,6 +172,8 @@
                 record.incidentMonth = parseInt(record.CREATED_ON.substring(5,8));
                 record.incidentDay = parseInt(record.CREATED_ON.substring(8,10));
             }
+
+
         },
 
         // Calls from the library db
@@ -172,6 +182,7 @@
             primaryFiltering: "WHERE \"Name\" LIKE '%OAKLAND%'",
             latLong: ["Lat", "Lon"],
             icon: iconTypes.LIBRARY_ICON,
+            updateTime: 24*HOUR*30,
 
             title: (record) => record["Name"],
             popup: (record) => `
@@ -193,6 +204,7 @@
             primaryFiltering: "Where \"NEIGHBORHOOD\" LIKE '%Oakland'",
             latLong: ["Y", "X"],
             icon: iconTypes.NON_TRAFFIC_VIOLATION,
+            updateTime: 12*HOUR,
 
             title: (record) => record["OFFENSES"],
             popup: (record) => record["OFFENSES"],
@@ -211,6 +223,7 @@
     const dataReadyEvent = new CustomEvent("dataready", {
         detail: {
             WPRDC_BASE_URL,
+            WPRDC_META_URL,
             WPRDC_DATA_SOURCES,
             WPRDC_QUERY_PREFIX,
             WPRDC_QUERY_SUFFIX,

@@ -3,6 +3,7 @@
 
     // declare variables awaiting values
     let WPRDC_BASE_URL,
+        WPRDC_META_URL,
         WPRDC_DATA_SOURCES,
         WPRDC_QUERY_PREFIX,
         WPRDC_QUERY_SUFFIX,
@@ -13,6 +14,7 @@
         // assign the received values
         ({
             WPRDC_BASE_URL,
+            WPRDC_META_URL,
             WPRDC_DATA_SOURCES,
             WPRDC_QUERY_PREFIX,
             WPRDC_QUERY_SUFFIX,
@@ -303,7 +305,26 @@
                     fetchWPRDCData(dataSourceName);
                 });
                 retryDiv.appendChild(retryButton);
-            }));
+            }))
+            .then(() => {
+                return fetch(WPRDC_META_URL + dataSource.id)
+                .then((response) => {
+                    //check response for data and data for date
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    }
+                })
+                .then((metadata) => {
+                    // Parse json for last modified field
+                    var parsedDate = Date.parse(metadata.result.last_modified);
+
+                    // Display a notification if the dataset has been updated within .updateTime
+                    var diff = Date.now() - parsedDate;
+                    if (diff <= dataSource.updateTime) {
+                        displayNotification("The " + dataSourceName + " dataset has been recently updated.");
+                    }
+                });
+           });
     }
 
     //Fetch data from Pitt using Ritwik Gupta's PittAPI and associated wrapper
