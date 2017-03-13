@@ -181,7 +181,7 @@
         const closeButton = document.createElement("button");
         closeButton.className = "close";
         closeButton.innerHTML = "x";
-        closeButton.addEventListener("click", function() {
+        closeButton.addEventListnener("click", function() {
             box.style.display = "none";
         });
 
@@ -199,6 +199,8 @@
         const topNotification = notificationArea.firstChild;
         notificationArea.insertBefore(box, topNotification);
     }
+
+    // data was here
 
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
     // TODO: Prune to last 30 days in SQL
@@ -322,7 +324,7 @@
                         displayNotification("The " + dataSourceName + " dataset has been recently updated.");
                     }
                 });
-            });
+           });
     }
 
     function fetchAllData() {
