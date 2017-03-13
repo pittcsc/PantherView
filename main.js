@@ -1,6 +1,29 @@
 (function (window, undefined) {
     "use strict";
 
+    // declare variables awaiting values
+    let WPRDC_BASE_URL,
+        WPRDC_DATA_SOURCES,
+        WPRDC_QUERY_PREFIX,
+        WPRDC_QUERY_SUFFIX;
+
+    // await those values
+    window.addEventListener("dataready", function handler(event) {
+        // asign the recieved values
+        ({
+            WPRDC_BASE_URL,
+            WPRDC_DATA_SOURCES,
+            WPRDC_QUERY_PREFIX,
+            WPRDC_QUERY_SUFFIX
+        } = event.detail);
+
+        // wait for these values before fetching dependant data
+        fetchAllData();
+
+        // need only assign values once
+        window.removeEventListener("dataready", handler);
+    });
+
     // Oakland Coordinates: 40.4388 N, 79.9514 W (40.4388, -79.9514)
     // Cathy Coordinates: 40° 26′ 39″ N, 79° 57′ 11″ W (40.444167, -79.953056)
     const cathyLatLong = [40.444167, -79.953056];
@@ -174,7 +197,6 @@
         const topNotification = notificationArea.firstChild;
         notificationArea.insertBefore(box, topNotification);
     }
-
 
     // WPRDC data
     const WPRDC_BASE_URL = "https://data.wprdc.org/api/action/datastore_search_sql?sql=";
@@ -616,7 +638,6 @@
     }
 
     fetchAllData();
-
 
     //Helper function that returns difference between two dates in days
     function getDateDifference(dateA, dateB) {
