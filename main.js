@@ -413,7 +413,7 @@
                     type: "labs" 
                 });
             })
-            .catch((err) => displayNotification(err, "error", (retryDiv) => {
+            .catch((err) => displayNotification("Error: Unable to fetch Pitt data", "error", (retryDiv) => {
                 const retryButton = document.createElement("button");
                 retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
                 retryButton.type = "button";
