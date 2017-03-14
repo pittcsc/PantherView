@@ -295,7 +295,7 @@
                     markers.push(record);
                 });
             })
-            .catch((err) => displayNotification(err, "error", (retryDiv) => {
+            .catch((err) => displayNotification(`Error: Public dataset ${dataSourceName} could not be retrieved`, "error", (retryDiv) => {
                 const retryButton = document.createElement("button");
                 retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
                 retryButton.type = "button";
@@ -412,7 +412,7 @@
                     type: "labs" 
                 });
             })
-            .catch((err) => displayNotification(`Error: ${dataSourceName} could not be retrieved`, "error", (retryDiv) => {
+            .catch((err) => displayNotification(`Error: Pitt dataset ${dataSourceName} could not be retrieved`, "error", (retryDiv) => {
                 const retryButton = document.createElement("button");
                 retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
                 retryButton.type = "button";
