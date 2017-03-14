@@ -6,17 +6,19 @@
         WPRDC_META_URL,
         WPRDC_DATA_SOURCES,
         WPRDC_QUERY_PREFIX,
-        WPRDC_QUERY_SUFFIX;
+        WPRDC_QUERY_SUFFIX,
+        PITT_LABS;
 
     // await those values
     window.addEventListener("dataready", function handler(event) {
-        // asign the recieved values
+        // assign the received values
         ({
             WPRDC_BASE_URL,
             WPRDC_META_URL,
             WPRDC_DATA_SOURCES,
             WPRDC_QUERY_PREFIX,
-            WPRDC_QUERY_SUFFIX
+            WPRDC_QUERY_SUFFIX,
+            PITT_LABS
         } = event.detail);
 
         // wait for these values before fetching dependant data
@@ -181,7 +183,7 @@
         const closeButton = document.createElement("button");
         closeButton.className = "close";
         closeButton.innerHTML = "x";
-        closeButton.addEventListnener("click", function() {
+        closeButton.addEventListener("click", function() {
             box.style.display = "none";
         });
 
@@ -199,8 +201,6 @@
         const topNotification = notificationArea.firstChild;
         notificationArea.insertBefore(box, topNotification);
     }
-
-    // data was here
 
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
     // TODO: Prune to last 30 days in SQL
@@ -327,6 +327,106 @@
            });
     }
 
+    //Fetch data from Pitt using Ritwik Gupta's PittAPI and associated wrapper
+    //May not need the "options" parameter, as I can't see any data request from Pitt being overwhelmingly large
+    function fetchPittData(dataSection, dataSourceName, filterCreated, options = {}){
+        if (dataSection == "Labs"){
+            return fetch("http://127.0.0.1:5000/lab_status/" + dataSourceName.toUpperCase())
+            //TODO: Ensure 200 response
+            .then((response) => {
+                // Inspired by https://github.com/github/fetch#handling-http-error-statuses
+                if (response.status >= 200 && response.status < 300) {
+                    return response;
+                } else {
+                    throw new Error(`Could not retrieve the ${dataSourceName} dataset; bad response.`);
+                }
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data) {
+                    displayNotification(`${dataSourceName} records not processed.`, "error", (retryDiv) => {
+                        const retryButton = document.createElement("button");
+                        retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
+                        retryButton.type = "button";
+                        retryButton.className = "retry";
+                        retryButton.addEventListener("click", function() {
+                            retryDiv.parentNode.style.display = "none";
+                            fetchPittData(dataSourceName);
+                        });
+                        retryDiv.appendChild(retryButton);
+                    });
+                    return;
+                }
+
+                //Grab dataSource object
+                const dataSource = PITT_LABS[dataSourceName];
+
+                //If the checkbox has yet to be built for filtering the pins (only executes for first lab fetch)
+                if (!filterCreated){
+                    var filterContainer = document.createElement("div");
+                    filterContainer.className = "typeBtn";
+
+                    var filter = document.createElement("input");
+                    filter.id = dataSection.toLowerCase() + "Check";
+                    filter.type = "checkbox";
+                    filter.checked = true;
+
+                    var filterLabel = document.createElement("label");
+                    filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
+                    filterLabel.innerHTML = dataSource.icon.options.html + " - " + dataSection;
+
+                    filter.addEventListener("click", filterDisplay);
+
+                    document.getElementById("typeSelection").appendChild(filterContainer);
+                    filterContainer.appendChild(filter);
+                    filterContainer.appendChild(filterLabel);
+                }
+
+                //Create pin object
+                const thePin = L.marker(PITT_LABS[dataSourceName].latLong, {
+                    title: dataSourceName,
+                    icon: dataSource.icon
+                });
+
+                //Create popup
+                var pup = L.popup();
+                    pup.setContent("<p> " + dataSourceName + " Lab<br>Status: " + data.status
+                                 + "<br> Macs available: " + data.mac
+                                + "<br> Windows available: " + data.windows
+                                + "<br> Linux available: " + data.linux + "</p>");
+
+                //labRecord.popup = pup;
+                //Bind popup to pin
+                thePin.bindPopup(pup);
+                //Add pin to map
+                thePin.addTo(map);
+                pup.isMapped = true;
+                //Push pin (haha, get it?)
+                markers.push({ //Push the following object onto the markers array
+                    numWindows: data.windows,
+                    numMac: data.mac,
+                    numLinux: data.linux,
+                    labStatus: data.status,
+                    pin: thePin,
+                    isMapped: true,
+                    inDate: true, //Date is not important, but necessary for filtering for now
+                    type: "labs" 
+                });
+            })
+            .catch((err) => displayNotification(err, "error", (retryDiv) => {
+                const retryButton = document.createElement("button");
+                retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
+                retryButton.type = "button";
+                retryButton.className = "retry";
+                retryButton.addEventListener("click", function() {
+                    retryDiv.parentNode.style.display = "none";
+                    fetchPittData(dataSourceName);
+                });
+                retryDiv.appendChild(retryButton);
+            }));
+        }
+    }
+
     function fetchAllData() {
         Promise.all([
             fetchWPRDCData("Police", { limit: 250 }),
@@ -334,7 +434,16 @@
             fetchWPRDCData("Arrest", { limit: 250 }),
             fetchWPRDCData("Code Violation", { limit: 250 }),
             fetchWPRDCData("Library"),
-            fetchWPRDCData("Non-Traffic Violation", { limit: 250 })
+            fetchWPRDCData("Non-Traffic Violation", { limit: 250 }),
+
+            fetchPittData('Labs', 'Alumni', false),
+            fetchPittData('Labs', 'Benedum', true),
+            fetchPittData('Labs', 'Cath_G62', true),
+            fetchPittData('Labs', 'Cath_G27', true),
+            fetchPittData('Labs', 'Lawrence', true),
+            fetchPittData('Labs', 'Hillman', true),
+            fetchPittData('Labs', 'Suth', true)
+
         ]).catch((err) => {
             displayNotification(err, "error", (retryDiv) => {
                 var retryButton = document.createElement("button");

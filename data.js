@@ -10,6 +10,13 @@
 
     // Marker Icons
     const iconTypes = {
+        COMP_LAB: L.divIcon({
+            className: 'map-pin black',
+            html: '<i class="fa fa-desktop"></i>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
+        }),
         CITY_POLICE: L.divIcon({
             className: "map-pin blue",
             html: "<i class=\"fa fa-balance-scale\"></i>",
@@ -52,6 +59,37 @@
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
         })
+    };
+
+    const PITT_LABS = {
+        "Alumni": {
+            latLong: [40.445763, -79.953834],
+            icon: iconTypes.COMP_LAB
+        },
+        "Benedum": {
+            latLong: [40.443844, -79.958475],
+            icon: iconTypes.COMP_LAB
+        },
+        "Cath_G62": {
+            latLong: [40.444038, -79.953110],
+            icon: iconTypes.COMP_LAB
+        },
+        "Cath_G27": {
+            latLong: [40.444291, -79.953357],
+            icon: iconTypes.COMP_LAB
+        },
+        "Lawrence": {
+            latLong: [40.442277, -79.955023],
+            icon: iconTypes.COMP_LAB
+        },
+        "Hillman": {
+            latLong: [40.442787, -79.953942],
+            icon: iconTypes.COMP_LAB
+        },
+        "Suth": {
+            latLong: [40.445953, -79.962444],
+            icon: iconTypes.COMP_LAB
+        }
     };
 
     const WPRDC_DATA_SOURCES = {
@@ -188,7 +226,8 @@
             WPRDC_META_URL,
             WPRDC_DATA_SOURCES,
             WPRDC_QUERY_PREFIX,
-            WPRDC_QUERY_SUFFIX
+            WPRDC_QUERY_SUFFIX,
+            PITT_LABS
         }
     });
     window.dispatchEvent(dataReadyEvent);
