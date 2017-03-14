@@ -332,7 +332,6 @@
     function fetchPittData(dataSection, dataSourceName, filterCreated, options = {}){
         if (dataSection == "Labs"){
             return fetch("http://127.0.0.1:5000/lab_status/" + dataSourceName.toUpperCase())
-            //TODO: Ensure 200 response
             .then((response) => {
                 // Inspired by https://github.com/github/fetch#handling-http-error-statuses
                 if (response.status >= 200 && response.status < 300) {
@@ -413,7 +412,7 @@
                     type: "labs" 
                 });
             })
-            .catch((err) => displayNotification("Error: Unable to fetch Pitt data", "error", (retryDiv) => {
+            .catch((err) => displayNotification(`Error: ${dataSourceName} could not be retrieved`, "error", (retryDiv) => {
                 const retryButton = document.createElement("button");
                 retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
                 retryButton.type = "button";
