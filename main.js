@@ -367,11 +367,15 @@
                     } else {
                         // Give non-mapped markers a list element for displaying in a separate list
                         // of non-mapped markers
-                        const headerLine = document.createElement('p');
-                        headerLine.innerHTML = dataSource.title(record);
-
                         const li = document.createElement('li');
-                        li.appendChild(headerLine);
+
+                        if (dataSource.table) {
+                          li.innerHTML = `<div class="${dataSource.icon.options.className}">${dataSource.icon.options.html}</div>${dataSource.table(record)}`;
+                        } else {
+                          const headerLine = document.createElement('p');
+                          headerLine.innerHTML = `<div class="${dataSource.icon.options.className}">${dataSource.icon.options.html}</div>${dataSource.title(record)}`;
+                          li.appendChild(headerLine);
+                        }
 
                         parentList.appendChild(li);
 
