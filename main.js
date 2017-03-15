@@ -368,14 +368,26 @@
                         // Give non-mapped markers a list element for displaying in a separate list
                         // of non-mapped markers
                         const li = document.createElement('li');
+                        const headerLine = document.createElement('p');
+
+                        // const marker = dataSource.icon.createIcon();
+                        // marker.style.marginLeft = null;
+                        // marker.style.marginTop = null;
+                        const options = dataSource.icon.options;
+                        const icon = document.createElement('div');
+                        icon.className = options.className;
+                        icon.innerHTML = options.html;
+                        icon.style.width = options.iconSize[0];
+                        icon.style.height = options.iconSize[1];
 
                         if (dataSource.table) {
-                          li.innerHTML = `<div class="${dataSource.icon.options.className}">${dataSource.icon.options.html}</div>${dataSource.table(record)}`;
+                            headerLine.innerHTML = dataSource.table(record);
                         } else {
-                          const headerLine = document.createElement('p');
-                          headerLine.innerHTML = `<div class="${dataSource.icon.options.className}">${dataSource.icon.options.html}</div>${dataSource.title(record)}`;
-                          li.appendChild(headerLine);
+                            headerLine.innerHTML = dataSource.title(record);
                         }
+
+                        li.appendChild(icon);
+                        li.appendChild(headerLine);
 
                         parentList.appendChild(li);
 
