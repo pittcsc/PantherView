@@ -370,9 +370,6 @@
                         const li = document.createElement('li');
                         const headerLine = document.createElement('p');
 
-                        // const marker = dataSource.icon.createIcon();
-                        // marker.style.marginLeft = null;
-                        // marker.style.marginTop = null;
                         const options = dataSource.icon.options;
                         const icon = document.createElement('div');
                         icon.className = options.className;
