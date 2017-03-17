@@ -331,7 +331,7 @@
     //May not need the "options" parameter, as I can't see any data request from Pitt being overwhelmingly large
     function fetchPittData(dataSection, dataSourceName, filterCreated, options = {}){
         if (dataSection == "Labs"){
-            return fetch("http://127.0.0.1:5000/lab_status/" + dataSourceName.toUpperCase())
+            return fetch("http://labinformation.cssd.pitt.edu/lab_status/" + dataSourceName.toUpperCase())
             .then((response) => {
                 // Inspired by https://github.com/github/fetch#handling-http-error-statuses
                 if (response.status >= 200 && response.status < 300) {
