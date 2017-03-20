@@ -53,7 +53,7 @@
     const WPRDC_DATA_SOURCES = {
         "Police": {
             id: "1797ead8-8262-41cc-9099-cbc8a161924b",
-            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland'",
+            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland' AND \"INCIDENTTIME\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"INCIDENTTIME\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_POLICE,
 
@@ -71,7 +71,7 @@
 
         "Arrest": {
             id: "e03a89dd-134a-4ee8-a2bd-62c40aeebc6f",
-            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland'",
+            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland' AND \"ARRESTTIME\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"ARRESTTIME\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_ARREST,
 
@@ -89,7 +89,7 @@
 
         "Code Violation": {
             id: "4e5374be-1a88-47f7-afee-6a79317019b4",
-            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland'",
+            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland' AND \"INSPECTION_DATE\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"INSPECTION_DATE\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CODE_VIOLATION,
 
@@ -131,7 +131,7 @@
         // Calls from the library db
         "Library": {
             id: "2ba0788a-2f35-43aa-a47c-89c75f55cf9d",
-            primaryFiltering: "WHERE \"Name\" LIKE '%OAKLAND%'",
+            primaryFiltering: "WHERE \"Name\" LIKE '%OAKLAND%' AND \"CITEDTIME\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"CITEDTIME\" DESC",
             latLong: ["Lat", "Lon"],
             icon: iconTypes.LIBRARY_ICON,
 
