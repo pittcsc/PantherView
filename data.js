@@ -111,7 +111,7 @@
         // TODO: would be great to prune 311 data to the last 30 days, like the police data
         "311": {
             id: "40776043-ad00-40f5-9dc8-1fde865ff571",
-            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland' ORDER BY \"CREATED_ON\" DESC",
+            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland' AND \"CREATED_ON\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"CREATED_ON\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_311_ICON,
 
