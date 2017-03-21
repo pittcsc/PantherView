@@ -130,7 +130,7 @@
         // Calls from the library db
         "Library": {
             id: "2ba0788a-2f35-43aa-a47c-89c75f55cf9d",
-            primaryFiltering: "WHERE \"Name\" LIKE '%OAKLAND%' AND \"CITEDTIME\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"CITEDTIME\" DESC",
+            primaryFiltering: "WHERE \"Name\" LIKE '%OAKLAND%'",
             latLong: ["Lat", "Lon"],
             icon: iconTypes.LIBRARY_ICON,
 
