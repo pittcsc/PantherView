@@ -203,7 +203,6 @@
     }
 
     // Fetch data from West Pennsylvania Regional Data Center using the SQL API
-    // TODO: Prune to last 30 days in SQL
     function fetchWPRDCData(dataSourceName, options={}) {
         const dataSource = WPRDC_DATA_SOURCES[dataSourceName];
         let query = WPRDC_QUERY_PREFIX + dataSource.id + WPRDC_QUERY_SUFFIX + dataSource.primaryFiltering;

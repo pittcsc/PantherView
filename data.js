@@ -95,7 +95,7 @@
     const WPRDC_DATA_SOURCES = {
         "Police": {
             id: "1797ead8-8262-41cc-9099-cbc8a161924b",
-            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland'",
+            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland' AND \"INCIDENTTIME\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"INCIDENTTIME\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_POLICE,
             updateTime: 12*HOUR,
@@ -114,7 +114,7 @@
 
         "Arrest": {
             id: "e03a89dd-134a-4ee8-a2bd-62c40aeebc6f",
-            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland'",
+            primaryFiltering: "WHERE \"INCIDENTNEIGHBORHOOD\" LIKE '%Oakland' AND \"ARRESTTIME\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"ARRESTTIME\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_ARREST,
             updateTime: 12*HOUR,
@@ -133,7 +133,7 @@
 
         "Code Violation": {
             id: "4e5374be-1a88-47f7-afee-6a79317019b4",
-            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland'",
+            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland' AND \"INSPECTION_DATE\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"INSPECTION_DATE\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CODE_VIOLATION,
             updateTime: 12*HOUR,
@@ -153,10 +153,9 @@
         },
 
         // City of Pittsburgh 311 data
-        // TODO: would be great to prune 311 data to the last 30 days, like the police data
         "311": {
             id: "40776043-ad00-40f5-9dc8-1fde865ff571",
-            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland' ORDER BY \"CREATED_ON\" DESC",
+            primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland' AND \"CREATED_ON\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"CREATED_ON\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_311_ICON,
             updateTime: 10*MINUTE,
