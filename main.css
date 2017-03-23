@@ -246,7 +246,7 @@ html, body
     background-color: transparent;
 }
 
-#sidebar
+#sidebar.mapMode
 {
     position: fixed;
     top: 45px;
@@ -255,6 +255,31 @@ html, body
     height: 100%;
     background: rgba(250,250,250,0.85);
     box-shadow: 2px 2px 10px #a3a3a3;
+}
+
+#sidebar.dataMode
+{
+    position: fixed;
+    top: 45px;
+    padding: 15px 15px 15px 15px;
+    width: 100%;
+    height: 100%;
+    background: rgba(250,250,250,0.85);
+    box-shadow: 2px 2px 10px #a3a3a3;
+}
+
+#dataArea
+{
+    position: fixed;
+    margin-left: 250px;
+    height: 90%;
+    overflow-y: scroll;
+
+}
+
+#dataTable tr:nth-child(even)
+{
+    background-color: #d8d8d8;
 }
 
 .shown
@@ -269,8 +294,9 @@ html, body
 
 #controls
 {
-    position: relative;
+    position: absolute;
     overflow-y: auto;
+    width: 250px;
     height: 100%;
     text-align: left;
 }

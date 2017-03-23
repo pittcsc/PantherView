@@ -103,6 +103,10 @@
             // TODO: Better title and popup messages?
             title: (record) => record["OFFENSES"],
             popup: (record) => record["OFFENSES"],
+            table: (record) => `<td>Police</td>
+                                <td>${record["OFFENSES"]}</td>
+                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td>${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 // Collect time of incident from the record
@@ -122,6 +126,10 @@
             // TODO: Better title and popup messages?
             title: (record) => record["OFFENSES"],
             popup: (record) => record["OFFENSES"],
+            table: (record) => `<td>Arrest</td>
+                                <td>${record["OFFENSES"]}</td>
+                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td>${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 // Collect time of incident from the record
@@ -141,8 +149,12 @@
             // TODO: Better title and popup messages?
             title: (record) => record["VIOLATION"],
             popup: (record) => `<strong>${record["VIOLATION"]}:</strong>
-            ${record["LOCATION"]}<br>
-            ${record["STREET_NUM"]} ${record["STREET_NAME"]}`,
+                                ${record["LOCATION"]}<br>
+                                ${record["STREET_NUM"]} ${record["STREET_NAME"]}`,
+            table: (record) => `<td>Code Violation</td>
+                                <td>${record["VIOLATION"]}</td>
+                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td>${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 // Collect time of incident from the record
@@ -164,6 +176,10 @@
             popup: (record) => `
               <strong>${record["DEPARTMENT"]}</strong>
               <br> ${record["REQUEST_TYPE"]}`,
+            table: (record) => `<td>311</td>
+                                <td>${record["DEPARTMENT"]} - ${record["REQUEST_TYPE"]}</td>
+                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td>${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 // Collect time of incident from the record
@@ -171,8 +187,6 @@
                 record.incidentMonth = parseInt(record.CREATED_ON.substring(5,8));
                 record.incidentDay = parseInt(record.CREATED_ON.substring(8,10));
             }
-
-
         },
 
         // Calls from the library db
@@ -195,9 +209,9 @@
               <br> Friday: ${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}
               <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
               <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
-              `,
+              `
+          },
 
-        },
         "Non-Traffic Violation": {
             id: "6b11e87d-1216-463d-bbd3-37460e539d86",
             primaryFiltering: "Where \"NEIGHBORHOOD\" LIKE '%Oakland'",
@@ -207,6 +221,10 @@
 
             title: (record) => record["OFFENSES"],
             popup: (record) => record["OFFENSES"],
+            table: (record) => `<td>Non-Traffic Violation</td>
+                                <td>${record["OFFENSES"]}</td>
+                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td>${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 record.incidentYear = parseInt(record.CITEDTIME.substring(0,4));

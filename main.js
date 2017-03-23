@@ -45,11 +45,11 @@
     //Start with sidebar closed if mobile
     if (screen.width <= 800) {
         sidebarToggle.open = 0;
-        sidebar.className = "hidden";
+        sidebar.className = "mapMode hidden";
         sidebarToggle.className = "fa fa-chevron-right fa-3x";
     } else {
         sidebarToggle.open = 1;
-        sidebar.className = "shown";
+        sidebar.className = "mapMode shown";
         sidebarToggle.className = "fa fa-chevron-left fa-3x";
     }
 
@@ -152,14 +152,31 @@
     function toggleSidebar() {
         if (sidebarToggle.open == 1) {
             sidebarToggle.open = 0;
-            sidebar.className = "hidden";
+            sidebar.className = "mapMode hidden";
             sidebarToggle.className = "fa fa-chevron-right fa-3x";
         } else {
             sidebarToggle.open = 1;
-            sidebar.className = "shown";
+            sidebar.className = "mapMode shown";
             sidebarToggle.className = "fa fa-chevron-left fa-3x";
         }
     }
+
+    // TODO: Get rid of these?
+    function displayMapMode() {
+        sidebarToggle.className = "fa fa-chevron-left fa-3x";
+        sidebar.className = "mapMode";
+        document.getElementById("dataArea").className = "hidden";
+    }
+
+    function displayDataMode() {
+        sidebarToggle.className = "hidden";
+        sidebar.className = "dataMode";
+        document.getElementById("dataArea").className = "shown";
+    }
+
+    //Listeners for map/data mode toggle
+    document.getElementById("radioMap").addEventListener("click", displayMapMode);
+    document.getElementById("radioData").addEventListener("click", displayDataMode);
 
     //Listeners for date buttons
     document.getElementById("radioDay").addEventListener("click", displayPastDay);
@@ -270,7 +287,6 @@
                                 return;
                         }
                     }
-
                     record.inDate = true;
                     record.type = dataSourceName.toLowerCase();
 
@@ -292,6 +308,13 @@
                         record.isMapped = false;
                     }
                     markers.push(record);
+
+                    // Add row in data table for this record
+                    if (dataSource.table) {
+                        var tr = document.createElement("tr");
+                        tr.innerHTML = dataSource.table(record);
+                        document.getElementById("dataTable").appendChild(tr);
+                    }
                 });
             })
             .catch((err) => displayNotification(err, "error", (retryDiv) => {
@@ -409,7 +432,7 @@
                     pin: thePin,
                     isMapped: true,
                     inDate: true, //Date is not important, but necessary for filtering for now
-                    type: "labs" 
+                    type: "labs"
                 });
             })
             .catch((err) => displayNotification(err, "error", (retryDiv) => {
