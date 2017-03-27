@@ -163,6 +163,10 @@ html, body
   max-width: 45px;
   max-height: 45px;
 }
+#logo img{
+  max-width: 45px;
+  max-height: 45px;
+}
 
 #header h1
 {

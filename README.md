@@ -1,6 +1,10 @@
 # PantherView
 Pitt Computer Science Club spring semester (16-17) project with the Western Pennsylvania Regional Data Center (@wprdc) Open Data.
 
+![Logo; credit: @alexandrabush](./logo.png)
+
+Thanks to @alexandrabush for the logo!
+
 ---
 
 ## Installing and running:
