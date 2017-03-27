@@ -10,6 +10,13 @@
 
     // Marker Icons
     const iconTypes = {
+        LAUNDRY: L.divIcon({
+            className: 'map-pin black',
+            html: '<i class="fa fa-tint"</i>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -16]
+        }),
         COMP_LAB: L.divIcon({
             className: 'map-pin black',
             html: '<i class="fa fa-desktop"></i>',
@@ -59,6 +66,57 @@
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
         })
+    };
+
+    const PITT_LAUNDRY = {
+        'TOWERS': {
+            building: 'Litchfield Towers',
+            icon: iconTypes.LAUNDRY,
+            id: '2430136',
+            latLong: [40.442559, -79.956584]
+        },
+        'BRACKENRIDGE':{
+            building: 'Brackenridge Hall',
+            icon: iconTypes.LAUNDRY,
+            id: '2430119',
+            latLong: [40.442772, -79.955637]
+        },
+        'HOLLAND':{
+            building: 'Holland Hall',
+            icon: iconTypes.LAUNDRY,
+            id: '2430137',
+            latLong: [40.443189, -79.956164]
+        },
+        'LOTHROP': {
+            building: 'Lothrop Hall',
+            icon: iconTypes.LAUNDRY,
+            id: '2430151',
+            latLong: [40.441654, -79.960041]
+        },
+        'MCCORMICK': {
+            building: 'McCormick Hall',
+            icon: iconTypes.LAUNDRY,
+            id: '2430120',
+            latLong: [40.443466, -79.955419]
+        },
+        'SUTH_EAST': {
+            building: 'Sutherland Hall East',
+            icon: iconTypes.LAUNDRY,
+            id: '2430135',
+            latLong: [40.445818, -79.962299]
+        },
+        'SUTH_WEST': {
+            building: 'Sutherland Hall West',
+            icon: iconTypes.LAUNDRY,
+            id: '2430134',
+            latLong: [40.446006, -79.963158]
+        },
+        'FORBES_CRAIG': {
+            building: 'Forbes-Craig Apartments',
+            icon: iconTypes.LAUNDRY,
+            id: '2430142',
+            latLong: [40.444569, -79.949092]
+        }
     };
 
     const PITT_LABS = {
@@ -226,7 +284,8 @@
             WPRDC_DATA_SOURCES,
             WPRDC_QUERY_PREFIX,
             WPRDC_QUERY_SUFFIX,
-            PITT_LABS
+            PITT_LABS,
+            PITT_LAUNDRY
         }
     });
     window.dispatchEvent(dataReadyEvent);
