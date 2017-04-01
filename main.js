@@ -331,12 +331,7 @@
     //Fetch data from Pitt using Ritwik Gupta's PittAPI and associated wrapper
     //May not need the "options" parameter, as I can't see any data request from Pitt being overwhelmingly large
     function fetchPittData(dataSection, dataSourceName, filterCreated, options = {}){
-
-        //TODO:
-            //SET VARS ACCORDING TO WHAT DATASET WE'RE USING, THEN DEDUPLICATE ALL THIS CODE (GENERALIZE IT FOR ALL PITT DATASETS)
-            //Modify retry function args in (!data) and .catch()
-
-        var URL = "http://127.0.0.1:5000/";
+        var URL = "http://23.22.137.193:5000/";
         if (dataSection == "Labs"){
             URL = URL + "lab_status/" + dataSourceName.toUpperCase();
         }
@@ -479,7 +474,8 @@
                 });
                 retryDiv.appendChild(retryButton);
         }));
-    }
+    }//End fetchPittData()
+    
     function fetchAllData() {
         Promise.all([
             fetchWPRDCData("Police", { limit: 250 }),
