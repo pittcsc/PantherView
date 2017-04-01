@@ -7,6 +7,7 @@
         WPRDC_DATA_SOURCES,
         WPRDC_QUERY_PREFIX,
         WPRDC_QUERY_SUFFIX,
+        PITT_LAUNDRY,
         PITT_LABS;
 
     // await those values
@@ -18,6 +19,7 @@
             WPRDC_DATA_SOURCES,
             WPRDC_QUERY_PREFIX,
             WPRDC_QUERY_SUFFIX,
+            PITT_LAUNDRY,
             PITT_LABS
         } = event.detail);
 
@@ -350,7 +352,7 @@
                     markers.push(record);
                 });
             })
-            .catch((err) => displayNotification(err, "error", (retryDiv) => {
+            .catch((err) => displayNotification(`Error: Public dataset ${dataSourceName} could not be retrieved`, "error", (retryDiv) => {
                 const retryButton = document.createElement("button");
                 retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
                 retryButton.type = "button";
@@ -385,59 +387,74 @@
     //Fetch data from Pitt using Ritwik Gupta's PittAPI and associated wrapper
     //May not need the "options" parameter, as I can't see any data request from Pitt being overwhelmingly large
     function fetchPittData(dataSection, dataSourceName, filterCreated, options = {}){
+        var URL = "http://23.22.137.193:5000/";
         if (dataSection == "Labs"){
-            return fetch("http://127.0.0.1:5000/lab_status/" + dataSourceName.toUpperCase())
-            //TODO: Ensure 200 response
-            .then((response) => {
-                // Inspired by https://github.com/github/fetch#handling-http-error-statuses
-                if (response.status >= 200 && response.status < 300) {
-                    return response;
-                } else {
-                    throw new Error(`Could not retrieve the ${dataSourceName} dataset; bad response.`);
-                }
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                if (!data) {
-                    displayNotification(`${dataSourceName} records not processed.`, "error", (retryDiv) => {
-                        const retryButton = document.createElement("button");
-                        retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
-                        retryButton.type = "button";
-                        retryButton.className = "retry";
-                        retryButton.addEventListener("click", function() {
-                            retryDiv.parentNode.style.display = "none";
-                            fetchPittData(dataSourceName);
-                        });
-                        retryDiv.appendChild(retryButton);
+            URL = URL + "lab_status/" + dataSourceName.toUpperCase();
+        }
+        else{ //For now, the only other one is laundry
+            URL = URL + "laundry/simple/" + dataSourceName.toUpperCase();
+        }
+
+        //Begin data fetch
+        return fetch(URL)
+        .then((response) => {
+            // Inspired by https://github.com/github/fetch#handling-http-error-statuses
+            if (response.status >= 200 && response.status < 300) {
+                return response;
+            } else {
+                throw new Error(`Could not retrieve the ${dataSourceName} dataset; bad response.`);
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (!data) {
+                displayNotification(`${dataSourceName} records not processed.`, "error", (retryDiv) => {
+                    const retryButton = document.createElement("button");
+                    retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
+                    retryButton.type = "button";
+                    retryButton.className = "retry";
+
+                    retryButton.addEventListener("click", function() {
+                    retryDiv.parentNode.style.display = "none";
+                    fetchPittData(dataSection, dataSourceName, filterCreated, options);
                     });
-                    return;
-                }
 
-                //Grab dataSource object
-                const dataSource = PITT_LABS[dataSourceName];
+                    retryDiv.appendChild(retryButton);
+                });
+                return;
+            }
 
-                //If the checkbox has yet to be built for filtering the pins (only executes for first lab fetch)
-                if (!filterCreated){
-                    var filterContainer = document.createElement("div");
-                    filterContainer.className = "typeBtn";
+            var dataSource = null;
+            if (dataSection == "Labs"){
+                dataSource = PITT_LABS[dataSourceName];
+            }
+            else{ //For now, the only other one is laundry
+                dataSource = PITT_LAUNDRY[dataSourceName];
+            }
 
-                    var filter = document.createElement("input");
-                    filter.id = dataSection.toLowerCase() + "Check";
-                    filter.type = "checkbox";
-                    filter.checked = true;
+            //If the checkbox has yet to be built for filtering the pins (only executes for first lab fetch)
+            if (!filterCreated){
+                var filterContainer = document.createElement("div");
+                filterContainer.className = "typeBtn";
 
-                    var filterLabel = document.createElement("label");
-                    filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
-                    filterLabel.innerHTML = dataSource.icon.options.html + " - " + dataSection;
+                var filter = document.createElement("input");
+                filter.id = dataSection.toLowerCase() + "Check";
+                filter.type = "checkbox";
+                filter.checked = true;
 
-                    filter.addEventListener("click", filterDisplay);
+                var filterLabel = document.createElement("label");
+                filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
+                filterLabel.innerHTML = dataSource.icon.options.html + " - " + dataSection;
 
-                    document.getElementById("typeSelection").appendChild(filterContainer);
-                    filterContainer.appendChild(filter);
-                    filterContainer.appendChild(filterLabel);
-                }
+                filter.addEventListener("click", filterDisplay);
 
-                //Create pin object
+                document.getElementById("typeSelection").appendChild(filterContainer);
+                filterContainer.appendChild(filter);
+                filterContainer.appendChild(filterLabel);
+            }
+
+            if (dataSection == "Labs"){
+                //LABS PINS
                 const thePin = L.marker(PITT_LABS[dataSourceName].latLong, {
                     title: dataSourceName,
                     icon: dataSource.icon
@@ -467,21 +484,54 @@
                     inDate: true, //Date is not important, but necessary for filtering for now
                     type: "labs"
                 });
-            })
-            .catch((err) => displayNotification(err, "error", (retryDiv) => {
+            }
+            else{ //For now, the only other one is laundry
+                //LAUNDRY PINS
+                const thePin = L.marker(PITT_LAUNDRY[dataSourceName].latLong, {
+                    title: dataSourceName,
+                    icon: dataSource.icon
+                });
+
+                //Create popup
+                var pup = L.popup();
+                    pup.setContent("<p> " + PITT_LAUNDRY[dataSourceName].building + " Laundry: " 
+                                + "<br> Total washers: " + data.total_washers
+                                + "<br> Total dryers: " + data.total_dryers
+                                + "<br> Washers available: " + data.free_washers
+                                + "<br> Dryers available: " + data.free_dryers + "</p>");
+
+                //labRecord.popup = pup;
+                //Bind popup to pin
+                thePin.bindPopup(pup);
+                //Add pin to map
+                thePin.addTo(map);
+                pup.isMapped = true;
+                //Push pin (haha, get it?)
+                markers.push({ //Push the following object onto the markers array
+                    total_washers: data.total_washers,
+                    total_dryers: data.total_dryers,
+                    free_washers: data.free_washers,
+                    free_dryers: data.free_dryers,
+                    pin: thePin,
+                    isMapped: true,
+                    inDate: true, //Date is not important, but necessary for filtering for now
+                    type: "laundry" 
+                });
+            }
+        })
+        .catch((err) => displayNotification(`Error: Pitt dataset ${dataSourceName} could not be retrieved`, "error", (retryDiv) => {
                 const retryButton = document.createElement("button");
                 retryButton.innerHTML = "<p><i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> Retry</p>";
                 retryButton.type = "button";
                 retryButton.className = "retry";
                 retryButton.addEventListener("click", function() {
                     retryDiv.parentNode.style.display = "none";
-                    fetchPittData(dataSourceName);
+                    fetchPittData(dataSection, dataSourceName, filterCreated, options);
                 });
                 retryDiv.appendChild(retryButton);
-            }));
-        }
-    }
-
+        }));
+    }//End fetchPittData()
+    
     function fetchAllData() {
         Promise.all([
             fetchWPRDCData("Police", { limit: 250 }),
@@ -497,7 +547,16 @@
             fetchPittData('Labs', 'Cath_G27', true),
             fetchPittData('Labs', 'Lawrence', true),
             fetchPittData('Labs', 'Hillman', true),
-            fetchPittData('Labs', 'Suth', true)
+            fetchPittData('Labs', 'Suth', true),
+
+            fetchPittData('Laundry', 'TOWERS', false),
+            fetchPittData('Laundry', 'BRACKENRIDGE', true),
+            fetchPittData('Laundry', 'HOLLAND', true),
+            fetchPittData('Laundry', 'LOTHROP', true),
+            fetchPittData('Laundry', 'MCCORMICK', true),
+            fetchPittData('Laundry', 'SUTH_EAST', true),
+            fetchPittData('Laundry', 'SUTH_WEST', true),
+            fetchPittData('Laundry', 'FORBES_CRAIG', true)
 
         ]).catch((err) => {
             displayNotification(err, "error", (retryDiv) => {
