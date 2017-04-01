@@ -12,7 +12,7 @@
     const iconTypes = {
         LAUNDRY: L.divIcon({
             className: 'map-pin black',
-            html: '<i class="fa fa-tint"</i>',
+            html: '<i class="fa fa-tint"></i>',
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -16]
