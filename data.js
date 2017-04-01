@@ -210,7 +210,7 @@
               <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
               <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
               `
-          },
+        },
 
         "Non-Traffic Violation": {
             id: "6b11e87d-1216-463d-bbd3-37460e539d86",

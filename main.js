@@ -87,6 +87,8 @@
                 marker.inDate = false;
             }
         });
+
+        generateDataTable();
     }
 
     function displayPastWeek() {
@@ -109,6 +111,8 @@
                 marker.inDate = false;
             }
         });
+
+        generateDataTable();
     }
 
     function displayPastMonth() {
@@ -123,6 +127,8 @@
                 marker.pin.addTo(map);
             }
         });
+
+        generateDataTable();
     }
 
     function filterDisplay(e) {
@@ -146,6 +152,8 @@
                 }
             });
         }
+
+        generateDataTable();
     }
 
     //Displays and hides the sidebar
@@ -159,6 +167,38 @@
             sidebar.className = "mapMode shown";
             sidebarToggle.className = "fa fa-chevron-left fa-3x";
         }
+    }
+
+    function generateDataTable() {
+        var table = document.getElementById("dataTable");
+
+        // Reset table and re-add table header
+        table.innerHTML =
+        `<colgroup>
+           <col style="width: 10%; text-align: center;">
+           <col style="width: 70%;">
+           <col style="width: 10%; text-align: center;">
+           <col style="width: 10%; text-align: center;">
+        </colgroup>
+        <tr>
+          <th>Dataset</th>
+          <th>Text</th>
+          <th>Date</th>
+          <th>Location</th>
+        </tr>
+        `;
+
+        //var tableBody = table.getElementsByTagName("tbody")[0];
+        markers.forEach((marker) => {
+            var dataSource = WPRDC_DATA_SOURCES[marker.type];
+
+            // Add row in data table for this record
+            if (dataSource.table && marker.isMapped && !marker.filtered && marker.inDate) {
+                var tr = document.createElement("tr");
+                tr.innerHTML = dataSource.table(marker);
+                table.appendChild(tr);
+            }
+        });
     }
 
     // TODO: Get rid of these?
@@ -288,7 +328,7 @@
                         }
                     }
                     record.inDate = true;
-                    record.type = dataSourceName.toLowerCase();
+                    record.type = dataSourceName;
 
                     const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
                     const latLongNoNulls = latLong.some((field) => !!field);
@@ -308,13 +348,6 @@
                         record.isMapped = false;
                     }
                     markers.push(record);
-
-                    // Add row in data table for this record
-                    if (dataSource.table) {
-                        var tr = document.createElement("tr");
-                        tr.innerHTML = dataSource.table(record);
-                        document.getElementById("dataTable").appendChild(tr);
-                    }
                 });
             })
             .catch((err) => displayNotification(err, "error", (retryDiv) => {
@@ -478,6 +511,8 @@
                 });
                 retryDiv.appendChild(retryButton);
             });
+        }).then(() => {
+            generateDataTable();
         });
     }
 

@@ -286,6 +286,14 @@ html, body
     background-color: #d8d8d8;
 }
 
+#dataTable th
+{
+    position: sticky;
+    top: 0;
+    color: white;
+    background: #00254A;
+}
+
 .shown
 {
     display: block;
