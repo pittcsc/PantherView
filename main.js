@@ -47,11 +47,11 @@
     //Start with sidebar closed if mobile
     if (screen.width <= 800) {
         sidebarToggle.open = 0;
-        sidebar.className = "hidden";
+        sidebar.className = "mapMode hidden";
         sidebarToggle.className = "fa fa-chevron-right fa-3x";
     } else {
         sidebarToggle.open = 1;
-        sidebar.className = "shown";
+        sidebar.className = "mapMode shown";
         sidebarToggle.className = "fa fa-chevron-left fa-3x";
     }
 
@@ -89,6 +89,8 @@
                 marker.inDate = false;
             }
         });
+
+        generateDataTable();
     }
 
     function displayPastWeek() {
@@ -111,6 +113,8 @@
                 marker.inDate = false;
             }
         });
+
+        generateDataTable();
     }
 
     function displayPastMonth() {
@@ -125,6 +129,8 @@
                 marker.pin.addTo(map);
             }
         });
+
+        generateDataTable();
     }
 
     function filterDisplay(e) {
@@ -133,7 +139,7 @@
 
         if (elm.checked) {
             markers.forEach((marker) => {
-                if (marker.type === type && marker.isMapped) {
+                if (marker.type.toLowerCase() === type && marker.isMapped) {
                     if (marker.inDate) {
                         marker.pin.addTo(map);
                     }
@@ -142,26 +148,77 @@
             });
         } else {
             markers.forEach((marker) => {
-                if (marker.type === type && marker.isMapped) {
+                if (marker.type.toLowerCase() === type && marker.isMapped) {
                     map.removeLayer(marker.pin);
                     marker.filtered = true;
                 }
             });
         }
+
+        generateDataTable();
     }
 
     //Displays and hides the sidebar
     function toggleSidebar() {
         if (sidebarToggle.open == 1) {
             sidebarToggle.open = 0;
-            sidebar.className = "hidden";
+            sidebar.className = "mapMode hidden";
             sidebarToggle.className = "fa fa-chevron-right fa-3x";
         } else {
             sidebarToggle.open = 1;
-            sidebar.className = "shown";
+            sidebar.className = "mapMode shown";
             sidebarToggle.className = "fa fa-chevron-left fa-3x";
         }
     }
+
+    function generateDataTable() {
+        var table = document.getElementById("dataTable");
+
+        // Reset table and re-add table header
+        table.innerHTML =
+        `<colgroup>
+           <col style="width: 10%; text-align: center;">
+           <col style="width: 70%;">
+           <col style="width: 10%; text-align: center;">
+           <col style="width: 10%; text-align: center;">
+        </colgroup>
+        <tr>
+          <th>Dataset</th>
+          <th>Text</th>
+          <th>Date</th>
+          <th>Location</th>
+        </tr>
+        `;
+
+        markers.forEach((marker) => {
+            // Only entering WPRDC data into the table for now
+            var dataSource = WPRDC_DATA_SOURCES[marker.type];
+            if (!dataSource) return;
+
+            // Add row in data table for this record
+            if (dataSource.table && marker.isMapped && !marker.filtered && marker.inDate) {
+                var tr = document.createElement("tr");
+                tr.innerHTML = dataSource.table(marker);
+                table.appendChild(tr);
+            }
+        });
+    }
+
+    function displayMapMode() {
+        sidebarToggle.className = "fa fa-chevron-left fa-3x";
+        sidebar.className = "mapMode";
+        document.getElementById("dataArea").className = "hidden";
+    }
+
+    function displayDataMode() {
+        sidebarToggle.className = "hidden";
+        sidebar.className = "dataMode";
+        document.getElementById("dataArea").className = "shown";
+    }
+
+    //Listeners for map/data mode toggle
+    document.getElementById("radioMap").addEventListener("click", displayMapMode);
+    document.getElementById("radioData").addEventListener("click", displayDataMode);
 
     //Listeners for date buttons
     document.getElementById("radioDay").addEventListener("click", displayPastDay);
@@ -272,9 +329,8 @@
                                 return;
                         }
                     }
-
                     record.inDate = true;
-                    record.type = dataSourceName.toLowerCase();
+                    record.type = dataSourceName;
 
                     const latLong = dataSource.latLong.map((fieldName) => record[fieldName]);
                     const latLongNoNulls = latLong.some((field) => !!field);
@@ -426,7 +482,7 @@
                     pin: thePin,
                     isMapped: true,
                     inDate: true, //Date is not important, but necessary for filtering for now
-                    type: "labs" 
+                    type: "labs"
                 });
             }
             else{ //For now, the only other one is laundry
@@ -438,7 +494,7 @@
 
                 //Create popup
                 var pup = L.popup();
-                    pup.setContent("<p> " + PITT_LAUNDRY[dataSourceName].building + " Laundry: " 
+                    pup.setContent("<p> " + PITT_LAUNDRY[dataSourceName].building + " Laundry: "
                                 + "<br> Total washers: " + data.total_washers
                                 + "<br> Total dryers: " + data.total_dryers
                                 + "<br> Washers available: " + data.free_washers
@@ -459,7 +515,7 @@
                     pin: thePin,
                     isMapped: true,
                     inDate: true, //Date is not important, but necessary for filtering for now
-                    type: "laundry" 
+                    type: "laundry"
                 });
             }
         })
@@ -475,7 +531,7 @@
                 retryDiv.appendChild(retryButton);
         }));
     }//End fetchPittData()
-    
+
     function fetchAllData() {
         Promise.all([
             fetchWPRDCData("Police", { limit: 250 }),
@@ -514,6 +570,8 @@
                 });
                 retryDiv.appendChild(retryButton);
             });
+        }).then(() => {
+            generateDataTable();
         });
     }
 

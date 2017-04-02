@@ -55,6 +55,10 @@
     </div>
     <div id="sidebar">
       <div id="controls">
+        <div id="displaySelection">
+            <button id="radioMap" checked>Map</button>
+            <button id="radioData">Data</button>
+        </div>
         <div id="dateSelection">
             <button id="radioMonth" checked>Past Month</button>
             <button id="radioWeek">Past Week</button>
@@ -63,6 +67,9 @@
         <h3>Legend</h3>
         <div id="typeSelection">
         </div>
+      </div>
+      <div id="dataArea" class="hidden">
+          <table id="dataTable"></table>
       </div>
       <footer>
         &copy; 2017 University of Pittsburgh Computer Science Club.
