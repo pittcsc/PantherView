@@ -139,7 +139,7 @@
 
         if (elm.checked) {
             markers.forEach((marker) => {
-                if (marker.type === type && marker.isMapped) {
+                if (marker.type.toLowerCase() === type && marker.isMapped) {
                     if (marker.inDate) {
                         marker.pin.addTo(map);
                     }
@@ -148,7 +148,7 @@
             });
         } else {
             markers.forEach((marker) => {
-                if (marker.type === type && marker.isMapped) {
+                if (marker.type.toLowerCase() === type && marker.isMapped) {
                     map.removeLayer(marker.pin);
                     marker.filtered = true;
                 }
@@ -190,9 +190,10 @@
         </tr>
         `;
 
-        //var tableBody = table.getElementsByTagName("tbody")[0];
         markers.forEach((marker) => {
+            // Only entering WPRDC data into the table for now
             var dataSource = WPRDC_DATA_SOURCES[marker.type];
+            if (!dataSource) return;
 
             // Add row in data table for this record
             if (dataSource.table && marker.isMapped && !marker.filtered && marker.inDate) {
@@ -203,7 +204,6 @@
         });
     }
 
-    // TODO: Get rid of these?
     function displayMapMode() {
         sidebarToggle.className = "fa fa-chevron-left fa-3x";
         sidebar.className = "mapMode";
@@ -494,7 +494,7 @@
 
                 //Create popup
                 var pup = L.popup();
-                    pup.setContent("<p> " + PITT_LAUNDRY[dataSourceName].building + " Laundry: " 
+                    pup.setContent("<p> " + PITT_LAUNDRY[dataSourceName].building + " Laundry: "
                                 + "<br> Total washers: " + data.total_washers
                                 + "<br> Total dryers: " + data.total_dryers
                                 + "<br> Washers available: " + data.free_washers
@@ -515,7 +515,7 @@
                     pin: thePin,
                     isMapped: true,
                     inDate: true, //Date is not important, but necessary for filtering for now
-                    type: "laundry" 
+                    type: "laundry"
                 });
             }
         })
@@ -531,7 +531,7 @@
                 retryDiv.appendChild(retryButton);
         }));
     }//End fetchPittData()
-    
+
     function fetchAllData() {
         Promise.all([
             fetchWPRDCData("Police", { limit: 250 }),

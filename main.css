@@ -277,8 +277,15 @@ html, body
     position: fixed;
     margin-left: 250px;
     height: 90%;
+    width: 80%;
     overflow-y: scroll;
 
+}
+
+#dataTable
+{
+    table-layout: fixed;
+    width: 100%;
 }
 
 #dataTable tr:nth-child(even)
