@@ -176,13 +176,15 @@
                 sidebar.className = "dataMode";
                 sidebarToggle.className = "fa fa-chevron-right fa-3x";
                 document.getElementById("controls").className = "hidden";
-                document.getElementById("dataArea").style.marginLeft = "35px";
+                document.getElementById("dataArea").className = "controlsHidden";
+                // document.getElementById("dataArea").style.marginLeft = "35px";
             } else {
                 sidebarToggle.open = 1;
                 sidebar.className = "dataMode";
                 sidebarToggle.className = "fa fa-chevron-left fa-3x";
                 document.getElementById("controls").className = "shown";
-                document.getElementById("dataArea").style.marginLeft = "250px";
+                document.getElementById("dataArea").className = "controlsShown";
+                //document.getElementById("dataArea").style.marginLeft = "250px";
 
             }
         }
@@ -193,19 +195,12 @@
 
         // Reset table and re-add table header
         table.innerHTML =
-        `<colgroup>
-           <col style="width: 10%; text-align: center;">
-           <col style="width: 70%;">
-           <col style="width: 10%; text-align: center;">
-           <col style="width: 10%; text-align: center;">
-        </colgroup>
-        <tr>
-          <th>Dataset</th>
-          <th>Text</th>
-          <th>Date</th>
-          <th>Location</th>
-        </tr>
-        `;
+        `<tr>
+          <th class="col1">Dataset</th>
+          <th class="col2">Text</th>
+          <th class="col3">Date</th>
+          <th class="col4">Location</th>
+         </tr>`;
 
         markers.forEach((marker) => {
             // Only entering WPRDC data into the table for now
@@ -228,9 +223,14 @@
     }
 
     function displayDataMode() {
+        var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+        if (width <= 600) {
+
+        }
+
         //sidebarToggle.className = "hidden";
         sidebar.className = "dataMode";
-        document.getElementById("dataArea").className = "shown";
+        document.getElementById("dataArea").className = "controlsShown shown";
     }
 
     //Listeners for map/data mode toggle

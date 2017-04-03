@@ -93,22 +93,6 @@ html, body
     border-radius: 3px;
 }
 
-@media only screen and (max-width: 600px)
-{
-    #notifications
-    {
-        left: 0px;
-        margin: 0px;
-        width: 100%;
-    }
-
-    .notification
-    {
-        margin: 0px;
-        border-radius: 0px;
-    }
-}
-
 #mapid
 {
     height: 100%;
@@ -243,7 +227,7 @@ html, body
     position: fixed;
     bottom: 0;
     right: 1;
-    width: 255px;
+    width: 250px;
     height: 20px;
     font-size: 10px;
     z-index: 9999;
@@ -279,8 +263,9 @@ html, body
     height: 90%;
     width: auto;
     overflow-y: scroll;
-
 }
+/*#dataArea.controlsShown { }*/
+#dataArea.controlsHidden { margin-left: 35px; }
 
 #dataTable
 {
@@ -300,6 +285,11 @@ html, body
     color: white;
     background: #00254A;
 }
+
+#dataTable .col1 { width: 10%; text-align: center; }
+#dataTable .col2 { width: 70%; text-align: center; }
+#dataTable .col3 { width: 10%; text-align: center; }
+#dataTable .col4 { width: 10%; text-align: center; }
 
 .shown
 {
@@ -450,4 +440,69 @@ button:active
 .map-pin.black
 {
     color: white; /* FIXME: I'm a placeholder color */
+}
+
+@media only screen and (max-width: 600px)
+{
+    #notifications
+    {
+        left: 0px;
+        margin: 0px;
+        width: 100%;
+    }
+
+    .notification
+    {
+        margin: 0px;
+        border-radius: 0px;
+    }
+
+    #sidebar { height: auto; }
+
+    #dataArea .controlsShown
+    {
+        position: relative;
+        top: 5px;
+        margin-left: -15px;
+        margin-right: 15px;
+        height: auto;
+        width: auto;
+        overflow-x: scroll;
+        overflow-y: scroll;
+    }
+
+    #dataArea .controlsHidden
+    {
+        position: fixed;
+        margin-left: 250px;
+        height: 90%;
+        width: auto;
+        overflow-y: scroll;
+    }
+
+    #dataTable { width: auto; height: auto; }
+
+    #dataTable .col1 { width: 20%; text-align: center; }
+    #dataTable .col2 { width: 70%; text-align: center; }
+    #dataTable .col3,
+    #dataTable .col4 { display: none; }
+    /*#dataTable tr td:nth-child(3),
+    #dataTable tr th:nth-child(3),
+    #dataTable tr td:nth-child(4),
+    #dataTable tr th:nth-child(4) { display: none; }*/
+
+    #controls
+    {
+        position: static;
+        overflow-y: auto;
+        width: 100%;
+        height: auto;
+        text-align: left;
+    }
+
+    #sidebar footer
+    {
+        display: none;
+    }
+
 }

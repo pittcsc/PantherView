@@ -161,10 +161,10 @@
             // TODO: Better title and popup messages?
             title: (record) => record["OFFENSES"],
             popup: (record) => record["OFFENSES"],
-            table: (record) => `<td>Police</td>
-                                <td>${record["OFFENSES"]}</td>
-                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
-                                <td>${record["NEIGHBORHOOD"]}</td>`,
+            table: (record) => `<td class="col1">Police</td>
+                                <td class="col2">${record["OFFENSES"]}</td>
+                                <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td class="col4">${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 // Collect time of incident from the record
@@ -184,10 +184,10 @@
             // TODO: Better title and popup messages?
             title: (record) => record["OFFENSES"],
             popup: (record) => record["OFFENSES"],
-            table: (record) => `<td>Arrest</td>
-                                <td>${record["OFFENSES"]}</td>
-                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
-                                <td>${record["NEIGHBORHOOD"]}</td>`,
+            table: (record) => `<td class="col1">Arrest</td>
+                                <td class="col2">${record["OFFENSES"]}</td>
+                                <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td class="col4">${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 // Collect time of incident from the record
@@ -209,10 +209,10 @@
             popup: (record) => `<strong>${record["VIOLATION"]}:</strong>
                                 ${record["LOCATION"]}<br>
                                 ${record["STREET_NUM"]} ${record["STREET_NAME"]}`,
-            table: (record) => `<td>Code Violation</td>
-                                <td>${record["VIOLATION"]}</td>
-                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
-                                <td>${record["NEIGHBORHOOD"]}</td>`,
+            table: (record) => `<td class="col1">Code Violation</td>
+                                <td class="col2">${record["VIOLATION"]}</td>
+                                <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td class="col4">${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 // Collect time of incident from the record
@@ -234,10 +234,10 @@
             popup: (record) => `
               <strong>${record["DEPARTMENT"]}</strong>
               <br> ${record["REQUEST_TYPE"]}`,
-            table: (record) => `<td>311</td>
-                                <td>${record["DEPARTMENT"]} - ${record["REQUEST_TYPE"]}</td>
-                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
-                                <td>${record["NEIGHBORHOOD"]}</td>`,
+            table: (record) => `<td class="col1">311</td>
+                                <td class="col2">${record["DEPARTMENT"]} - ${record["REQUEST_TYPE"]}</td>
+                                <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td class="col4">${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 // Collect time of incident from the record
@@ -279,10 +279,10 @@
 
             title: (record) => record["OFFENSES"],
             popup: (record) => record["OFFENSES"],
-            table: (record) => `<td>Non-Traffic Violation</td>
-                                <td>${record["OFFENSES"]}</td>
-                                <td>${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
-                                <td>${record["NEIGHBORHOOD"]}</td>`,
+            table: (record) => `<td class="col1">Non-Traffic Violation</td>
+                                <td class="col2">${record["OFFENSES"]}</td>
+                                <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
+                                <td class="col4">${record["NEIGHBORHOOD"]}</td>`,
 
             processRecord: (record) => {
                 record.incidentYear = parseInt(record.CITEDTIME.substring(0,4));
