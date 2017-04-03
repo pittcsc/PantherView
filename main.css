@@ -277,7 +277,7 @@ html, body
     position: fixed;
     margin-left: 250px;
     height: 90%;
-    width: 80%;
+    width: auto;
     overflow-y: scroll;
 
 }
@@ -316,7 +316,7 @@ html, body
     position: absolute;
     overflow-y: auto;
     width: 250px;
-    height: 100%;
+    height: auto;
     text-align: left;
 }
 

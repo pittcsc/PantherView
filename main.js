@@ -160,14 +160,31 @@
 
     //Displays and hides the sidebar
     function toggleSidebar() {
-        if (sidebarToggle.open == 1) {
-            sidebarToggle.open = 0;
-            sidebar.className = "mapMode hidden";
-            sidebarToggle.className = "fa fa-chevron-right fa-3x";
-        } else {
-            sidebarToggle.open = 1;
-            sidebar.className = "mapMode shown";
-            sidebarToggle.className = "fa fa-chevron-left fa-3x";
+        if (sidebar.classList.contains("mapMode")) {
+            if (sidebarToggle.open == 1) {
+                sidebarToggle.open = 0;
+                sidebar.className = "mapMode hidden";
+                sidebarToggle.className = "fa fa-chevron-right fa-3x";
+            } else {
+                sidebarToggle.open = 1;
+                sidebar.className = "mapMode shown";
+                sidebarToggle.className = "fa fa-chevron-left fa-3x";
+            }
+        } else if (sidebar.classList.contains("dataMode")) {
+            if (sidebarToggle.open == 1) {
+                sidebarToggle.open = 0;
+                sidebar.className = "dataMode";
+                sidebarToggle.className = "fa fa-chevron-right fa-3x";
+                document.getElementById("controls").className = "hidden";
+                document.getElementById("dataArea").style.marginLeft = "35px";
+            } else {
+                sidebarToggle.open = 1;
+                sidebar.className = "dataMode";
+                sidebarToggle.className = "fa fa-chevron-left fa-3x";
+                document.getElementById("controls").className = "shown";
+                document.getElementById("dataArea").style.marginLeft = "250px";
+
+            }
         }
     }
 
@@ -205,13 +222,13 @@
     }
 
     function displayMapMode() {
-        sidebarToggle.className = "fa fa-chevron-left fa-3x";
+        //sidebarToggle.className = "fa fa-chevron-left fa-3x";
         sidebar.className = "mapMode";
         document.getElementById("dataArea").className = "hidden";
     }
 
     function displayDataMode() {
-        sidebarToggle.className = "hidden";
+        //sidebarToggle.className = "hidden";
         sidebar.className = "dataMode";
         document.getElementById("dataArea").className = "shown";
     }
