@@ -173,19 +173,18 @@
         } else if (sidebar.classList.contains("dataMode")) {
             if (sidebarToggle.open == 1) {
                 sidebarToggle.open = 0;
-                sidebar.className = "dataMode";
+                sidebar.className = "dataMode controlsHidden";
                 sidebarToggle.className = "fa fa-chevron-right fa-3x";
                 document.getElementById("controls").className = "hidden";
                 document.getElementById("dataArea").className = "controlsHidden";
-                // document.getElementById("dataArea").style.marginLeft = "35px";
+                document.getElementsByTagName("footer")[0].className = "hidden";
             } else {
                 sidebarToggle.open = 1;
-                sidebar.className = "dataMode";
+                sidebar.className = "dataMode controlsShown";
                 sidebarToggle.className = "fa fa-chevron-left fa-3x";
                 document.getElementById("controls").className = "shown";
                 document.getElementById("dataArea").className = "controlsShown";
-                //document.getElementById("dataArea").style.marginLeft = "250px";
-
+                document.getElementsByTagName("footer")[0].className = "shown";
             }
         }
     }
@@ -195,13 +194,16 @@
 
         // Reset table and re-add table header
         table.innerHTML =
-        `<tr>
-          <th class="col1">Dataset</th>
-          <th class="col2">Text</th>
-          <th class="col3">Date</th>
-          <th class="col4">Location</th>
-         </tr>`;
+        `<tbody>
+           <tr>
+             <th class="col1">Dataset</th>
+             <th class="col2">Text</th>
+             <th class="col3">Date</th>
+             <th class="col4">Location</th>
+           </tr>
+         </tbody>`;
 
+        var tbody = table.getElementsByTagName("tbody")[0];
         markers.forEach((marker) => {
             // Only entering WPRDC data into the table for now
             var dataSource = WPRDC_DATA_SOURCES[marker.type];
@@ -211,25 +213,18 @@
             if (dataSource.table && marker.isMapped && !marker.filtered && marker.inDate) {
                 var tr = document.createElement("tr");
                 tr.innerHTML = dataSource.table(marker);
-                table.appendChild(tr);
+                tbody.appendChild(tr);
             }
         });
     }
 
     function displayMapMode() {
-        //sidebarToggle.className = "fa fa-chevron-left fa-3x";
-        sidebar.className = "mapMode";
+        sidebar.className = "mapMode controlsShown shown";
         document.getElementById("dataArea").className = "hidden";
     }
 
     function displayDataMode() {
-        var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-        if (width <= 600) {
-
-        }
-
-        //sidebarToggle.className = "hidden";
-        sidebar.className = "dataMode";
+        sidebar.className = "dataMode controlsShown shown";
         document.getElementById("dataArea").className = "controlsShown shown";
     }
 

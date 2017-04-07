@@ -194,7 +194,7 @@ html, body
     background-color: #061428;
 }
 
-#sidebarToggleContainer #sidebarToggle
+#sidebarToggle
 {
     position: fixed;
     top: calc(50% - 24px);
@@ -207,7 +207,7 @@ html, body
     cursor: pointer;
 }
 
-#sidebarToggleContainer .fa-chevron-right
+#sidebarToggle.fa-chevron-right
 {
     background: #0D2A52;
     color: white;
@@ -216,7 +216,7 @@ html, body
     padding-right: 0px;
 }
 
-#sidebarToggleContainer .fa-chevron-left
+#sidebarToggle.fa-chevron-left
 {
     left: 232px;
     color: #0D2A52
@@ -225,8 +225,7 @@ html, body
 #sidebar footer
 {
     position: fixed;
-    bottom: 0;
-    right: 1;
+    bottom: 1px;
     width: 250px;
     height: 20px;
     font-size: 10px;
@@ -262,10 +261,10 @@ html, body
     margin-left: 250px;
     height: 90%;
     width: auto;
-    overflow-y: scroll;
+    overflow: scroll;
 }
-/*#dataArea.controlsShown { }*/
-#dataArea.controlsHidden { margin-left: 35px; }
+
+#dataArea.controlsHidden { margin-left: 30px; }
 
 #dataTable
 {
@@ -286,20 +285,13 @@ html, body
     background: #00254A;
 }
 
-#dataTable .col1 { width: 10%; text-align: center; }
-#dataTable .col2 { width: 70%; text-align: center; }
-#dataTable .col3 { width: 10%; text-align: center; }
-#dataTable .col4 { width: 10%; text-align: center; }
+#dataTable .col1 { width: 75px; text-align: center; }
+#dataTable .col2 { width: 375px; text-align: center; }
+#dataTable .col3 { width: 75px; text-align: center; }
+#dataTable .col4 { width: 75px; text-align: center; }
 
-.shown
-{
-    display: block;
-}
-
-.hidden
-{
-    display: none;
-}
+.shown  { display: block; }
+.hidden { display: none; }
 
 #controls
 {
@@ -457,52 +449,26 @@ button:active
         border-radius: 0px;
     }
 
-    #sidebar { height: auto; }
+    #dataArea.controlsShown { top: 60px; }
 
-    #dataArea .controlsShown
-    {
-        position: relative;
-        top: 5px;
-        margin-left: -15px;
-        margin-right: 15px;
-        height: auto;
-        width: auto;
-        overflow-x: scroll;
-        overflow-y: scroll;
-    }
-
-    #dataArea .controlsHidden
+    #dataArea.controlsHidden
     {
         position: fixed;
-        margin-left: 250px;
-        height: 90%;
-        width: auto;
-        overflow-y: scroll;
+        margin-left: 5px;
+        margin-right: 5px;
+        width: 98vw;
+        box-sizing: border-box;
     }
-
-    #dataTable { width: auto; height: auto; }
-
-    #dataTable .col1 { width: 20%; text-align: center; }
-    #dataTable .col2 { width: 70%; text-align: center; }
-    #dataTable .col3,
-    #dataTable .col4 { display: none; }
-    /*#dataTable tr td:nth-child(3),
-    #dataTable tr th:nth-child(3),
-    #dataTable tr td:nth-child(4),
-    #dataTable tr th:nth-child(4) { display: none; }*/
 
     #controls
     {
         position: static;
+        margin-bottom: 15px;
         overflow-y: auto;
         width: 100%;
         height: auto;
         text-align: left;
     }
 
-    #sidebar footer
-    {
-        display: none;
-    }
-
+    #sidebar.dataMode.controlsHidden { padding-left: 0px; }
 }
