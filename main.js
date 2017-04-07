@@ -160,14 +160,32 @@
 
     //Displays and hides the sidebar
     function toggleSidebar() {
-        if (sidebarToggle.open == 1) {
-            sidebarToggle.open = 0;
-            sidebar.className = "mapMode hidden";
-            sidebarToggle.className = "fa fa-chevron-right fa-3x";
-        } else {
-            sidebarToggle.open = 1;
-            sidebar.className = "mapMode shown";
-            sidebarToggle.className = "fa fa-chevron-left fa-3x";
+        if (sidebar.classList.contains("mapMode")) {
+            if (sidebarToggle.open == 1) {
+                sidebarToggle.open = 0;
+                sidebar.className = "mapMode hidden";
+                sidebarToggle.className = "fa fa-chevron-right fa-3x";
+            } else {
+                sidebarToggle.open = 1;
+                sidebar.className = "mapMode shown";
+                sidebarToggle.className = "fa fa-chevron-left fa-3x";
+            }
+        } else if (sidebar.classList.contains("dataMode")) {
+            if (sidebarToggle.open == 1) {
+                sidebarToggle.open = 0;
+                sidebar.className = "dataMode controlsHidden";
+                sidebarToggle.className = "fa fa-chevron-right fa-3x";
+                document.getElementById("controls").className = "hidden";
+                document.getElementById("dataArea").className = "controlsHidden";
+                document.getElementsByTagName("footer")[0].className = "hidden";
+            } else {
+                sidebarToggle.open = 1;
+                sidebar.className = "dataMode controlsShown";
+                sidebarToggle.className = "fa fa-chevron-left fa-3x";
+                document.getElementById("controls").className = "shown";
+                document.getElementById("dataArea").className = "controlsShown";
+                document.getElementsByTagName("footer")[0].className = "shown";
+            }
         }
     }
 
@@ -176,20 +194,16 @@
 
         // Reset table and re-add table header
         table.innerHTML =
-        `<colgroup>
-           <col style="width: 10%; text-align: center;">
-           <col style="width: 70%;">
-           <col style="width: 10%; text-align: center;">
-           <col style="width: 10%; text-align: center;">
-        </colgroup>
-        <tr>
-          <th>Dataset</th>
-          <th>Text</th>
-          <th>Date</th>
-          <th>Location</th>
-        </tr>
-        `;
+        `<tbody>
+           <tr>
+             <th class="col1">Dataset</th>
+             <th class="col2">Text</th>
+             <th class="col3">Date</th>
+             <th class="col4">Location</th>
+           </tr>
+         </tbody>`;
 
+        var tbody = table.getElementsByTagName("tbody")[0];
         markers.forEach((marker) => {
             // Only entering WPRDC data into the table for now
             var dataSource = WPRDC_DATA_SOURCES[marker.type];
@@ -199,21 +213,19 @@
             if (dataSource.table && marker.isMapped && !marker.filtered && marker.inDate) {
                 var tr = document.createElement("tr");
                 tr.innerHTML = dataSource.table(marker);
-                table.appendChild(tr);
+                tbody.appendChild(tr);
             }
         });
     }
 
     function displayMapMode() {
-        sidebarToggle.className = "fa fa-chevron-left fa-3x";
-        sidebar.className = "mapMode";
+        sidebar.className = "mapMode controlsShown shown";
         document.getElementById("dataArea").className = "hidden";
     }
 
     function displayDataMode() {
-        sidebarToggle.className = "hidden";
-        sidebar.className = "dataMode";
-        document.getElementById("dataArea").className = "shown";
+        sidebar.className = "dataMode controlsShown shown";
+        document.getElementById("dataArea").className = "controlsShown shown";
     }
 
     //Listeners for map/data mode toggle

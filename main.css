@@ -93,22 +93,6 @@ html, body
     border-radius: 3px;
 }
 
-@media only screen and (max-width: 600px)
-{
-    #notifications
-    {
-        left: 0px;
-        margin: 0px;
-        width: 100%;
-    }
-
-    .notification
-    {
-        margin: 0px;
-        border-radius: 0px;
-    }
-}
-
 #mapid
 {
     height: 100%;
@@ -210,7 +194,7 @@ html, body
     background-color: #061428;
 }
 
-#sidebarToggleContainer #sidebarToggle
+#sidebarToggle
 {
     position: fixed;
     top: calc(50% - 24px);
@@ -223,7 +207,7 @@ html, body
     cursor: pointer;
 }
 
-#sidebarToggleContainer .fa-chevron-right
+#sidebarToggle.fa-chevron-right
 {
     background: #0D2A52;
     color: white;
@@ -232,7 +216,7 @@ html, body
     padding-right: 0px;
 }
 
-#sidebarToggleContainer .fa-chevron-left
+#sidebarToggle.fa-chevron-left
 {
     left: 232px;
     color: #0D2A52
@@ -241,9 +225,8 @@ html, body
 #sidebar footer
 {
     position: fixed;
-    bottom: 0;
-    right: 1;
-    width: 255px;
+    bottom: 1px;
+    width: 250px;
     height: 20px;
     font-size: 10px;
     z-index: 9999;
@@ -277,10 +260,11 @@ html, body
     position: fixed;
     margin-left: 250px;
     height: 90%;
-    width: 80%;
-    overflow-y: scroll;
-
+    width: auto;
+    overflow: scroll;
 }
+
+#dataArea.controlsHidden { margin-left: 30px; }
 
 #dataTable
 {
@@ -301,22 +285,20 @@ html, body
     background: #00254A;
 }
 
-.shown
-{
-    display: block;
-}
+#dataTable .col1 { width: 75px; text-align: center; }
+#dataTable .col2 { width: 375px; text-align: center; }
+#dataTable .col3 { width: 75px; text-align: center; }
+#dataTable .col4 { width: 75px; text-align: center; }
 
-.hidden
-{
-    display: none;
-}
+.shown  { display: block; }
+.hidden { display: none; }
 
 #controls
 {
     position: absolute;
     overflow-y: auto;
     width: 250px;
-    height: 100%;
+    height: auto;
     text-align: left;
 }
 
@@ -450,4 +432,43 @@ button:active
 .map-pin.black
 {
     color: white; /* FIXME: I'm a placeholder color */
+}
+
+@media only screen and (max-width: 600px)
+{
+    #notifications
+    {
+        left: 0px;
+        margin: 0px;
+        width: 100%;
+    }
+
+    .notification
+    {
+        margin: 0px;
+        border-radius: 0px;
+    }
+
+    #dataArea.controlsShown { top: 60px; }
+
+    #dataArea.controlsHidden
+    {
+        position: fixed;
+        margin-left: 5px;
+        margin-right: 5px;
+        width: 98vw;
+        box-sizing: border-box;
+    }
+
+    #controls
+    {
+        position: static;
+        margin-bottom: 15px;
+        overflow-y: auto;
+        width: 100%;
+        height: auto;
+        text-align: left;
+    }
+
+    #sidebar.dataMode.controlsHidden { padding-left: 0px; }
 }
