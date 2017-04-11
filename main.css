@@ -272,26 +272,6 @@ html, body
     box-shadow: 2px 2px 10px #a3a3a3;
 }
 
-#unmappedRecords .map-pin
-{
-    display: inline-block;
-}
-
-#unmappedRecords .map-pin:after
-{
-    background: 0;
-}
-
-#unmappedRecords p
-{
-    /* Set the height to height of icons */
-    height: 32px;
-
-    display: inline-block;
-    margin: 0 0 0 4px;
-    vertical-align: middle;
-}
-
 #dataArea
 {
     position: fixed;
@@ -319,6 +299,26 @@ html, body
     top: 0;
     color: white;
     background: #00254A;
+}
+
+#dataTable .map-pin
+{
+    display: inline-block;
+}
+
+#dataTable .map-pin:after
+{
+    background: 0;
+}
+
+#dataTable p
+{
+    /* Set the height to height of icons */
+    height: 32px;
+
+    display: inline-block;
+    margin: 0 0 0 4px;
+    vertical-align: middle;
 }
 
 .shown

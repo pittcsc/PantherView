@@ -140,11 +140,7 @@
 
         if (elm.checked) {
             markers.forEach((marker) => {
-<<<<<<< HEAD
                 if (marker.type.toLowerCase() === type && marker.isMapped) {
-=======
-                if (marker.type === type) {
->>>>>>> Precompute table data to allow for filtering
                     if (marker.inDate) {
                         if (marker.isMapped) {
                             marker.pin.addTo(map);
@@ -157,17 +153,8 @@
             });
         } else {
             markers.forEach((marker) => {
-<<<<<<< HEAD
                 if (marker.type.toLowerCase() === type && marker.isMapped) {
                     map.removeLayer(marker.pin);
-=======
-                if (marker.type === type) {
-                    if (marker.isMapped) {
-                        map.removeLayer(marker.pin);
-                    } else if (marker.tableEl.parentElement) {
-                        marker.tableEl.parentElement.removeChild(marker.tableEl);
-                    }
->>>>>>> Precompute table data to allow for filtering
                     marker.filtered = true;
                 }
             });
