@@ -1,88 +1,66 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PantherView</title>
-  <meta name="description" content="Map for Oakland data.">
-  <link rel="icon" href="favicon.ico" />
-  <link rel="stylesheet" href="./main.css">
-  <!--Using fontawesome temporarily-->
-  <script src="https://use.fontawesome.com/07694042f8.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
-  <!--favicons-->
-  <link rel="apple-touch-icon" sizes="57x57" href="./favicons/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="./favicons/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="./favicons/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="./favicons/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="./favicons/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="./favicons/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="./favicons/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="./favicons/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="./favicons/android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="./favicons/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png">
-  <link rel="manifest" href="./favicons/manifest.json">
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="./favicons/ms-icon-144x144.png">
-  <meta name="theme-color" content="#ffffff">
-</head>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PantherView</title>
+    <meta name="description" content="Map for Oakland data.">
+    <link rel="icon" href="favicon.ico" />
+    <!--favicons-->
+    <link rel="apple-touch-icon" sizes="57x57" href="./favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="./favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="./favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="./favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="./favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="./favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="./favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png">
+    <link rel="manifest" href="./favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="./favicons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
 
-<body>
-  <div id="ui">
-    <div id="notifications"></div>
+    <!-- necessary style -->
+    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+    <script src="https://use.fontawesome.com/07694042f8.js"></script>
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <!-- end necessary style -->
+
+  </head>
+
+  <body>
     <div id="header">
-      <div id="title">
-        <a href="index.html">
-          <div id="logo">
-            <img src="./logo.png" alt="logo; credit: @alexandrabush" title="credit: @alexandrabush">
-          </div>
-          <h1>PantherView</h1>
-        </a>
-      </div>
-      <div id="navigation">
+        <div id="title">
+            <a href="index.html">
+                <div id="logo">
+                    <img src="./logo.png" alt="logo; credit: @alexandrabush" title="credit: @alexandrabush">
+                </div>
+                <h1>PantherView</h1>
+            </a>
+        </div>
+        <div id="navigation">
         <ul>
-          <li><a href="about.html">About</a></li>
+            <li><a href="about.html">About</a></li>
         </ul>
-      </div>
-    </div>
-    <div id="sidebarToggleContainer">
-      <i id="sidebarToggle"></i>
-    </div>
-    <div id="sidebar">
-      <div id="controls">
-        <div id="displaySelection">
-            <button id="radioMap" checked>Map</button>
-            <button id="radioData">Data</button>
         </div>
-        <div id="dateSelection">
-            <button id="radioMonth" checked>Past Month</button>
-            <button id="radioWeek">Past Week</button>
-            <button id="radioDay">Yesterday</button>
-        </div>
-        <h3>Legend</h3>
-        <div id="typeSelection">
-        </div>
-      </div>
-      <div id="dataArea" class="hidden">
-          <table id="dataTable"></table>
-      </div>
-      <footer>
-        &copy; 2017 University of Pittsburgh Computer Science Club.
-         Logo: @alexandrabush.
-      </footer>
     </div>
-  </div>
-  <div id="mapid"></div>
-  <script src="https://unpkg.com/promise-polyfill@6.0.2/promise.min.js"></script>
-  <script src="https://unpkg.com/whatwg-fetch@2.0.2/fetch.js"></script>
-  <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
-  <script src="./main.js"></script>
-  <script src="./data.js"></script>
-</body>
+
+    <!-- necessary HTML -->
+    <div id="ui"></div>
+    <div id="mapid"></div>
+    <script src="./ui.js"></script>
+    <script src="./map.js"></script>
+    <script src="./data.js"></script>
+    <!-- end necessary HTML -->
+
+  </body>
 
 </html>
