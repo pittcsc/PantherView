@@ -150,6 +150,17 @@
         }
     };
 
+    // generate a pop-up based on object map provided
+    // object simply contains the property values as found in the data set
+    // mapped to the corresponding human-readable text
+
+    function generatePopup(record, mapping) {
+        return Object.keys(mapping).map(property => `<p class="marker-text">
+        <span class="marker-key">${mapping[property]}</span>:
+        <span class="marker-value">${record[property]}</span></p>`)
+            .join("");
+    }
+
     const WPRDC_DATA_SOURCES = {
         "Police": {
             id: "1797ead8-8262-41cc-9099-cbc8a161924b",
@@ -157,10 +168,11 @@
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_POLICE,
             updateTime: 12*HOUR,
-
-            // TODO: Better title and popup messages?
-            title: (record) => record["OFFENSES"],
-            popup: (record) => record["OFFENSES"],
+            title: (record) => record["INCIDENTHIERARCHYDESC"],
+            popup: (record) => generatePopup(record, {
+                INCIDENTHIERARCHYDESC: "Description",
+                OFFENSES: "Offenses"
+            }),
             table: (record) => `<td class="col1">Police</td>
                                 <td class="col2">${record["OFFENSES"]}</td>
                                 <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
@@ -181,9 +193,10 @@
             icon: iconTypes.CITY_ARREST,
             updateTime: 12*HOUR,
 
-            // TODO: Better title and popup messages?
             title: (record) => record["OFFENSES"],
-            popup: (record) => record["OFFENSES"],
+            popup: (record) => generatePopup(record, {
+                OFFENSES: "Offenses"
+            }),
             table: (record) => `<td class="col1">Arrest</td>
                                 <td class="col2">${record["OFFENSES"]}</td>
                                 <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
@@ -203,12 +216,13 @@
             latLong: ["Y", "X"],
             icon: iconTypes.CODE_VIOLATION,
             updateTime: 12*HOUR,
-
-            // TODO: Better title and popup messages?
             title: (record) => record["VIOLATION"],
-            popup: (record) => `<strong>${record["VIOLATION"]}:</strong>
-                                ${record["LOCATION"]}<br>
-                                ${record["STREET_NUM"]} ${record["STREET_NAME"]}`,
+            popup: (record) => generatePopup(record, {
+                VIOLATION: "Violation",
+                LOCATION: "Location",
+                CORRECTIVE_ACTION: "Description",
+                INSPECTION_RESULT: "Result"
+            }),
             table: (record) => `<td class="col1">Code Violation</td>
                                 <td class="col2">${record["VIOLATION"]}</td>
                                 <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
@@ -229,11 +243,11 @@
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_311_ICON,
             updateTime: 10*MINUTE,
-
             title: (record) => record["REQUEST_TYPE"],
-            popup: (record) => `
-              <strong>${record["DEPARTMENT"]}</strong>
-              <br> ${record["REQUEST_TYPE"]}`,
+            popup: (record) => generatePopup(record, {
+                REQUEST_TYPE: "Type",
+                DEPARTMENT: "Department"
+            }),
             table: (record) => `<td class="col1">311</td>
                                 <td class="col2">${record["DEPARTMENT"]} - ${record["REQUEST_TYPE"]}</td>
                                 <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>
@@ -246,8 +260,6 @@
                 record.incidentDay = parseInt(record.CREATED_ON.substring(8,10));
             }
         },
-
-        // Calls from the library db
         "Library": {
             id: "2ba0788a-2f35-43aa-a47c-89c75f55cf9d",
             primaryFiltering: "WHERE \"Name\" LIKE '%OAKLAND%'",
@@ -256,20 +268,38 @@
             updateTime: 24*HOUR*30,
 
             title: (record) => record["Name"],
-            popup: (record) => `
-              <strong>${record.Name}</strong>
-              <br> Address: ${record.Address}
-              <br> Phone: ${record.Phone}
-              <br> Monday: ${record.MoOpen.substring(0, 5)} - ${record.MoClose.substring(0, 5)}
-              <br> Tuesday: ${record.TuOpen.substring(0, 5)} - ${record.TuClose.substring(0, 5)}
-              <br> Wednesday: ${record.WeOpen.substring(0, 5)} - ${record.WeClose.substring(0, 5)}
-              <br> Thursday: ${record.ThOpen.substring(0, 5)} - ${record.ThClose.substring(0, 5)}
-              <br> Friday: ${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}
-              <br> Saturday: ${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}
-              <br> Sunday: ${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}
-              `
+            popup: (record) => `<p class="marker-text">${record.Name}</p>
+                <p class="marker-text">${record.Address}</p>
+                <p class="marker-text">${record.Phone}</p>
+                <p class="marker-text">
+                    <span class="marker-key">Monday</span>:
+                    <span class="marker-value">${record.MoOpen.substring(0, 5)} - ${record.MoClose.substring(0, 5)}</span>
+                </p>
+                <p class="marker-text">
+                    <span class="marker-key">Tuesday</span>:
+                    <span class="marker-value">${record.TuOpen.substring(0, 5)} - ${record.TuClose.substring(0, 5)}</span>
+                </p>
+                <p class="marker-text">
+                    <span class="marker-key">Wednesday</span>:
+                    <span class="marker-value">${record.WeOpen.substring(0, 5)} - ${record.WeClose.substring(0, 5)}</span>
+                </p>
+                <p class="marker-text">
+                    <span class="marker-key">Thursday</span>:
+                    <span class="marker-value">${record.ThOpen.substring(0, 5)} - ${record.ThClose.substring(0, 5)}</span>
+                </p>
+                <p class="marker-text">
+                    <span class="marker-key">Friday</span>:
+                    <span class="marker-value">${record.FrOpen.substring(0, 5)} - ${record.FrClose.substring(0, 5)}</span>
+                </p>
+                <p class="marker-text">
+                    <span class="marker-key">Saturday</span>:
+                    <span class="marker-value">${record.SaOpen.substring(0, 5)} - ${record.SaClose.substring(0, 5)}</span>
+                </p>
+                <p class="marker-text">
+                    <span class="marker-key">Sunday</span>:
+                    <span class="marker-value">${record.SuOpen.substring(0, 5)} - ${record.SuClose.substring(0, 5)}</span>
+                </p>`
         },
-
         "Non-Traffic Violation": {
             id: "6b11e87d-1216-463d-bbd3-37460e539d86",
             primaryFiltering: "Where \"NEIGHBORHOOD\" LIKE '%Oakland'",
@@ -278,7 +308,9 @@
             updateTime: 12*HOUR,
 
             title: (record) => record["OFFENSES"],
-            popup: (record) => record["OFFENSES"],
+            popup: (record) => generatePopup(record, {
+                OFFENSES: "Offenses"
+            }),
             table: (record) => `<td class="col1">Non-Traffic Violation</td>
                                 <td class="col2">${record["OFFENSES"]}</td>
                                 <td class="col3">${record.incidentMonth}/${record.incidentDay}/${record.incidentYear}</td>

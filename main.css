@@ -102,7 +102,7 @@ html, body
 #ui
 {
     position: fixed;
-    z-index: 1000000;
+    z-index: 99999;
     font-family: "Roboto", sans-serif;
     letter-spacing: .04em;
     font-weight: 300;
@@ -129,12 +129,16 @@ html, body
 #header
 {
     position: fixed;
+    z-index: 1000000;
     height: 45px;
     width: 100%;
     color: white;
     box-sizing: border-box;
     background: #00254A; /* color picked from Pitt website */
     line-height: 45px;
+    font-family: "Roboto", sans-serif;
+    letter-spacing: .04em;
+    font-weight: 300;
 }
 
 #header a{
@@ -199,7 +203,7 @@ html, body
     position: fixed;
     top: calc(50% - 24px);
     padding-top: 5px;
-    z-index: 9999;
+    z-index: 1000000;
 }
 
 #sidebarToggle:hover
@@ -222,22 +226,21 @@ html, body
     color: #0D2A52
 }
 
-#sidebar footer
+#sidebar #footer
 {
     position: fixed;
-    bottom: 1px;
+    bottom: 25px;
     width: 250px;
     height: 20px;
-    font-size: 10px;
-    z-index: 9999;
+    font-size: 14px;
+    z-index: 99999;
     background-color: transparent;
 }
 
 #sidebar.mapMode
 {
     position: fixed;
-    top: 45px;
-    padding: 15px;
+    padding: 50px 15px;
     width: 250px;
     height: 100%;
     background: rgba(250,250,250,0.85);
@@ -247,8 +250,7 @@ html, body
 #sidebar.dataMode
 {
     position: fixed;
-    top: 45px;
-    padding: 15px 15px 15px 15px;
+    padding: 50px 15px;
     width: 100%;
     height: 100%;
     background: rgba(250,250,250,0.85);
@@ -300,6 +302,7 @@ html, body
     width: 250px;
     height: auto;
     text-align: left;
+    padding: 5px;
 }
 
 #dateSelection
@@ -332,11 +335,44 @@ button:active
     background-color: #bbb;
 }
 
+#typeSelection {
+    margin-top: 5px;
+}
+
+.checkboxBtn {
+    position: relative;
+    display: inline-block;
+    margin: 5px 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+}
+
+#typeSelection label {
+  display: inline-block;
+	width: 20px;
+	height: 20px;
+	border-radius: 100%;
+	cursor: pointer;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background: #333;
+	box-shadow:inset 0px 1px 3px rgba(0,0,0,0.5);
+}
+
 #typeSelection input[type=checkbox] {
+	  visibility: hidden;
     cursor: pointer;
-    margin: 5px;
-    padding: 5px;
-    vertical-align: -3px;
+}
+
+#typeSelection input[type=checkbox]:checked + label {
+	  background: #3596E5;
+}
+
+#typeSelection .label {
+    display: inline-block;
+    margin: 10px 0px;
 }
 
 /* divIcon pins */
@@ -369,7 +405,6 @@ button:active
 .map-pin:after
 {
     position: absolute;
-    /*z-index: -1;*/
     top: 100%;
     left: 50%;
 
@@ -471,4 +506,14 @@ button:active
     }
 
     #sidebar.dataMode.controlsHidden { padding-left: 0px; }
+}
+
+.marker-text {
+   margin: 5px 0 !important;
+}
+.marker-key {
+    font-weight: bold;
+}
+.marker-value {
+    font-weight: normal;
 }
