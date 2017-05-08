@@ -21,6 +21,11 @@
         <div id="dataArea" class="hidden">
             <table id="dataTable"></table>
         </div>
-        <div id="footer">&copy; 2017 University of Pittsburgh Computer Science Club.</div>
+        <div id="footer">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdVahcTHpZ4yVToQTKCla4eZo7YW73PYdm96Pq-ckEb0OpPOQ/viewform?c=0&w=1">Feedback</a>
+            <br>
+            <br>
+            &copy; 2017 University of Pittsburgh Computer Science Club.
+        </div>
     </div>`;
 })(typeof window !== "undefined" ? window : {});

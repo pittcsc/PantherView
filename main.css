@@ -229,9 +229,8 @@ html, body
 #sidebar #footer
 {
     position: fixed;
-    bottom: 25px;
+    bottom: 15px;
     width: 250px;
-    height: 20px;
     font-size: 14px;
     z-index: 99999;
     background-color: transparent;
