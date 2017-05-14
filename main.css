@@ -69,6 +69,22 @@ html, body
     cursor: pointer;
 }
 
+@keyFrames vanish
+{
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.vanish
+{
+    animation-duration: 1s;
+    animation-name: vanish;
+}
+
 .retry
 {
     position: relative;
@@ -304,9 +320,14 @@ html, body
     padding: 5px;
 }
 
-#dateSelection
+#dateSelection, #displaySelection
 {
     display: flex;
+}
+
+#dateSelection
+{
+    margin-top: 5px;
 }
 
 button
@@ -316,11 +337,6 @@ button
     border: 1px solid lightgrey;
     margin-left: -1px;
     padding: 5px 5px;
-}
-
-#dateSelection:first-child
-{
-    margin-left: 1px;
 }
 
 button:hover
