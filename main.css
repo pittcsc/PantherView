@@ -69,6 +69,22 @@ html, body
     cursor: pointer;
 }
 
+@keyFrames vanish
+{
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.vanish
+{
+    animation-duration: 1s;
+    animation-name: vanish;
+}
+
 .retry
 {
     position: relative;

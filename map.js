@@ -268,7 +268,7 @@
         closeButton.className = "close";
         closeButton.innerHTML = "x";
         closeButton.addEventListener("click", function() {
-            box.style.display = "none";
+            vanish();
         });
 
         box.appendChild(closeButton);
@@ -281,6 +281,17 @@
             customHTML(customDiv);
             box.appendChild(customDiv);
         }
+
+        function vanish() {
+            box.classList.add("vanish");
+            setTimeout(function() {
+                if (box.classList.contains("vanish")) {
+                    box.style.display = "none";
+                }
+            }, 1000);
+        }
+
+        setTimeout(vanish, 7000);
 
         const topNotification = notificationArea.firstChild;
         notificationArea.insertBefore(box, topNotification);
