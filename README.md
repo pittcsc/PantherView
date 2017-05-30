@@ -33,6 +33,8 @@ to the `head` tag, as well as
 ```
 somewhere in the `body`.
 
+In order to turn on or off default checkboxes, open up `map.js`, CTRL+F 'DEFAULT_CHECKS', and change a value to `false` to turn it off by default and `true` to turn it on by default.
+
 ## Getting started:
 1. Fork the project
 2. Add your name to `contributors.md`
