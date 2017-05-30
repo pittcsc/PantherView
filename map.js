@@ -8,7 +8,8 @@
         WPRDC_QUERY_PREFIX,
         WPRDC_QUERY_SUFFIX,
         PITT_LAUNDRY,
-        PITT_LABS;
+        PITT_LABS,
+        DEFAULT_CHECKS;
 
     // await those values
     window.addEventListener("dataready", function handler(event) {
@@ -22,6 +23,10 @@
             PITT_LAUNDRY,
             PITT_LABS
         } = event.detail);
+
+        // select the default checkmarked boxes
+        // true = turned on by default; false = turned off by default
+        DEFAULT_CHECKS = { "library": true, "arrest": true, "police": true, "code violation": true, "non-traffic violation": true, "311": true, "labs": true, "laundry": true };
 
         // wait for these values before fetching dependant data
         fetchAllData();
@@ -330,7 +335,9 @@
                 const filter = document.createElement("input");
                 filter.id = dataSourceName.toLowerCase() + "Check";
                 filter.type = "checkbox";
-                filter.checked = true;
+                if (DEFAULT_CHECKS[dataSourceName.toLowerCase()] == true) {
+                    filter.checked = true;
+                }
                 const filterLabelDec = document.createElement("label");
                 filterLabelDec.htmlFor = dataSourceName.toLowerCase() + "Check";
 
@@ -373,7 +380,12 @@
                         });
 
                         record.pin.bindPopup(dataSource.popup(record));
-                        record.pin.addTo(map);
+
+                        record.filtered = true;
+                        if (filter.checked == true) {
+                            record.pin.addTo(map);
+                            record.filtered = false;
+                        }
 
                         record.isMapped = true;
                     } else {
@@ -472,7 +484,9 @@
                 var filter = document.createElement("input");
                 filter.id = dataSection.toLowerCase() + "Check";
                 filter.type = "checkbox";
-                filter.checked = true;
+                if (DEFAULT_CHECKS[dataSection.toLowerCase()] == true) {
+                    filter.checked = true;
+                }
                 var filterLabelDec = document.createElement("label");
                 filterLabelDec.htmlFor = dataSection.toLowerCase() + "Check";
 
@@ -519,8 +533,11 @@
                 //labRecord.popup = pup;
                 //Bind popup to pin
                 thePin.bindPopup(pup);
-                //Add pin to map
-                thePin.addTo(map);
+                //Add pin to map if Labs checkbox is ticked
+                var filter = document.getElementById("labsCheck");
+                if (filter.checked == true) {
+                    thePin.addTo(map);
+                }
                 pup.isMapped = true;
                 //Push pin (haha, get it?)
                 markers.push({ //Push the following object onto the markers array
@@ -565,7 +582,10 @@
                 //Bind popup to pin
                 thePin.bindPopup(pup);
                 //Add pin to map
-                thePin.addTo(map);
+                var filter = document.getElementById("laundryCheck");
+                if (filter.checked == true) {
+                    thePin.addTo(map);
+                }
                 pup.isMapped = true;
                 //Push pin (haha, get it?)
                 markers.push({ //Push the following object onto the markers array
@@ -591,7 +611,7 @@
                 });
                 retryDiv.appendChild(retryButton);
         }));
-    }//End fetchPittData()
+    }
 
     function fetchAllData() {
         Promise.all([
