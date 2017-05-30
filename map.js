@@ -9,7 +9,8 @@
         WPRDC_QUERY_SUFFIX,
         PITT_LAUNDRY,
         PITT_LABS,
-        DEFAULT_CHECKS;
+        DEFAULT_CHECKS,
+        DEFAULT_VIEW;
 
     // await those values
     window.addEventListener("dataready", function handler(event) {
@@ -27,6 +28,12 @@
         // select the default checkmarked boxes
         // true = turned on by default; false = turned off by default
         DEFAULT_CHECKS = { "library": true, "arrest": true, "police": true, "code violation": true, "non-traffic violation": true, "311": true, "labs": true, "laundry": true };
+
+        // choose the default data shown in the map; can hold 1 of 3 strings:
+        // "month" = show data from the previous 30 days
+        // "week"  = show data from the previous 7 days
+        // "day"   = show data from the previous day
+        DEFAULT_VIEW = "week";
 
         // wait for these values before fetching dependant data
         fetchAllData();
@@ -383,7 +390,6 @@
 
                         record.filtered = true;
                         if (filter.checked == true) {
-                            record.pin.addTo(map);
                             record.filtered = false;
                         }
 
@@ -652,8 +658,19 @@
                 retryDiv.appendChild(retryButton);
             });
         }).then(() => {
-            //display past week map as default
-            displayPastWeek();
+            switch (DEFAULT_VIEW) {
+                case "month":
+                    displayPastMonth();
+                    break;
+                case "week":
+                    displayPastWeek();
+                    break;
+                case "day":
+                    displayPastDay();
+                    break;
+                default:
+                    displayPastWeek();
+            }
             displayMapMode();
             generateDataTable();
         });
