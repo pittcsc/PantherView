@@ -112,6 +112,7 @@
         document.getElementById("radioDay").style.backgroundColor = "#fff";
         document.getElementById("radioWeek").style.backgroundColor = "lightgrey";
         document.getElementById("radioMonth").style.backrgoundColor = "#fff";
+        document.getElementById("radioMonth").style.backgroundColor = "#fff"; // NOTE: when switching from month to week data, the month button is stuck on "lightgrey" so this statement makes sure it is "#fff" instead
         markers.forEach((marker, i) => {
             if (!marker.incidentYear || !marker.isMapped) {
                 return;
