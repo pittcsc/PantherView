@@ -8,7 +8,9 @@
         WPRDC_QUERY_PREFIX,
         WPRDC_QUERY_SUFFIX,
         PITT_LAUNDRY,
-        PITT_LABS;
+        PITT_LABS,
+        DEFAULT_CHECKS,
+        DEFAULT_VIEW;
 
     // await those values
     window.addEventListener("dataready", function handler(event) {
@@ -22,6 +24,16 @@
             PITT_LAUNDRY,
             PITT_LABS
         } = event.detail);
+
+        // select the default checkmarked boxes
+        // true = turned on by default; false = turned off by default
+        DEFAULT_CHECKS = { "library": true, "arrest": true, "police": true, "code violation": true, "non-traffic violation": true, "311": true, "labs": true, "laundry": true };
+
+        // choose the default data shown in the map; can hold 1 of 3 strings:
+        // "month" = show data from the previous 30 days
+        // "week"  = show data from the previous 7 days
+        // "day"   = show data from the previous day
+        DEFAULT_VIEW = "week";
 
         // wait for these values before fetching dependant data
         fetchAllData();
@@ -100,6 +112,7 @@
         document.getElementById("radioDay").style.backgroundColor = "#fff";
         document.getElementById("radioWeek").style.backgroundColor = "lightgrey";
         document.getElementById("radioMonth").style.backrgoundColor = "#fff";
+        document.getElementById("radioMonth").style.backgroundColor = "#fff"; // NOTE: when switching from month to week data, the month button is stuck on "lightgrey" so this statement makes sure it is "#fff" instead
         markers.forEach((marker, i) => {
             if (!marker.incidentYear || !marker.isMapped) {
                 return;
@@ -341,7 +354,9 @@
                 const filter = document.createElement("input");
                 filter.id = dataSourceName.toLowerCase() + "Check";
                 filter.type = "checkbox";
-                filter.checked = true;
+                if (DEFAULT_CHECKS[dataSourceName.toLowerCase()] == true) {
+                    filter.checked = true;
+                }
                 const filterLabelDec = document.createElement("label");
                 filterLabelDec.htmlFor = dataSourceName.toLowerCase() + "Check";
 
@@ -384,7 +399,11 @@
                         });
 
                         record.pin.bindPopup(dataSource.popup(record));
-                        record.pin.addTo(map);
+
+                        record.filtered = true;
+                        if (filter.checked == true) {
+                            record.filtered = false;
+                        }
 
                         record.isMapped = true;
                     } else {
@@ -483,7 +502,9 @@
                 var filter = document.createElement("input");
                 filter.id = dataSection.toLowerCase() + "Check";
                 filter.type = "checkbox";
-                filter.checked = true;
+                if (DEFAULT_CHECKS[dataSection.toLowerCase()] == true) {
+                    filter.checked = true;
+                }
                 var filterLabelDec = document.createElement("label");
                 filterLabelDec.htmlFor = dataSection.toLowerCase() + "Check";
 
@@ -530,8 +551,11 @@
                 //labRecord.popup = pup;
                 //Bind popup to pin
                 thePin.bindPopup(pup);
-                //Add pin to map
-                thePin.addTo(map);
+                //Add pin to map if Labs checkbox is ticked
+                var filter = document.getElementById("labsCheck");
+                if (filter.checked == true) {
+                    thePin.addTo(map);
+                }
                 pup.isMapped = true;
                 //Push pin (haha, get it?)
                 markers.push({ //Push the following object onto the markers array
@@ -576,7 +600,10 @@
                 //Bind popup to pin
                 thePin.bindPopup(pup);
                 //Add pin to map
-                thePin.addTo(map);
+                var filter = document.getElementById("laundryCheck");
+                if (filter.checked == true) {
+                    thePin.addTo(map);
+                }
                 pup.isMapped = true;
                 //Push pin (haha, get it?)
                 markers.push({ //Push the following object onto the markers array
@@ -602,7 +629,7 @@
                 });
                 retryDiv.appendChild(retryButton);
         }));
-    }//End fetchPittData()
+    }
 
     function fetchAllData() {
         Promise.all([
@@ -643,8 +670,19 @@
                 retryDiv.appendChild(retryButton);
             });
         }).then(() => {
-            //display past week map as default
-            displayPastWeek();
+            switch (DEFAULT_VIEW) {
+                case "month":
+                    displayPastMonth();
+                    break;
+                case "week":
+                    displayPastWeek();
+                    break;
+                case "day":
+                    displayPastDay();
+                    break;
+                default:
+                    displayPastWeek();
+            }
             displayMapMode();
             generateDataTable();
         });

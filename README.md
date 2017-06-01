@@ -33,6 +33,10 @@ to the `head` tag, as well as
 ```
 somewhere in the `body`.
 
+In order to turn on or off default checkboxes, open up `map.js`, CTRL+F 'DEFAULT_CHECKS', and change a value to `false` to turn it off by default and `true` to turn it on by default.
+
+In order to change the default view (currently shipped with weekly data as default) to the past month, week, or day, open `map.js`, CTRL+F 'DEFAULT_VIEW', and read the documentation.  You can change the value to "month", "week", or "day"; anything else will default to weekly data.
+
 ## Getting started:
 1. Fork the project
 2. Add your name to `contributors.md`
