@@ -11,17 +11,37 @@ Thanks to @alexandrabush for the logo!
 Since our project is just an HTML file, you can simply load the file into your browser.  
 Once you make edits, commit the changes, and push, your changes will be updated on GitHub.
 
+## Including in an external Site:
+In order to include this project in an existing HTML page you will need to first download the `main.css`, `ui.js`, `map.js`, and `data.js` files (we don't yet have them on a CDN). Then, you will need to add
+```
+<!-- necessary style -->
+<link rel="stylesheet" href="./main.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+<script src="https://use.fontawesome.com/07694042f8.js"></script>
+<script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+<!-- end necessary style -->
+```
+to the `head` tag, as well as
+```
+<!-- necessary HTML -->
+<div id="ui"></div>
+<div id="mapid"></div>
+<script src="./ui.js"></script>
+<script src="./map.js"></script>
+<script src="./data.js"></script>
+<!-- end necessary HTML -->
+```
+somewhere in the `body`.
+
+In order to turn on or off default checkboxes, open up `map.js`, CTRL+F 'DEFAULT_CHECKS', and change a value to `false` to turn it off by default and `true` to turn it on by default.
+
+In order to change the default view (currently shipped with weekly data as default) to the past month, week, or day, open `map.js`, CTRL+F 'DEFAULT_VIEW', and read the documentation.  You can change the value to "month", "week", or "day"; anything else will default to weekly data.
 
 ## Getting started:
 1. Fork the project
 2. Add your name to `contributors.md`
 3. Submit a pull request
 4. Take a look at the Issues for more things to do
-
-## Getting started (machine learning):
-1. Do all the steps above
-2. `cd` to the `ml` directory
-3. Ensure you have Python 3.5.X installed, then run `pip install -r requirements.txt` (depending on config, may be `pip3` instead)
 
 ## Helpful links:
 

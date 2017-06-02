@@ -8,7 +8,9 @@
         WPRDC_QUERY_PREFIX,
         WPRDC_QUERY_SUFFIX,
         PITT_LAUNDRY,
-        PITT_LABS;
+        PITT_LABS,
+        DEFAULT_CHECKS,
+        DEFAULT_VIEW;
 
     // await those values
     window.addEventListener("dataready", function handler(event) {
@@ -22,6 +24,16 @@
             PITT_LAUNDRY,
             PITT_LABS
         } = event.detail);
+
+        // select the default checkmarked boxes
+        // true = turned on by default; false = turned off by default
+        DEFAULT_CHECKS = { "library": true, "arrest": true, "police": true, "code violation": true, "non-traffic violation": true, "311": true, "labs": true, "laundry": true };
+
+        // choose the default data shown in the map; can hold 1 of 3 strings:
+        // "month" = show data from the previous 30 days
+        // "week"  = show data from the previous 7 days
+        // "day"   = show data from the previous day
+        DEFAULT_VIEW = "week";
 
         // wait for these values before fetching dependant data
         fetchAllData();
@@ -49,11 +61,11 @@
     if (screen.width <= 800) {
         sidebarToggle.open = 0;
         sidebar.className = "mapMode hidden";
-        sidebarToggle.className = "fa fa-chevron-right fa-3x";
+        sidebarToggle.className = "fa fa-chevron-right fa-2x";
     } else {
         sidebarToggle.open = 1;
         sidebar.className = "mapMode shown";
-        sidebarToggle.className = "fa fa-chevron-left fa-3x";
+        sidebarToggle.className = "fa fa-chevron-left fa-2x";
     }
 
     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
@@ -70,6 +82,9 @@
     // 30 days respectively (assuming all fetched data has been pruned to the last
     // 30 days already)
     function displayPastDay() {
+        document.getElementById("radioDay").style.backgroundColor = "lightgrey";
+        document.getElementById("radioWeek").style.backgroundColor = "#fff";
+        document.getElementById("radioMonth").style.backgroundColor = "#fff";
         markers.forEach((marker, i) => {
             //Check if library or other non-dated pin
             if (!marker.incidentYear || !marker.isMapped) {
@@ -95,6 +110,10 @@
     }
 
     function displayPastWeek() {
+        document.getElementById("radioDay").style.backgroundColor = "#fff";
+        document.getElementById("radioWeek").style.backgroundColor = "lightgrey";
+        document.getElementById("radioMonth").style.backrgoundColor = "#fff";
+        document.getElementById("radioMonth").style.backgroundColor = "#fff"; // NOTE: when switching from month to week data, the month button is stuck on "lightgrey" so this statement makes sure it is "#fff" instead
         markers.forEach((marker, i) => {
             if (!marker.incidentYear || !marker.isMapped) {
                 return;
@@ -119,6 +138,9 @@
     }
 
     function displayPastMonth() {
+        document.getElementById("radioDay").style.backgroundColor = "#fff";
+        document.getElementById("radioWeek").style.backgroundColor = "#fff";
+        document.getElementById("radioMonth").style.backgroundColor = "lightgrey";
         markers.forEach((marker, i) => {
             if (!marker.isMapped) {
                 return;
@@ -169,27 +191,27 @@
             if (sidebarToggle.open == 1) {
                 sidebarToggle.open = 0;
                 sidebar.className = "mapMode hidden";
-                sidebarToggle.className = "fa fa-chevron-right fa-3x";
+                sidebarToggle.className = "fa fa-chevron-right fa-2x";
             } else {
                 sidebarToggle.open = 1;
                 sidebar.className = "mapMode shown";
-                sidebarToggle.className = "fa fa-chevron-left fa-3x";
+                sidebarToggle.className = "fa fa-chevron-left fa-2x";
             }
         } else if (sidebar.classList.contains("dataMode")) {
             if (sidebarToggle.open == 1) {
                 sidebarToggle.open = 0;
                 sidebar.className = "dataMode controlsHidden";
-                sidebarToggle.className = "fa fa-chevron-right fa-3x";
+                sidebarToggle.className = "fa fa-chevron-right fa-2x";
                 document.getElementById("controls").className = "hidden";
                 document.getElementById("dataArea").className = "controlsHidden";
-                document.getElementsByTagName("footer")[0].className = "hidden";
+                document.getElementById("footer").className = "hidden";
             } else {
                 sidebarToggle.open = 1;
                 sidebar.className = "dataMode controlsShown";
-                sidebarToggle.className = "fa fa-chevron-left fa-3x";
+                sidebarToggle.className = "fa fa-chevron-left fa-2x";
                 document.getElementById("controls").className = "shown";
                 document.getElementById("dataArea").className = "controlsShown";
-                document.getElementsByTagName("footer")[0].className = "shown";
+                document.getElementById("footer").className = "shown";
             }
         }
     }
@@ -224,11 +246,15 @@
     }
 
     function displayMapMode() {
+        document.getElementById("radioMap").style.backgroundColor = "lightgrey";
+        document.getElementById("radioData").style.backgroundColor = "#fff";
         sidebar.className = "mapMode controlsShown shown";
         document.getElementById("dataArea").className = "hidden";
     }
 
     function displayDataMode() {
+        document.getElementById("radioMap").style.backgroundColor = "#fff";
+        document.getElementById("radioData").style.backgroundColor = "lightgrey";
         sidebar.className = "dataMode controlsShown shown";
         document.getElementById("dataArea").className = "controlsShown shown";
     }
@@ -260,7 +286,7 @@
         closeButton.className = "close";
         closeButton.innerHTML = "x";
         closeButton.addEventListener("click", function() {
-            box.style.display = "none";
+            vanish();
         });
 
         box.appendChild(closeButton);
@@ -273,6 +299,17 @@
             customHTML(customDiv);
             box.appendChild(customDiv);
         }
+
+        function vanish() {
+            box.classList.add("vanish");
+            setTimeout(function() {
+                if (box.classList.contains("vanish")) {
+                    box.style.display = "none";
+                }
+            }, 1000);
+        }
+
+        setTimeout(vanish, 7000);
 
         const topNotification = notificationArea.firstChild;
         notificationArea.insertBefore(box, topNotification);
@@ -317,20 +354,27 @@
                 const filterContainer = document.createElement("div");
                 filterContainer.className = "typeBtn";
 
+                const checkboxContainer = document.createElement("div");
+                checkboxContainer.className = "checkboxBtn";
                 const filter = document.createElement("input");
                 filter.id = dataSourceName.toLowerCase() + "Check";
                 filter.type = "checkbox";
-                filter.checked = true;
+                if (DEFAULT_CHECKS[dataSourceName.toLowerCase()] == true) {
+                    filter.checked = true;
+                }
+                const filterLabelDec = document.createElement("label");
+                filterLabelDec.htmlFor = dataSourceName.toLowerCase() + "Check";
 
-                const filterLabel = document.createElement("label");
-                filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
+                const filterLabel = document.createElement("p");
+                filterLabel.className = "label";
                 filterLabel.innerHTML = dataSource.icon.options.html + " - " +
                     dataSourceName;
 
                 filter.addEventListener("click", filterDisplay);
 
-                document.getElementById("typeSelection").appendChild(filterContainer);
-                filterContainer.appendChild(filter);
+                document.getElementById("typeSelection").appendChild(filterContainer).appendChild(checkboxContainer);
+                checkboxContainer.appendChild(filter);
+                checkboxContainer.appendChild(filterLabelDec);
                 filterContainer.appendChild(filterLabel);
 
                 records.forEach((record, i) => {
@@ -360,7 +404,11 @@
                         });
 
                         record.pin.bindPopup(dataSource.popup(record));
-                        record.pin.addTo(map);
+
+                        record.filtered = true;
+                        if (filter.checked == true) {
+                            record.filtered = false;
+                        }
 
                         record.isMapped = true;
                     } else {
@@ -478,41 +526,65 @@
                 var filterContainer = document.createElement("div");
                 filterContainer.className = "typeBtn";
 
+                var checkboxContainer = document.createElement("div");
+                checkboxContainer.className = "checkboxBtn";
                 var filter = document.createElement("input");
                 filter.id = dataSection.toLowerCase() + "Check";
                 filter.type = "checkbox";
-                filter.checked = true;
+                if (DEFAULT_CHECKS[dataSection.toLowerCase()] == true) {
+                    filter.checked = true;
+                }
+                var filterLabelDec = document.createElement("label");
+                filterLabelDec.htmlFor = dataSection.toLowerCase() + "Check";
 
-                var filterLabel = document.createElement("label");
-                filterLabel.htmlFor = dataSourceName.toLowerCase() + "Check";
+
+                var filterLabel = document.createElement("p");
+                filterLabel.className = "label";
                 filterLabel.innerHTML = dataSource.icon.options.html + " - " + dataSection;
 
                 filter.addEventListener("click", filterDisplay);
 
-                document.getElementById("typeSelection").appendChild(filterContainer);
-                filterContainer.appendChild(filter);
+                document.getElementById("typeSelection").appendChild(filterContainer).appendChild(checkboxContainer);
+                checkboxContainer.appendChild(filter);
+                checkboxContainer.appendChild(filterLabelDec);
                 filterContainer.appendChild(filterLabel);
             }
 
             if (dataSection == "Labs"){
                 //LABS PINS
                 const thePin = L.marker(PITT_LABS[dataSourceName].latLong, {
-                    title: dataSourceName,
+                    title: dataSourceName + " Lab",
                     icon: dataSource.icon
                 });
 
                 //Create popup
                 var pup = L.popup();
-                    pup.setContent("<p> " + dataSourceName + " Lab<br>Status: " + data.status
-                                 + "<br> Macs available: " + data.mac
-                                + "<br> Windows available: " + data.windows
-                                + "<br> Linux available: " + data.linux + "</p>");
+                pup.setContent(`<p class="marker-text">${dataSourceName} Lab</p>
+                    <p class="marker-text">
+                        <span class="marker-key">Status</span>:
+                        <span class="marker-value">${data.status}</span>
+                    </p>
+                    <p class="marker-text">
+                        <span class="marker-key">Macs available</span>:
+                        <span class="marker-value">${data.mac}</span>
+                    </p>
+                    <p class="marker-text">
+                        <span class="marker-key">Windows available</span>:
+                        <span class="marker-value">${data.windows}</span>
+                    </p>
+                    <p class="marker-text">
+                        <span class="marker-key">Linux available</span>:
+                        <span class="marker-value">${data.linux}</span>
+                    </p>`);
 
                 //labRecord.popup = pup;
                 //Bind popup to pin
                 thePin.bindPopup(pup);
-                //Add pin to map
-                thePin.addTo(map);
+                //Add pin to map if Labs checkbox is ticked
+                var filter = document.getElementById("labsCheck");
+                if (filter.checked == true) {
+                    thePin.addTo(map);
+                }
                 pup.isMapped = true;
                 //Push pin (haha, get it?)
                 markers.push({ //Push the following object onto the markers array
@@ -529,23 +601,38 @@
             else{ //For now, the only other one is laundry
                 //LAUNDRY PINS
                 const thePin = L.marker(PITT_LAUNDRY[dataSourceName].latLong, {
-                    title: dataSourceName,
+                    title: dataSourceName + " Laundry",
                     icon: dataSource.icon
                 });
 
                 //Create popup
                 var pup = L.popup();
-                    pup.setContent("<p> " + PITT_LAUNDRY[dataSourceName].building + " Laundry: "
-                                + "<br> Total washers: " + data.total_washers
-                                + "<br> Total dryers: " + data.total_dryers
-                                + "<br> Washers available: " + data.free_washers
-                                + "<br> Dryers available: " + data.free_dryers + "</p>");
+                pup.setContent(`<p class="marker-text">${PITT_LAUNDRY[dataSourceName].building} Laundry</p>
+                    <p class="marker-text">
+                        <span class="marker-key">Total washers</span>:
+                        <span class="marker-value">${data.total_washers}</span>
+                    </p>
+                    <p class="marker-text">
+                        <span class="marker-key">Available washers</span>:
+                        <span class="marker-value">${data.free_washers}</span>
+                    </p>
+                    <p class="marker-text">
+                        <span class="marker-key">Total dryers</span>:
+                        <span class="marker-value">${data.total_dryers}</span>
+                    </p>
+                    <p class="marker-text">
+                        <span class="marker-key">Available dryers</span>:
+                        <span class="marker-value">${data.free_dryers}</span>
+                    </p>`);
 
                 //labRecord.popup = pup;
                 //Bind popup to pin
                 thePin.bindPopup(pup);
                 //Add pin to map
-                thePin.addTo(map);
+                var filter = document.getElementById("laundryCheck");
+                if (filter.checked == true) {
+                    thePin.addTo(map);
+                }
                 pup.isMapped = true;
                 //Push pin (haha, get it?)
                 markers.push({ //Push the following object onto the markers array
@@ -571,7 +658,7 @@
                 });
                 retryDiv.appendChild(retryButton);
         }));
-    }//End fetchPittData()
+    }
 
     function fetchAllData() {
         Promise.all([
@@ -611,6 +698,20 @@
                 retryDiv.appendChild(retryButton);
             });
         }).then(() => {
+            switch (DEFAULT_VIEW) {
+                case "month":
+                    displayPastMonth();
+                    break;
+                case "week":
+                    displayPastWeek();
+                    break;
+                case "day":
+                    displayPastDay();
+                    break;
+                default:
+                    displayPastWeek();
+            }
+            displayMapMode();
             generateDataTable();
         });
     }
