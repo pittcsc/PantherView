@@ -55,17 +55,7 @@
 
     const sidebar = document.getElementById("sidebar");
     const sidebarToggle = document.getElementById("sidebarToggle");
-
-    //Start with sidebar closed if mobile
-    if (screen.width <= 800) {
-        sidebarToggle.open = 0;
-        sidebar.className = "mapMode hidden";
-        sidebarToggle.className = "fa fa-chevron-right fa-2x";
-    } else {
-        sidebarToggle.open = 1;
-        sidebar.className = "mapMode shown";
-        sidebarToggle.className = "fa fa-chevron-left fa-2x";
-    }
+    sidebarToggle.open = 1;
 
     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
         attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"
@@ -243,14 +233,16 @@
     function displayMapMode() {
         document.getElementById("radioMap").style.backgroundColor = "lightgrey";
         document.getElementById("radioData").style.backgroundColor = "#fff";
-        sidebar.className = "mapMode controlsShown shown";
+        sidebar.classList.add("mapMode");
+        sidebar.classList.remove("dataMode");
         document.getElementById("dataArea").className = "hidden";
     }
 
     function displayDataMode() {
         document.getElementById("radioMap").style.backgroundColor = "#fff";
         document.getElementById("radioData").style.backgroundColor = "lightgrey";
-        sidebar.className = "dataMode controlsShown shown";
+        sidebar.classList.remove("mapMode");
+        sidebar.classList.add("dataMode");
         document.getElementById("dataArea").className = "controlsShown shown";
     }
 
@@ -686,6 +678,17 @@
             displayMapMode();
             generateDataTable();
         });
+    }
+
+    //Start with sidebar closed if mobile
+    if (screen.width <= 800) {
+        sidebarToggle.open = 1;
+        sidebar.className = "mapMode hidden";
+        sidebarToggle.className = "fa fa-chevron-right fa-2x";
+    } else {
+        sidebarToggle.open = 1;
+        sidebar.className = "mapMode shown";
+        sidebarToggle.className = "fa fa-chevron-left fa-2x";
     }
 
     //Helper function that returns difference between two dates in days
