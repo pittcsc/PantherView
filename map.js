@@ -55,7 +55,6 @@
 
     const sidebar = document.getElementById("sidebar");
     const sidebarToggle = document.getElementById("sidebarToggle");
-    sidebarToggle.open = 1;
 
     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
         attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"
@@ -682,7 +681,7 @@
 
     //Start with sidebar closed if mobile
     if (screen.width <= 800) {
-        sidebarToggle.open = 1;
+        sidebarToggle.open = 0;
         sidebar.className = "mapMode hidden";
         sidebarToggle.className = "fa fa-chevron-right fa-2x";
     } else {
