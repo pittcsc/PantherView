@@ -238,7 +238,7 @@
 
         // City of Pittsburgh 311 data
         "311": {
-            id: "40776043-ad00-40f5-9dc8-1fde865ff571",
+            id: "76fda9d0-69be-4dd5-8108-0de7907fc5a4",
             primaryFiltering: "WHERE \"NEIGHBORHOOD\" LIKE '%Oakland' AND \"CREATED_ON\" >= (NOW() - '30 day'::INTERVAL) ORDER BY \"CREATED_ON\" DESC",
             latLong: ["Y", "X"],
             icon: iconTypes.CITY_311_ICON,
@@ -261,7 +261,7 @@
             }
         },
         "Library": {
-            id: "2ba0788a-2f35-43aa-a47c-89c75f55cf9d",
+            id: "14babf3f-4932-4828-8b49-3c9a03bae6d0",
             primaryFiltering: "WHERE \"Name\" LIKE '%OAKLAND%'",
             latLong: ["Lat", "Lon"],
             icon: iconTypes.LIBRARY_ICON,
