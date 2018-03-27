@@ -55,6 +55,7 @@
 
     const sidebar = document.getElementById("sidebar");
     const sidebarToggle = document.getElementById("sidebarToggle");
+    const parentList = document.getElementById('badMarkers');
 
     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
         attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"
@@ -152,7 +153,11 @@
             markers.forEach((marker) => {
                 if (marker.type.toLowerCase() === type && marker.isMapped) {
                     if (marker.inDate) {
-                        marker.pin.addTo(map);
+                        if (marker.isMapped) {
+                            marker.pin.addTo(map);
+                        } else {
+                            parentList.appendChild(marker.tableEl);
+                        }
                     }
                     marker.filtered = false;
                 }
@@ -398,6 +403,30 @@
 
                         record.isMapped = true;
                     } else {
+                        // Give non-mapped markers a list element for displaying in a separate list
+                        // of non-mapped markers
+                        const li = document.createElement('li');
+                        const headerLine = document.createElement('p');
+
+                        const options = dataSource.icon.options;
+                        const icon = document.createElement('div');
+                        icon.className = options.className;
+                        icon.innerHTML = options.html;
+                        icon.style.width = options.iconSize[0];
+                        icon.style.height = options.iconSize[1];
+
+                        if (dataSource.table) {
+                            headerLine.innerHTML = dataSource.table(record);
+                        } else {
+                            headerLine.innerHTML = dataSource.title(record);
+                        }
+
+                        li.appendChild(icon);
+                        li.appendChild(headerLine);
+
+                        parentList.appendChild(li);
+
+                        record.tableEl = li;
                         record.isMapped = false;
                     }
                     markers.push(record);
@@ -647,7 +676,6 @@
             fetchPittData('Laundry', 'SUTH_EAST', true),
             fetchPittData('Laundry', 'SUTH_WEST', true),
             fetchPittData('Laundry', 'FORBES_CRAIG', true)
-
         ]).catch((err) => {
             displayNotification(err, "error", (retryDiv) => {
                 var retryButton = document.createElement("button");
